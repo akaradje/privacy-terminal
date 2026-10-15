@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="220" viewBox="0 0 760 220" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">
+  <rect width="760" height="220" rx="14" fill="#0b0f14"/>
+  <rect x="1" y="1" width="758" height="218" rx="13" fill="none" stroke="#1e2936" stroke-width="2"/>
+  <circle cx="26" cy="26" r="5" fill="#ff5f56"/><circle cx="46" cy="26" r="5" fill="#ffbd2e"/><circle cx="66" cy="26" r="5" fill="#27c93f"/>
+  <text x="380" y="31" fill="#6b7a8d" font-size="12" text-anchor="middle">privacy-terminal</text>
+  <text x="40" y="120" fill="#4cc2ff" font-size="46" font-weight="bold">&gt;_</text>
+  <text x="120" y="120" fill="#eef4fb" font-size="40" font-weight="bold">PRIVACY</text>
+  <text x="392" y="120" fill="#4cc2ff" font-size="40" font-weight="bold">//</text>
+  <text x="440" y="120" fill="#eef4fb" font-size="40" font-weight="bold">TERMINAL</text>
+  <polyline points="60,178 96,166 132,174 168,148 204,156 240,138 276,146 312,126 348,118 384,130 420,108 456,114 492,98 528,90 564,102 600,84 636,76 672,88 708,70" fill="none" stroke="#2ecc71" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="60" cy="178" r="4" fill="#2ecc71"/><circle cx="384" cy="130" r="4" fill="#2ecc71"/><circle cx="708" cy="70" r="4" fill="#2ecc71"/>
+  <text x="40" y="206" fill="#6b7a8d" font-size="13">51 PURE-PRIVACY ASSETS · DNA-GRADED · COINGECKO LIVE</text>
+</svg>
