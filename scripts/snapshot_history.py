@@ -29,7 +29,8 @@ def main():
         "const dna=JSON.parse(fs.readFileSync('data/dna3.json','utf8'));"
         "eval(fs.readFileSync('engine/score.js','utf8'));"
         "const o={};for(const k in dna){const p=scoreP(dna[k]);"
-        "o[k]={v1:scoreV1(dna[k]),v2:p?p.P:null,cov:p?p.coverage:null,ins:p?p.insufficient:null};}"
+        "o[k]={v1:scoreV1(dna[k]),v2:p?p.P:null,cov:p?p.coverage:null,ins:p?p.insufficient:null,"
+        "band:p?p.band:null,parts:p?p.parts:null,genes:dna[k]};}"
         "process.stdout.write(JSON.stringify(o));"
     )
     r = subprocess.run([node, '-e', script], capture_output=True, text=True, cwd=str(ROOT), timeout=90)
@@ -37,6 +38,13 @@ def main():
         print('score engine failed: %s' % r.stderr.strip()[:200], file=sys.stderr)
         return 1
     scores = json.loads(r.stdout)
+
+    IDS = {}
+    idf = DATA / 'ids.json'
+    if idf.exists():
+        for row in json.loads(idf.read_text(encoding='utf-8')):
+            if isinstance(row, (list, tuple)) and len(row) >= 2:
+                IDS[str(row[0]).upper()] = row[1]
 
     prices = {}
     for f in sorted(DATA.glob('cat_*_p1.json')):
@@ -60,9 +68,26 @@ def main():
         'scoring_v1': 'dna-v1 (primary)',
         'assets': {},
     }
+    flags_script = (
+        "const fs=require('fs');"
+        "const d=JSON.parse(fs.readFileSync('data/detail/'.concat(process.argv[1],'.json'),'utf8'));"
+        "eval(fs.readFileSync('engine/flags.js','utf8'));"
+        "process.stdout.write(JSON.stringify(evaluateFlags(metricsFor({},d,{})).map(f=>f.id)));"
+    )
     for sym, sc in scores.items():
         rec = dict(sc)
         rec.update(prices.get(sym, {}))
+        rec['pillars'] = {'P': sc.get('v2'), 'P_v1': sc.get('v1')}
+        rec['flags'] = []
+        cid = IDS.get(sym)
+        if cid:
+            try:
+                fr = subprocess.run([node, '-e', flags_script, cid], capture_output=True, text=True,
+                                    cwd=str(ROOT), timeout=30)
+                if fr.returncode == 0 and fr.stdout.strip():
+                    rec['flags'] = json.loads(fr.stdout)
+            except Exception:
+                pass
         out['assets'][sym] = rec
 
     HIST.mkdir(exist_ok=True)

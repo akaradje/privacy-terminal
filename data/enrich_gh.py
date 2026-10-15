@@ -6,10 +6,20 @@ D = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(D, 'detail')
 HDR = {'User-Agent': 'Mozilla/5.0 (research script)'}
 
-# CoinGecko sometimes points at an archived/side repo. These are the maintained ones.
-REPO_OVERRIDE = {
-    'dero': 'deroproject/derohe',        # coingecko link -> deroproject/derosuite (archived 2022)
-}
+# CoinGecko sometimes points at an archived/side repo. The maintained repo per coin lives in
+# curated data (not in this script): data/curated/repos.json -> {"<coingecko_id>": "owner/repo"}
+def _load_repo_override():
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'curated', 'repos.json')
+    if not os.path.exists(p):
+        return {}
+    try:
+        raw = json.load(open(p, encoding='utf-8'))
+    except Exception:
+        return {}
+    return dict((k, v.get('repo') if isinstance(v, dict) else v) for k, v in raw.items() if k != '_note')
+
+
+REPO_OVERRIDE = _load_repo_override()
 
 
 def gh_repo(url):

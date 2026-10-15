@@ -1,0 +1,9 @@
+{
+  "_note": "CoinGecko บางครั้งชี้ไป repo ที่ archived หรือ repo ย่อย — ที่นี่คือ repo ที่ยังดูแลอยู่จริง คีย์ = CoinGecko id ต้องมี field src + asof ทุกครั้งที่เพิ่ม",
+  "dero": {
+    "repo": "deroproject/derohe",
+    "reason": "CoinGecko ชี้ไป deroproject/derosuite ซึ่ง archived (push ล่าสุด 2022-03-30); derohe ยัง active",
+    "src": "https://api.github.com/repos/deroproject/derohe",
+    "asof": "2026-10-15"
+  }
+}

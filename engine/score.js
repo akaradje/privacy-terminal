@@ -5,12 +5,17 @@
  * scoring_version: 2.0.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
- * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible senders an
- * observer must consider for ONE transaction, at the moment it is made.
- *   ring signature   -> ring size (e.g. Monero 16)
- *   shielded pool    -> number of spendable notes in the pool when the tx is made
- *   mixer / coinjoin -> size of the deposit pool for that denomination/epoch
- *   TEE / MPC        -> number of distinct operators/users whose inputs are indistinguishable
+ * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
+ * observer must consider for ONE transaction, at the moment it is made. Full rubric:
+ *   data/schema/rubric.json
+ *   ring signature   -> the EFFECTIVE value after known heuristics (decoy selection, change
+ *                       output, timing), not the raw ring size; must cite research
+ *   shielded pool    -> all note commitments in THAT pool (spent notes stay indistinguishable),
+ *                       counted per pool (Sapling and Orchard are never merged)
+ *   mixer / coinjoin -> size of the deposit pool for the same denomination/epoch
+ *   TEE / MPC        -> number of USERS interacting with the same contract/pool during that
+ *                       epoch. Trusting the operator is NOT anonymity: that risk belongs in
+ *                       `tl` only, and counting it here would double-count it.
  * It is NOT the cumulative size of the whole pool, and NOT the number of holders.
  * Consequence (accepted, not a bug): ring-based coins score low on the bits component by
  * construction; they recover the difference through `man` (mandatory privacy), which is the
