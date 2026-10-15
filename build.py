@@ -138,6 +138,32 @@ STATS = {
 for _g in ('coin', 'proto', 'net', 'compute'):
     STATS['n_' + _g] = sum(1 for r in recs if r.get('g') == _g)
 
+# ---- docs + data index, rendered into the bundle so everything lives in one page ----
+try:
+    import build_docs as BD
+    _docs, _idx = [], []
+    for _path, _title, _blurb in BD.DOCS:
+        _fp = BD.resolve(_path)
+        if os.path.exists(_fp):
+            _docs.append({'p': _path, 't': _title, 'b': _blurb,
+                          'h': BD.md_to_html(open(_fp, encoding='utf-8').read())})
+    for _name, _kind, _files in BD.SECTIONS:
+        if _kind == 'doc':
+            continue
+        if _files is None:
+            _files = BD.scan('.json', 'data', 40) if 'Generated' in _name else BD.scan('.json.gz', 'history')
+        _items = []
+        for _f in _files:
+            _sz = BD.size_of(_f)
+            if _sz:
+                _items.append({'p': _f, 's': _sz})
+        _idx.append({'n': _name, 'items': _items})
+    DOCSPAY = {'docs': _docs, 'idx': _idx}
+    print('docs embedded:', len(_docs), '| index sections:', len(_idx))
+except Exception as _e:
+    DOCSPAY = {'docs': [], 'idx': []}
+    print('docs embed skipped:', _e)
+
 tpl = open(os.path.join(D, 'template.html'), encoding='utf-8').read()
 enginejs = ''
 for _ef in ('engine/score.js', 'engine/flags.js'):
@@ -152,6 +178,9 @@ html = html.replace('__DNA__', json.dumps(DNA, ensure_ascii=False, separators=('
 html = html.replace('__DETAIL__', json.dumps(DETAIL, ensure_ascii=False, separators=(',', ':')))
 html = html.replace('__STATS__', json.dumps(STATS, ensure_ascii=False))
 html = html.replace('__SNAP__', STATS['snap'])
+# __DOCS__ must be substituted LAST: the embedded documents contain the other
+# placeholder tokens as literal text (the file map in HANDOVER.md lists them).
+html = html.replace('__DOCS__', json.dumps(DOCSPAY, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'))
 
 out = os.path.join(D, 'privacy-terminal.html')
 open(out, 'w', encoding='utf-8').write(html)

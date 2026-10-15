@@ -111,6 +111,31 @@ table.mx td.wide{white-space:normal;max-width:230px;font-size:10px;color:var(--d
 .geneRow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 6px 2px}
 .geneRow .lbl{font-size:9.5px;color:var(--dim);letter-spacing:.4px;text-transform:uppercase;margin-right:2px}
 .spark{vertical-align:-3px;margin-left:6px}
+#docsWrap{padding:0 18px 20px}
+.dtabs{display:flex;flex-wrap:wrap;gap:4px;margin:14px 0 10px}
+.dtabs button{background:var(--panel);border:1px solid var(--line);color:var(--dim);font:600 11px var(--mono);padding:5px 11px;border-radius:4px;cursor:pointer}
+.dtabs button:hover{color:var(--tx)}
+.dtabs button.on{color:var(--accent);border-color:var(--accent)}
+.docpane{display:none;max-width:1100px}
+.docpane.on{display:block}
+.docpane h1{font-size:16px;color:var(--bright);margin:14px 0 8px}
+.docpane h2{font-size:13px;color:var(--accent);margin:16px 0 7px}
+.docpane h3{font-size:12px;color:var(--bright);margin:12px 0 5px}
+.docpane p{margin:6px 0;font-size:11.5px;line-height:1.7}
+.docpane ul,.docpane ol{margin:6px 0 6px 20px;font-size:11.5px}
+.docpane blockquote{border-left:3px solid var(--accent);background:var(--panel);padding:6px 10px;margin:8px 0;font-size:11px}
+.docpane pre.code{background:#0d1319;border:1px solid var(--line);border-radius:4px;padding:9px 11px;overflow-x:auto;font-size:10.5px;margin:8px 0}
+.docpane table.tbl{border-collapse:collapse;margin:10px 0;width:100%}
+.docpane table.tbl th{background:var(--panel);text-align:left}
+.docpane table.tbl th,.docpane table.tbl td{border:1px solid var(--line);padding:4px 7px;font-size:10.5px;vertical-align:top}
+.docpane a{color:var(--accent)}
+.srcLine{color:var(--dim);font-size:10px;margin-bottom:10px}
+.idxGrid{display:flex;flex-wrap:wrap;gap:14px}
+.idxCol{flex:1 1 260px;min-width:240px}
+.idxCol h3{font-size:11px;color:var(--accent);margin:10px 0 5px}
+.idxCol ul{list-style:none;margin:0}
+.idxCol li{font-size:10.5px;margin:1px 0}
+.idxCol .sz{color:var(--dim);font-size:9.5px}
 .v3{margin-top:10px;border-top:1px solid #172130;padding:8px 6px 2px}
 .v3t{font-size:10px;color:var(--accent);letter-spacing:1px;font-weight:700;margin-bottom:6px}
 .v3score{font-size:13px;margin-bottom:6px}
@@ -191,6 +216,7 @@ footer .disc{margin-top:10px;color:#8b98a8}
   </table>
 </div>
 <div class="tablewrap" id="matrixWrap" style="display:none"></div>
+<div id="docsWrap" style="display:none"></div>
 
 <footer>
   <div><b>แหล่งข้อมูล:</b> CoinGecko public API (categories: privacy, privacy-coins, zero-knowledge-zk, privacy-infrastructure, privacy-blockchain) · snapshot __SNAP__ · เกร็ด: อัปเดตล่าสุดจาก API ทุก coin อยู่ในไฟล์ข้อมูล</div>
@@ -201,6 +227,7 @@ footer .disc{margin-top:10px;color:#8b98a8}
   <div class="disc"><b>ข้อควรทราบ:</b> ข้อมูลทุกตัวในเว็บนี้รวบรวมจากแหล่งสาธารณะ (CoinGecko, GitHub) เพื่อการค้นคว้าวิจัยและคัดกรอง — <b>ไม่ใช่คำแนะนำทางการเงิน</b> และไม่ใช่คำแนะนำให้ซื้อหรือขาย ตลาดสินทรัพย์ดิจิทัลมีความผันผวนสูง โปรดศึกษาข้อมูลเองและอ่านเอกสารของแต่ละโครงการก่อนตัดสินใจ<br><b>Disclaimer:</b> All data is compiled from public sources for research and screening only. Nothing here is financial advice or a recommendation to buy or sell. Digital-asset markets are highly volatile — do your own research and verify each project's own documentation before acting.</div>
 </footer>
 
+<script type="application/json" id="docsData">__DOCS__</script>
 <script>
 /*__APPJS__*/
 </script>

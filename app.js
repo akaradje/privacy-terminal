@@ -2,6 +2,7 @@ var DATA = __DATA__;
 var CUR = __CUR__;
 var DNA = __DNA__;
 var DETAIL = __DETAIL__;
+var DOCSPAY = (function () { try { var el = document.getElementById('docsData'); return JSON.parse((el && el.textContent) || '{"docs":[],"idx":[]}'); } catch (e) { return { docs: [], idx: [] }; } })();
 var STATS = __STATS__;
 var state = { view: 'table', q: '', sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null };
 var view = [];
@@ -293,6 +294,14 @@ function v3Block(c) {
 
 function renderTable() {
   var mw = $('matrixWrap'), tw = $('tblWrap');
+  var dw = $('docsWrap');
+  if (state.view === 'docs') {
+    if (tw) tw.style.display = 'none';
+    if (mw) mw.style.display = 'none';
+    if (dw) { dw.style.display = 'block'; renderDocs(); }
+    return;
+  }
+  if (dw) dw.style.display = 'none';
   if (state.view === 'matrix') {
     if (tw) tw.style.display = 'none';
     if (mw) mw.style.display = 'block';
@@ -450,12 +459,50 @@ function liveRefresh() {
   });
 }
 
+/* third view: documents + data index, rendered from the same bundle (no separate page) */
+function renderDocs() {
+  var dw = $('docsWrap');
+  if (!dw) return;
+  var d = DOCSPAY || { docs: [], idx: [] };
+  if (!d.docs.length) { dw.innerHTML = '<p class="dim">ไม่พบเอกสารในบันเดิล</p>'; return; }
+  var tabs = d.docs.map(function (x, i) {
+    return '<button data-pane="dp' + i + '" class="' + (i === 0 ? 'on' : '') + '">' + x.t + '</button>';
+  }).join('');
+  var panes = d.docs.map(function (x, i) {
+    return '<section class="docpane' + (i === 0 ? ' on' : '') + '" id="dp' + i + '">' +
+      '<div class="srcLine">' + x.p + ' · ' + x.b + ' · <a href="' + x.p + '" target="_blank" rel="noopener">raw ↗</a></div>' +
+      x.h + '</section>';
+  }).join('');
+  var cols = (d.idx || []).map(function (sec) {
+    var items = sec.items.map(function (f) {
+      return '<li><a href="' + f.p + '" target="_blank" rel="noopener">' + f.p + '</a> <span class="sz">' + f.s + '</span></li>';
+    }).join('');
+    return '<div class="idxCol"><h3>' + sec.n + '</h3><ul>' + items + '</ul></div>';
+  }).join('');
+  dw.innerHTML = '<div class="dtabs">' + tabs + '</div>' + panes +
+    '<h2 style="margin-top:22px">ไฟล์ทั้งหมดในโปรเจกต์</h2><div class="idxGrid">' + cols + '</div>';
+  var btns = dw.querySelectorAll ? dw.querySelectorAll('.dtabs button') : [];
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].onclick = function () {
+      var all = dw.querySelectorAll('.dtabs button');
+      for (var j = 0; j < all.length; j++) all[j].classList.remove('on');
+      var panesAll = dw.querySelectorAll('.docpane');
+      for (var k = 0; k < panesAll.length; k++) panesAll[k].classList.remove('on');
+      this.classList.add('on');
+      var target = document.getElementById(this.getAttribute('data-pane'));
+      if (target) target.classList.add('on');
+    };
+  }
+}
+
 function renderViewSwitch() {
   $('vsw').innerHTML =
     '<button id="vTable" class="' + (state.view === 'table' ? 'on' : '') + '">ตาราง · ' + DATA.length + ' เหรียญ</button>' +
-    '<button id="vMatrix" class="' + (state.view === 'matrix' ? 'on' : '') + '">DNA Matrix</button>';
+    '<button id="vMatrix" class="' + (state.view === 'matrix' ? 'on' : '') + '">DNA Matrix</button>' +
+    '<button id="vDocs" class="' + (state.view === 'docs' ? 'on' : '') + '">เอกสาร &amp; ข้อมูล</button>';
   $('vTable').onclick = function () { state.view = 'table'; renderViewSwitch(); renderTable(); };
   $('vMatrix').onclick = function () { state.view = 'matrix'; renderViewSwitch(); renderTable(); };
+  $('vDocs').onclick = function () { state.view = 'docs'; renderViewSwitch(); renderTable(); };
 }
 
 function init() {
