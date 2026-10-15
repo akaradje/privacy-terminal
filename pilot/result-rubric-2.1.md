@@ -1,5 +1,10 @@
 # Pilot round 2 — after rubric 2.1 (arch roles + aset precedence)
 
+> **ตัวเลข NYM / SCRT / MPC ในเอกสารถูกแก้ภายหลัง** — ดู "Corrections" ใน
+> [`pilot/batch3-4-result.md`](batch3-4-result.md): `NYM.tl` 1 → 1.5 (mixnet = threshold)
+> และ `SCRT`/`MPC` `hs/hr/ha` 1 → 0 (การโอนโทเคน native โปร่งใส) → NYM 47, SCRT 27, MPC 30
+
+
 Run: 2026-10-16 · rubric `2.1.0-preview` · supersedes §1–§4 of `pilot/result.md`
 
 ## What changed in rubric 2.1
