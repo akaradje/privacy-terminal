@@ -137,7 +137,12 @@ for _g in ('coin', 'proto', 'net', 'compute'):
     STATS['n_' + _g] = sum(1 for r in recs if r.get('g') == _g)
 
 tpl = open(os.path.join(D, 'template.html'), encoding='utf-8').read()
-appjs = open(os.path.join(D, 'app.js'), encoding='utf-8').read()
+enginejs = ''
+for _ef in ('engine/score.js', 'engine/flags.js'):
+    _ep = os.path.join(D, _ef)
+    if os.path.exists(_ep):
+        enginejs += open(_ep, encoding='utf-8').read() + '\n'
+appjs = enginejs + open(os.path.join(D, 'app.js'), encoding='utf-8').read()
 tpl = tpl.replace('/*__APPJS__*/', appjs)
 html = tpl.replace('__DATA__', json.dumps(recs, ensure_ascii=False, separators=(',', ':')))
 html = html.replace('__CUR__', json.dumps(CUR, ensure_ascii=False, separators=(',', ':')))

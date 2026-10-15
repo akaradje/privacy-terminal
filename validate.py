@@ -9,6 +9,8 @@ Usage:  python validate.py
 """
 import json
 import pathlib
+import shutil
+import subprocess
 import sys
 
 D = pathlib.Path(__file__).parent / 'data'
@@ -91,6 +93,52 @@ def main():
         if s not in [str(x).upper() for x in syms]:
             warns.append('%s: has gene flags in dna3.json but is not in tiers.t1' % s)
 
+    # ---- v3: curated evidence schema (gene value may be {v, conf, src, asof}) ----
+    schema = load('schema/curated.schema.json', {})
+    v2_ok = 0
+    v2_missing_src = 0
+    for s_ in syms:
+        s_ = str(s_).upper()
+        g = dna3.get(s_) or {}
+        for k, v in g.items():
+            if isinstance(v, dict) and 'v' in v:
+                if not v.get('src'):
+                    v2_missing_src += 1
+                    errs.append('%s.%s: evidence object without src (must be conf=low or filled in)' % (s_, k))
+                if v.get('conf') not in (None, 'high', 'med', 'low'):
+                    errs.append('%s.%s: bad conf %r' % (s_, k, v.get('conf')))
+                v2_ok += 1
+    if not schema:
+        warns.append('data/schema/curated.schema.json is missing (v3 curated schema)')
+
+    # ---- v3: scores are computed by engine/score.js only (never re-implemented here) ----
+    node = shutil.which('node')
+    v2_scores = {}
+    if node:
+        script = (
+            "const fs=require('fs');"
+            "const dna=JSON.parse(fs.readFileSync('data/dna3.json','utf8'));"
+            "eval(fs.readFileSync('engine/score.js','utf8'));"
+            "const o={};for(const k in dna){const p=scoreP(dna[k]);o[k]={v1:scoreV1(dna[k]),v2:p?p.P:null,band:p?p.band:null,conf:p?p.conf:null};}"
+            "process.stdout.write(JSON.stringify(o));"
+        )
+        try:
+            r = subprocess.run([node, '-e', script], capture_output=True, text=True, timeout=60)
+            if r.returncode == 0 and r.stdout.strip():
+                v2_scores = json.loads(r.stdout)
+            else:
+                warns.append('engine/score.js run failed: %s' % (r.stderr.strip()[:120]))
+        except Exception as e:
+            warns.append('engine/score.js not runnable: %s' % e)
+    else:
+        warns.append('node not found — v2 scores not checked')
+
+    for s_, sc in v2_scores.items():
+        if sc.get('v2') is None:
+            errs.append('%s: engine returned no v2 score' % s_)
+        elif not 0 <= sc['v2'] <= 100:
+            errs.append('%s: v2 score %s outside 0-100' % (s_, sc['v2']))
+
     print('checked %d pure-privacy assets' % len(syms))
     if scores:
         ranked = sorted(scores.items(), key=lambda kv: -kv[1])
@@ -103,6 +151,11 @@ def main():
         print('  ! %s' % w)
     for e in errs:
         print('  x %s' % e)
+    if v2_scores:
+        v2 = [x['v2'] for x in v2_scores.values() if x.get('v2') is not None]
+        if v2:
+            print('DNA v2 (engine/score.js): band %d..%d | median %d | evidence objects %d | missing src %d' % (
+                min(v2), max(v2), sorted(v2)[len(v2) // 2], v2_ok, v2_missing_src))
     print('RESULT: %d error(s), %d warning(s)' % (len(errs), len(warns)))
     return 1 if errs else 0
 

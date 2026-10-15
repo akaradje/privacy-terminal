@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PRIVACY//TERMINAL curated genes (v3)",
+  "description": "Per-coin curated evidence. A gene value is either a bare number (legacy v1) or an evidence object {v, conf, src, asof, note}. A value with no src automatically gets conf=low.",
+  "type": "object",
+  "patternProperties": {
+    "^[A-Z0-9]{2,12}$": {
+      "type": "object",
+      "properties": {
+        "g": { "enum": ["coin", "proto", "net", "compute"] },
+        "yr": { "type": "integer", "minimum": 2008, "maximum": 2100 },
+        "hs": { "$ref": "#/definitions/gene3" },
+        "hr": { "$ref": "#/definitions/gene3" },
+        "ha": { "$ref": "#/definitions/gene3" },
+        "hst": { "$ref": "#/definitions/gene3" },
+        "hmeta": { "$ref": "#/definitions/gene3" },
+        "hnet": { "$ref": "#/definitions/gene3" },
+        "mat": { "$ref": "#/definitions/gene3" },
+        "pq": { "$ref": "#/definitions/gene3" },
+        "man": { "$ref": "#/definitions/geneMan" },
+        "tl": { "$ref": "#/definitions/gene3" },
+        "brk": { "$ref": "#/definitions/geneBool" },
+        "nst": { "$ref": "#/definitions/geneBool" },
+        "aset": { "$ref": "#/definitions/aset" },
+        "big": { "$ref": "#/definitions/geneBool" },
+        "fam": { "type": "string" },
+        "prim": { "type": "string" },
+        "hides": { "type": "string" },
+        "trust": { "type": "string" },
+        "setup": { "type": "string" },
+        "audit": { "type": "string" },
+        "gov": { "type": "string" },
+        "risk": { "type": "string" },
+        "sec": { "type": "string" },
+        "comp": { "type": "string" },
+        "anonset": { "type": "string" },
+        "stage": { "type": "string" },
+        "hist": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "evidence": {
+      "type": "object",
+      "required": ["v"],
+      "properties": {
+        "v": {},
+        "conf": { "enum": ["high", "med", "low"] },
+        "src": { "type": "string" },
+        "asof": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "gene3": {
+      "oneOf": [
+        { "type": "integer", "minimum": 0, "maximum": 2 },
+        { "allOf": [{ "$ref": "#/definitions/evidence" }, { "properties": { "v": { "type": "number", "minimum": 0, "maximum": 2 } } }] }
+      ]
+    },
+    "geneBool": {
+      "oneOf": [
+        { "type": "integer", "enum": [0, 1] },
+        { "allOf": [{ "$ref": "#/definitions/evidence" }, { "properties": { "v": { "type": "number", "enum": [0, 1] } } }] }
+      ]
+    },
+    "geneMan": {
+      "oneOf": [
+        { "type": "number", "enum": [0, 0.5, 1] },
+        { "allOf": [{ "$ref": "#/definitions/evidence" }, { "properties": { "v": { "type": "number", "enum": [0, 0.5, 1] } } }] }
+      ]
+    },
+    "aset": {
+      "oneOf": [
+        { "type": "number", "minimum": 0 },
+        { "allOf": [{ "$ref": "#/definitions/evidence" }, { "properties": { "v": { "type": "number", "minimum": 0 } } }] }
+      ]
+    }
+  }
+}

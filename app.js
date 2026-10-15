@@ -248,7 +248,35 @@ function dnaPanel(c) {
     kv('ความเสี่ยงหลัก', d.risk) +
     kv('notes', q.note) +
     '</div>';
-  return head + strip + grid + dossierHtml(c);
+  return head + strip + grid + v3Block(c) + dossierHtml(c);
+}
+
+/* v3 surface: DNA v2 (engine/score.js) + red flags (engine/flags.js) */
+function v3Block(c) {
+  var d = dna(c);
+  var out = '';
+  var p2 = null;
+  try { p2 = scoreP(d); } catch (e) { p2 = null; }
+  if (p2) {
+    var ev = p2.missing_src ? '<span class="dim"> · ยังไม่มี src ' + p2.missing_src + ' ค่า (conf ' + p2.conf + ')</span>' : '';
+    out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span></div>' +
+      '<div class="v3score">P = <b>' + p2.P + '</b> / 100 <span class="dim">± ' + p2.band + '</span>' + ev + '</div>' +
+      '<div class="v3parts">' + Object.keys(p2.parts).map(function (k) {
+        var v = p2.parts[k];
+        return '<span class="chip' + (v < 0 ? ' tier-t1' : '') + '">' + k + ' ' + (v > 0 ? '+' : '') + v + '</span>';
+      }).join('') + '</div>' +
+      '<div class="dim" style="font-size:10px">v2 ใช้ gene ใหม่ (hmeta/hnet/mat/pq/aset) ที่ยังต้องกรอกพร้อมหลักฐาน — คะแนนจะสมบูรณ์หลัง Phase 2 · คะแนน v1: ' + (scoreV1(d) == null ? '—' : scoreV1(d)) + '</div></div>';
+  }
+  var fl = [];
+  try { fl = evaluateFlags(metricsFor(c, det(c), d)); } catch (e) { fl = []; }
+  if (fl.length) {
+    out += '<div class="v3"><div class="v3t">RED FLAGS <span class="dim">(' + fl.length + ')</span></div><div class="v3flags">' +
+      fl.map(function (f) { return '<span class="chip fl-' + f.lv + '">' + f.lv + ' · ' + f.id + '</span> '; }).join('') +
+      '</div><div class="dim" style="font-size:10px">' + fl.map(function (f) { return f.msg; }).join(' · ') + '</div></div>';
+  } else {
+    out += '<div class="v3"><div class="v3t">RED FLAGS</div><div class="dim" style="font-size:10px">ไม่พบ flag จากเกณฑ์ปัจจุบัน (threshold เป็นค่าตั้งต้น ปรับได้ที่ engine/flags.js)</div></div>';
+  }
+  return out;
 }
 function renderTable() {
   var mw = $('matrixWrap'), tw = $('tblWrap');
