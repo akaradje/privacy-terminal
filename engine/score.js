@@ -1,26 +1,47 @@
 /* engine/score.js — DNA v2 scorer (v3 blueprint §3.1, §4)
- * Single source of truth for the P (Privacy Strength) pillar.
- * Loaded by build (Node) and by the browser — never re-implement the formula in Python.
- * scoring_version: v2 (v1 score is still returned alongside so old snapshots stay comparable)
+ * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
+ * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
+ *
+ * scoring_version: 2.0.0-preview
+ *
+ * --- Definition of `aset` (one definition for every mechanism family) -------------
+ * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible senders an
+ * observer must consider for ONE transaction, at the moment it is made.
+ *   ring signature   -> ring size (e.g. Monero 16)
+ *   shielded pool    -> number of spendable notes in the pool when the tx is made
+ *   mixer / coinjoin -> size of the deposit pool for that denomination/epoch
+ *   TEE / MPC        -> number of distinct operators/users whose inputs are indistinguishable
+ * It is NOT the cumulative size of the whole pool, and NOT the number of holders.
+ * Consequence (accepted, not a bug): ring-based coins score low on the bits component by
+ * construction; they recover the difference through `man` (mandatory privacy), which is the
+ * property that actually carries their security argument. Never compare two families on
+ * `aset` alone — compare on P, and read the parts.
+ *
+ * --- Missing data is NOT zero -----------------------------------------------------
+ * A gene that has no value is null/absent, never 0. A component counts only when its genes
+ * are present; the score is computed over the available weight and rescaled to 100, and the
+ * band widens with the missing weight. `coverage` reports how much of the weight had data,
+ * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = 'dna-v2';
+var SCORING_VERSION = '2.0.0-preview';
+var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 var W = { cov: 30, bits: 15, man: 12, tl: 12, hmeta: 10, hnet: 8, mat: 8, pq: 5, brkPenalty: 15 };
 var CONF = { high: 1.0, med: 0.6, low: 0.3 };
 
-/* gene value may be a plain number (v1) or {v, conf, src, asof, note} (v2) */
-function gval(g, key, dflt) {
-  if (!g) return dflt;
+/* a gene is either a bare number (legacy v1) or {v, conf, src, asof, note} (v2) */
+function gval(g, key) {
+  if (!g) return null;
   var x = g[key];
-  if (x == null) return dflt;
-  if (typeof x === 'object') return (x.v == null ? dflt : x.v);
+  if (x == null) return null;
+  if (typeof x === 'object') return (x.v == null ? null : x.v);
   return x;
 }
 function gconf(g, key) {
   if (!g) return 'low';
   var x = g[key];
   if (x && typeof x === 'object') return x.conf || (x.src ? 'med' : 'low');
-  return 'low'; // v1 bare numbers carry no evidence trail
+  return 'low';                       // bare numbers carry no evidence trail
 }
 function gsrc(g, key) {
   if (!g) return '';
@@ -28,57 +49,75 @@ function gsrc(g, key) {
   return (x && typeof x === 'object' && x.src) ? x.src : '';
 }
 
-/* v1 score — kept for continuity with everything published before v3 */
+/* v1 score — kept so everything published before v3 stays comparable */
 function scoreV1(d) {
-  if (!d || gval(d, 'hs', null) == null) return null;
-  var denom = 8 - (gval(d, 'nst', 0) ? 2 : 0);
-  var cov = Math.min((gval(d, 'hs', 0) + gval(d, 'hr', 0) + gval(d, 'ha', 0) + gval(d, 'hst', 0)) / denom, 1);
-  return Math.round(cov * 60 + (gval(d, 'man', 0) ? 15 : 0) + (gval(d, 'tl', 0) ? 15 : 0) + (gval(d, 'big', 0) ? 10 : 0));
+  if (!d || gval(d, 'hs') == null) return null;
+  var denom = 8 - (gval(d, 'nst') ? 2 : 0);
+  var cov = Math.min((gval(d, 'hs') + gval(d, 'hr') + gval(d, 'ha') + (gval(d, 'hst') || 0)) / denom, 1);
+  return Math.round(cov * 60 + (gval(d, 'man') ? 15 : 0) + (gval(d, 'tl') ? 15 : 0) + (gval(d, 'big') ? 10 : 0));
 }
 
-/* v2 — 12 genes, anonymity set measured in bits, evidence confidence carried through */
+/* v2 — null-aware: score over the available weight, rescale to 100, widen the band */
 function scoreP(d) {
   if (!d) return null;
-  var nst = gval(d, 'nst', 0) ? 1 : 0;
+  var nst = gval(d, 'nst') ? 1 : 0;
   var denom = 8 - 2 * nst;
-  var cov = Math.min((gval(d, 'hs', 0) + gval(d, 'hr', 0) + gval(d, 'ha', 0) + gval(d, 'hst', 0)) / denom, 1);
+  var hs = gval(d, 'hs'), hr = gval(d, 'hr'), ha = gval(d, 'ha'), hst = gval(d, 'hst') || 0;
+  var hasCov = (hs != null && hr != null && ha != null);
+  var cov = hasCov ? Math.min((hs + hr + ha + hst) / denom, 1) : null;
 
-  var aset = gval(d, 'aset', 0) || 0;
-  var bits = aset > 1 ? Math.min(Math.log(aset) / Math.LN2 / 20, 1) : 0;   // 2^20 effective set == full credit
+  var aset = gval(d, 'aset');
+  var bits = (aset != null && aset > 1) ? Math.min(Math.log(aset) / Math.LN2 / ASET_BITS_FULL, 1) : null;
 
-  var man = gval(d, 'man', 0);      // 0 opt-in / 0.5 default-on / 1 mandatory
-  var tl = gval(d, 'tl', 0);        // 0 centralized .. 2 fully trustless
-  var hmeta = gval(d, 'hmeta', 0);  // 0..2 metadata resistance
-  var hnet = gval(d, 'hnet', 0);    // 0..2 network-layer privacy
-  var mat = gval(d, 'mat', 0);      // 0..2 maturity
-  var pq = gval(d, 'pq', 0);        // 0..2 post-quantum readiness
-  var brk = gval(d, 'brk', 0) ? 1 : 0;
+  var man = gval(d, 'man');      // 0 opt-in | 0.5 default-on | 1 mandatory
+  var tl = gval(d, 'tl');        // 0..2
+  var hmeta = gval(d, 'hmeta');  // 0..2
+  var hnet = gval(d, 'hnet');    // 0..2
+  var mat = gval(d, 'mat');      // 0..2
+  var pq = gval(d, 'pq');        // 0..2
+  var brk = gval(d, 'brk') ? 1 : 0;
 
-  var raw = W.cov * cov + W.bits * bits + W.man * man + W.tl * (tl / 2) +
-            W.hmeta * (hmeta / 2) + W.hnet * (hnet / 2) + W.mat * (mat / 2) + W.pq * (pq / 2) -
-            W.brkPenalty * brk;
-  var P = Math.max(0, Math.min(100, Math.round(raw)));
+  var comps = [
+    { k: 'cov', w: W.cov, v: cov == null ? null : cov, conf: hasCov ? gconf(d, 'hs') : null },
+    { k: 'bits', w: W.bits, v: bits, conf: bits == null ? null : gconf(d, 'aset') },
+    { k: 'man', w: W.man, v: man == null ? null : man, conf: man == null ? null : gconf(d, 'man') },
+    { k: 'tl', w: W.tl, v: tl == null ? null : tl / 2, conf: tl == null ? null : gconf(d, 'tl') },
+    { k: 'hmeta', w: W.hmeta, v: hmeta == null ? null : hmeta / 2, conf: hmeta == null ? null : gconf(d, 'hmeta') },
+    { k: 'hnet', w: W.hnet, v: hnet == null ? null : hnet / 2, conf: hnet == null ? null : gconf(d, 'hnet') },
+    { k: 'mat', w: W.mat, v: mat == null ? null : mat / 2, conf: mat == null ? null : gconf(d, 'mat') },
+    { k: 'pq', w: W.pq, v: pq == null ? null : pq / 2, conf: pq == null ? null : gconf(d, 'pq') }
+  ];
 
-  /* confidence band: sum of weight × spread × (1 − conf) over the genes that feed the score */
-  var spreads = { cov: 1, bits: 1, man: 1, tl: 1, hmeta: 1, hnet: 1, mat: 1, pq: 1 };
-  var keys = ['hs', 'hr', 'ha', 'hst', 'aset', 'man', 'tl', 'hmeta', 'hnet', 'mat', 'pq', 'brk'];
-  var confs = keys.map(function (k) { return CONF[gconf(d, k)] || CONF.low; });
-  var avgConf = confs.reduce(function (a, b) { return a + b; }, 0) / confs.length;
-  var band = Math.round((1 - avgConf) * 25);
-  var missingSrc = keys.filter(function (k) { return gval(d, k, null) != null && !gsrc(d, k); }).length;
+  var total = 0, avail = 0, earned = 0, confSum = 0, confN = 0, parts = {};
+  for (var i = 0; i < comps.length; i++) {
+    var c = comps[i];
+    total += c.w;
+    if (c.v == null) { parts[c.k] = null; continue; }
+    avail += c.w;
+    earned += c.w * c.v;
+    parts[c.k] = +(c.w * c.v).toFixed(1);
+    confSum += (CONF[c.conf] || CONF.low);
+    confN++;
+  }
+  parts.brk = -(W.brkPenalty * brk);
+  if (avail === 0) return null;
+
+  var coverage = avail / total;
+  var avgConf = confN ? confSum / confN : CONF.low;
+  var P = Math.max(0, Math.min(100, Math.round((earned / avail) * 100 - W.brkPenalty * brk)));
+  /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
+  var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
 
   return {
-    P: P, band: band, conf: avgConf.toFixed(2), missing_src: missingSrc,
-    parts: {
-      cov: +(W.cov * cov).toFixed(1), bits: +(W.bits * bits).toFixed(1), man: +(W.man * man).toFixed(1),
-      tl: +(W.tl * tl / 2).toFixed(1), hmeta: +(W.hmeta * hmeta / 2).toFixed(1), hnet: +(W.hnet * hnet / 2).toFixed(1),
-      mat: +(W.mat * mat / 2).toFixed(1), pq: +(W.pq * pq / 2).toFixed(1), brk: -(W.brkPenalty * brk)
-    },
-    version: SCORING_VERSION
+    P: P, band: band, coverage: +coverage.toFixed(2), conf: +avgConf.toFixed(2),
+    insufficient: coverage < 0.8,
+    missing: comps.filter(function (c) { return c.v == null; }).map(function (c) { return c.k; }),
+    parts: parts, version: SCORING_VERSION,
+    v1: scoreV1(d)
   };
 }
 
-/* composite presets (§4.1) — weights are defaults, meant to be tuned in the Weight Lab */
+/* composite presets (§4.1) — defaults, meant to be tuned in the Weight Lab */
 var PRESETS = {
   purist: { P: 45, S: 20, D: 15, T: 5, L: 0, R: 5, U: 10 },
   investor: { P: 15, S: 15, D: 15, T: 20, L: 20, R: 10, U: 5 },
@@ -90,14 +129,13 @@ function composite(pillars, w) {
   var keys = ['P', 'S', 'D', 'T', 'L', 'R', 'U'];
   var num = 0, den = 0;
   for (var i = 0; i < keys.length; i++) {
-    var k = keys[i], ww = (w && w[k] != null) ? w[k] : 0;
-    var v = pillars[k];
+    var k = keys[i], ww = (w && w[k] != null) ? w[k] : 0, v = pillars[k];
     if (ww > 0 && v != null) { num += ww * v; den += ww; }
   }
   return den ? Math.round(num / den) : null;
 }
 
-/* rank stability under ±jitter weights (§4.3) */
+/* rank stability under jittered weights (§4.3) */
 function rankStability(rows, keyFn, runs, jitter) {
   runs = runs || 300; jitter = jitter || 0.2;
   var tally = {};

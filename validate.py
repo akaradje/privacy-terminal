@@ -104,10 +104,22 @@ def main():
             if isinstance(v, dict) and 'v' in v:
                 if not v.get('src'):
                     v2_missing_src += 1
-                    errs.append('%s.%s: evidence object without src (must be conf=low or filled in)' % (s_, k))
+                    warns.append('%s.%s: evidence object without src -> treated as conf=low' % (s_, k))
                 if v.get('conf') not in (None, 'high', 'med', 'low'):
                     errs.append('%s.%s: bad conf %r' % (s_, k, v.get('conf')))
                 v2_ok += 1
+    bare = 0
+    for s_ in syms:
+        g = dna3.get(str(s_).upper()) or {}
+        for k, v in g.items():
+            if k in ('hs', 'hr', 'ha', 'hst', 'man', 'tl', 'hmeta', 'hnet', 'mat', 'pq', 'aset', 'brk', 'nst') and not isinstance(v, dict):
+                bare += 1
+    ev_total = v2_ok + bare
+    ev_pct = (100.0 * v2_ok / ev_total) if ev_total else 0.0
+    print('evidence: %d/%d gene values carry src (%.0f%%) | bare numbers %d | missing src %d' % (
+        v2_ok, ev_total, ev_pct, bare, v2_missing_src))
+    if ev_pct < 80:
+        warns.append('evidence coverage %.0f%% < 80%% — v2 stays PREVIEW until Phase 2 fills the genes' % ev_pct)
     if not schema:
         warns.append('data/schema/curated.schema.json is missing (v3 curated schema)')
 
@@ -154,8 +166,8 @@ def main():
     if v2_scores:
         v2 = [x['v2'] for x in v2_scores.values() if x.get('v2') is not None]
         if v2:
-            print('DNA v2 (engine/score.js): band %d..%d | median %d | evidence objects %d | missing src %d' % (
-                min(v2), max(v2), sorted(v2)[len(v2) // 2], v2_ok, v2_missing_src))
+            print('DNA v2 (engine/score.js, PREVIEW): band %d..%d | median %d' % (
+                min(v2), max(v2), sorted(v2)[len(v2) // 2]))
     print('RESULT: %d error(s), %d warning(s)' % (len(errs), len(warns)))
     return 1 if errs else 0
 

@@ -35,6 +35,9 @@ jobs:
       - name: Validate data contract
         run: python validate.py
 
+      - name: History snapshot
+        run: python scripts/snapshot_history.py
+
       - name: Build single-file site
         run: |
           python build.py

@@ -6,6 +6,11 @@ D = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(D, 'detail')
 HDR = {'User-Agent': 'Mozilla/5.0 (research script)'}
 
+# CoinGecko sometimes points at an archived/side repo. These are the maintained ones.
+REPO_OVERRIDE = {
+    'dero': 'deroproject/derohe',        # coingecko link -> deroproject/derosuite (archived 2022)
+}
+
 
 def gh_repo(url):
     try:
@@ -51,6 +56,9 @@ for f in sorted(glob.glob(os.path.join(OUT, '*.json'))):
     except Exception:
         continue
     changed = False
+    ov = REPO_OVERRIDE.get(rec.get('id') or '')
+    if ov:
+        rec['gh'] = 'https://github.com/' + ov
     if rec.get('gh') and not rec.get('stars'):
         g = gh_repo(rec['gh'])
         if g:

@@ -251,33 +251,46 @@ function dnaPanel(c) {
   return head + strip + grid + v3Block(c) + dossierHtml(c);
 }
 
-/* v3 surface: DNA v2 (engine/score.js) + red flags (engine/flags.js) */
+/* v3 surface: DNA v2 (engine/score.js) + red flags (engine/flags.js)
+ * v2 is PREVIEW: the new genes are still being populated, so v1 remains the score the UI ranks on. */
 function v3Block(c) {
-  var d = dna(c);
-  var out = '';
+  var d = dna(c), det_ = det(c), out = '';
   var p2 = null;
   try { p2 = scoreP(d); } catch (e) { p2 = null; }
+  var v1 = null;
+  try { v1 = scoreV1(d); } catch (e) { v1 = null; }
+
   if (p2) {
-    var ev = p2.missing_src ? '<span class="dim"> · ยังไม่มี src ' + p2.missing_src + ' ค่า (conf ' + p2.conf + ')</span>' : '';
-    out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span></div>' +
-      '<div class="v3score">P = <b>' + p2.P + '</b> / 100 <span class="dim">± ' + p2.band + '</span>' + ev + '</div>' +
-      '<div class="v3parts">' + Object.keys(p2.parts).map(function (k) {
+    var pct = Math.round(p2.coverage * 100);
+    out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span> <span class="chip fl-MED">PREVIEW</span></div>';
+    if (p2.insufficient) {
+      out += '<div class="dim" style="font-size:11px">ข้อมูลไม่พอสำหรับจัดอันดับ (มีข้อมูล ' + pct + '% ของน้ำหนัก — ขาด: ' + p2.missing.join(', ') + ') → ตัวเลขนี้ไม่ใช้จัดอันดับ ใช้คะแนน v1 แทน</div>';
+    } else {
+      out += '<div class="v3score">P = <b>' + p2.P + '</b> / 100 <span class="dim">± ' + p2.band + '</span> <span class="dim">· ข้อมูลครบ ' + pct + '% · conf ' + p2.conf + '</span></div>';
+    }
+    out += '<div class="v3parts">' + Object.keys(p2.parts).map(function (k) {
         var v = p2.parts[k];
+        if (v == null) return '<span class="chip">' + k + ' ?</span>';
         return '<span class="chip' + (v < 0 ? ' tier-t1' : '') + '">' + k + ' ' + (v > 0 ? '+' : '') + v + '</span>';
-      }).join('') + '</div>' +
-      '<div class="dim" style="font-size:10px">v2 ใช้ gene ใหม่ (hmeta/hnet/mat/pq/aset) ที่ยังต้องกรอกพร้อมหลักฐาน — คะแนนจะสมบูรณ์หลัง Phase 2 · คะแนน v1: ' + (scoreV1(d) == null ? '—' : scoreV1(d)) + '</div></div>';
+      }).join('') + '</div>';
+    out += '<div class="dim" style="font-size:10px">คะแนนที่ใช้จัดอันดับจริง = v1 ' + (v1 == null ? '—' : v1 + ' / 100') + ' · v2 จะเป็นคะแนนหลักหลังกรอก gene ใหม่ครบ (Phase 2) พร้อม src/asof</div>';
+    out += '</div>';
   }
+
   var fl = [];
-  try { fl = evaluateFlags(metricsFor(c, det(c), d)); } catch (e) { fl = []; }
+  try { fl = evaluateFlags(metricsFor(c, det_, d)); } catch (e) { fl = []; }
+  out += '<div class="v3"><div class="v3t">RED FLAGS <span class="dim">(' + fl.length + ')</span></div>';
   if (fl.length) {
-    out += '<div class="v3"><div class="v3t">RED FLAGS <span class="dim">(' + fl.length + ')</span></div><div class="v3flags">' +
-      fl.map(function (f) { return '<span class="chip fl-' + f.lv + '">' + f.lv + ' · ' + f.id + '</span> '; }).join('') +
-      '</div><div class="dim" style="font-size:10px">' + fl.map(function (f) { return f.msg; }).join(' · ') + '</div></div>';
+    out += '<div class="v3flags">' + fl.map(function (f) { return '<span class="chip fl-' + f.lv + '">' + f.lv + ' · ' + f.id + '</span> '; }).join('') + '</div>' +
+      '<div class="dim" style="font-size:10px">' + fl.map(function (f) { return f.msg; }).join(' · ') + '</div>';
   } else {
-    out += '<div class="v3"><div class="v3t">RED FLAGS</div><div class="dim" style="font-size:10px">ไม่พบ flag จากเกณฑ์ปัจจุบัน (threshold เป็นค่าตั้งต้น ปรับได้ที่ engine/flags.js)</div></div>';
+    out += '<div class="dim" style="font-size:10px">ไม่พบ flag จากเกณฑ์ปัจจุบัน (threshold เป็นค่าตั้งต้น ปรับได้ที่ engine/flags.js)</div>';
   }
+  if (det_ && det_.repo_note) out += '<div class="dim" style="font-size:10px">! ' + det_.repo_note + '</div>';
+  out += '</div>';
   return out;
 }
+
 function renderTable() {
   var mw = $('matrixWrap'), tw = $('tblWrap');
   if (state.view === 'matrix') {
