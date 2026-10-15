@@ -1126,7 +1126,7 @@
    "conf": "high",
    "src": "https://docs.scrt.network/",
    "asof": "2026-10-16",
-   "note": "ต้องเชื่อฮาร์ดแวร์ TEE (SGX) — ความเสี่ยงนี้อยู่ที่ tl เท่านั้น ไม่นับใน aset"
+   "note": "tier 1: trust anchor เป็นฮาร์ดแวร์ Intel SGX (vendor root of trust) — งานวิจัย SGX side-channel (ÆPIC Leak 2022) เป็นความเสี่ยงระดับฮาร์ดแวร์ที่ควบคุมเองไม่ได้ทั้งหมด"
   },
   "big": 0,
   "yr": 2020,
@@ -1254,11 +1254,11 @@
    "note": "private contract เป็นทางเลือก ไม่ใช่ค่าเริ่มต้นของทั้งเครือข่าย"
   },
   "tl": {
-   "v": 1,
+   "v": 1.5,
    "conf": "high",
    "src": "https://partisiablockchain.com/",
    "asof": "2026-10-16",
-   "note": "เชื่อ honest-majority ของคณะ MPC — ความเสี่ยงนี้อยู่ที่ tl เท่านั้น"
+   "note": "tier 2: MPC threshold — เชื่อความยากทางคณิตศาสตร์ + honest majority ของคณะ ไม่มี single point of hardware failure"
   },
   "big": 0,
   "yr": 2022,

@@ -1,5 +1,5 @@
 {
- "version": "2.1.0-preview",
+ "version": "2.2.0-preview",
  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
  "genes": {
   "hs": {
@@ -59,7 +59,19 @@
    "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (trusted setup ที่ยังมีผล, single sequencer, permissioned validator)",
    "1": "เชื่อคณะที่กระจายตัวแต่ยังมีสมมติฐาน (honest-majority MPC, TEE hardware, threshold KMS, committee)",
    "2": "trustless เต็มรูปแบบ (ไม่มี trusted setup, พิสูจน์ได้บนเชน, PoW/PoS เปิด)",
-   "src_hint": "งานวิจัย setup / docs สถาปัตยกรรม — ห้ามนับ trust ของ operator ซ้ำใน aset"
+   "src_hint": "งานวิจัย setup / docs สถาปัตยกรรม — ห้ามนับ trust ของ operator ซ้ำใน aset",
+   "values": [
+    0,
+    1,
+    1.5,
+    2
+   ],
+   "levels": {
+    "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (permissioned validator, single sequencer)",
+    "1": "hardware enclave (TEE) หรือ trusted setup ceremony ขนาดใหญ่",
+    "1.5": "threshold/MPC — เชื่อคณิตศาสตร์ + honest majority ไม่พึ่งฮาร์ดแวร์",
+    "2": "trustless เต็มรูปแบบ"
+   }
   },
   "mat": {
    "label": "ความพร้อมใช้งานจริง",
@@ -127,5 +139,13 @@
   "value-transfer": "เหรียญ/เชนที่โอนมูลค่าเอง (Privacy Coins, L1, L2 rollup) — ประเมิน hs/hr/ha จากกลไกของตัวเชน",
   "transport": "โครงข่ายพา metadata (mixnet, dVPN, messenger) — โทเค็นอาศัยเชนโฮสต์แบบโปร่งใส → hs/hr/ha = 0 และถูกตัดสินด้วย hmeta/hnet เป็นหลัก",
   "compute": "ชั้นประมวลผล/จัดเก็บ (TEE, MPC, FHE, storage) — ประเมิน hs/hr/ha จากเลเยอร์ที่โทเค็นอยู่; hst/ความลับของ state ประเมินจากกลไกของมันเอง"
+ },
+ "trust_tiers": {
+  "note": "tl แยกตาม \"สมมติฐานที่ต้องเชื่อ\" — TEE กับ MPC ต้องไม่เท่ากัน เพราะ TEE พึ่งผู้ผลิตฮาร์ดแวร์ (single vendor root of trust) ส่วน MPC พึ่งคณิตศาสตร์ + การไม่ฮั้วกัน",
+  "tier1_hardware": "tl = 1 — hardware enclave (Intel SGX / AMD SEV): พึ่ง vendor + มีประวัติ side-channel ระดับฮาร์ดแวร์",
+  "tier2_math": "tl = 1.5 — threshold/MPC: พึ่งความยากทางคณิตศาสตร์และการไม่ฮั้วกันของคณะ ไม่มี single point of hardware failure",
+  "tier2_ceremony": "tl = 1 — ZK ที่ยังต้องพึ่ง multi-party trusted setup ceremony ขนาดใหญ่",
+  "tier3_trustless": "tl = 2 — ไม่ต้องเชื่อใคร: ไม่มี trusted setup, ไม่พึ่งฮาร์ดแวร์, พิสูจน์บนเชนได้",
+  "scoring": "tl/2 × น้ำหนัก 12"
  }
 }
