@@ -274,17 +274,24 @@ function v3Block(c) {
   if (p2) {
     var pct = Math.round(p2.coverage * 100);
     out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span> <span class="chip fl-MED">PREVIEW</span></div>';
+    var imp = p2.imputed || [];
     if (p2.insufficient) {
       out += '<div class="dim" style="font-size:11px">ข้อมูลไม่พอสำหรับจัดอันดับ (มีข้อมูล ' + pct + '% ของน้ำหนัก — ขาด: ' + p2.missing.join(', ') + ') → ตัวเลขนี้ไม่ใช้จัดอันดับ ใช้คะแนน v1 แทน</div>';
     } else {
-      out += '<div class="v3score">P = <b>' + p2.P + '</b> / 100 <span class="dim">± ' + p2.band + '</span> <span class="dim">· ข้อมูลครบ ' + pct + '% · conf ' + p2.conf + '</span></div>';
+      out += '<div class="v3score">P = <b>' + p2.P + '</b> / 100 <span class="dim">± ' + p2.band + '</span> <span class="dim">· ข้อมูลจริง ' + pct + '% · conf ' + p2.conf + '</span></div>';
     }
     out += '<div class="v3parts">' + Object.keys(p2.parts).map(function (k) {
         var v = p2.parts[k];
         if (v == null) return '<span class="chip">' + k + ' ?</span>';
-        return '<span class="chip' + (v < 0 ? ' tier-t1' : '') + '">' + k + ' ' + (v > 0 ? '+' : '') + v + '</span>';
+        var isImp = imp.indexOf(k) >= 0;
+        return '<span class="chip' + (v < 0 ? ' tier-t1' : (isImp ? ' imp' : '')) + '"' +
+          (isImp ? ' title="ค่าประมาณฐานล่าง: ยังไม่มีหลักฐาน aset — น้ำหนักนี้ยังอยู่ในตัวหาร แต่ได้ 0 คะแนน (ไม่ให้เครดิตฟรี)"' : '') + '>' +
+          k + ' ' + (v > 0 ? '+' : '') + v + (isImp ? ' ฐานล่าง' : '') + '</span>';
       }).join('') + '</div>';
-    out += '<div class="dim" style="font-size:10px">คะแนนที่ใช้จัดอันดับจริง = v1 ' + (v1 == null ? '—' : v1 + ' / 100') + ' · v2 จะเป็นคะแนนหลักหลังกรอก gene ใหม่ครบ (Phase 2) พร้อม src/asof</div>';
+    if (imp.length) {
+      out += '<div class="dim" style="font-size:10px">มี component ที่ยังไม่มีหลักฐาน: <b>' + imp.join(', ') + '</b> — คิดเป็นค่าฐานล่าง (0) โดยไม่ตัดน้ำหนักออกจากตัวหาร เพื่อไม่ให้เหรียญที่ไม่มีหลักฐานได้คะแนนฟรี</div>';
+    }
+    out += '<div class="dim" style="font-size:10px">คะแนนที่ใช้จัดอันดับจริง = v1 ' + (v1 == null ? '—' : v1 + ' / 100') + ' · v2 (' + p2.version + ') ต้องมีหลักฐาน ≥ 80% จึงมีสิทธิ์ถูกจัดอันดับ</div>';
     out += '</div>';
   }
 

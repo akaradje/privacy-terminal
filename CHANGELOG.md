@@ -3,6 +3,26 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.3.1-preview — 2026-10-16
+
+Closes the null-rescale loophole that the batch-1 leaderboard exposed.
+
+**Problem.** A missing component was dropped from the denominator and the rest rescaled to 100.
+That assumes the missing value equals the average of the others. For `bits` the assumption is
+systematically wrong for ring families (ring 16 scores 3/15, well below average), so a coin with
+no anonymity-set evidence collected full credit for the 15% it never proved: ALEO 89 / OCT 89
+(no evidence at all) and BDX/ZANO/GRIN/BEAM 84 all sat above XMR 78, which had proven its set.
+
+**Fix — conservative baseline imputation.** `IMPUTE = { bits: 0 }`. When `aset` is null the 15%
+weight stays in the denominator and scores 0. Imputed components are listed in `imputed`, remain
+in `missing`, and still widen `band` / lower `coverage` — the uncertainty does not disappear, it
+just stops paying. Scoring stays `earned / total`, so the scale no longer stretches.
+
+**Effect on the batch-1 set** (all had `aset = null`): BDX/ZANO/GRIN/BEAM/DERO/XTM 84 → 71,
+ABEL 85 → 72, ZEPH/EPIC/MWC 79 → 67, XEL 74 → 63. XMR unchanged at 78 and is now rank 1 of 17
+on proven evidence (100% coverage, band ±1). The pilot five also lose the same 8 points for the
+same reason (ZEC 44, NYM 44, MPC 41, SCRT 38, AZTEC 36); their relative order is unchanged.
+
 ## 2.2.0-preview — 2026-10-16
 
 Follow-up to the pilot gate failures. Rubric and engine versions are now kept in step.

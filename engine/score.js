@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.3.0-preview
+ * scoring_version: 2.3.1-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,8 +33,21 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.3.0-preview';
+var SCORING_VERSION = '2.3.1-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
+
+/* Conservative baseline imputation — closes the null-rescale loophole.
+ * Dropping a missing component out of the denominator assumes its value equals the average of
+ * the remaining ones. For `bits` that assumption is systematically WRONG for ring families:
+ * ring 16 scores 3/15, i.e. far below the average of the other components — so omitting `aset`
+ * used to PAY, and a coin with no anonymity-set evidence outranked one that had published a
+ * smaller, proven set. Rubric 2.2 tier-3 already states that an unproven anonymity set cannot
+ * buy credit; this makes it binding in the arithmetic instead of only in prose.
+ * An imputed component keeps its weight in the denominator at the floor value, is listed in
+ * `imputed`, still appears in `missing`, and still widens `band` / lowers `coverage`.
+ * Scoped to `bits` for now: it is the one component whose missing value is knowably low across
+ * a whole family. Extending this table changes scores and needs its own evidence. */
+var IMPUTE = { bits: 0 };
 
 var W = { cov: 30, bits: 15, man: 12, tl: 12, hmeta: 10, hnet: 8, mat: 8, pq: 5, brkPenalty: 15 };
 var CONF = { high: 1.0, med: 0.6, low: 0.3 };
@@ -103,14 +116,25 @@ function scoreP(d) {
     { k: 'pq', w: W.pq, v: pq == null ? null : pq / 2, conf: pq == null ? null : gconf(d, 'pq') }
   ];
 
-  var total = 0, avail = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {};
+  var total = 0, observed = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {}, imputed = [];
   var EV_KEYS = { cov: ['hs', 'hr', 'ha', 'hst'], bits: ['aset'], man: ['man'], tl: ['tl'],
                   hmeta: ['hmeta'], hnet: ['hnet'], mat: ['mat'], pq: ['pq'] };
   for (var i = 0; i < comps.length; i++) {
     var c = comps[i];
     total += c.w;
-    if (c.v == null) { parts[c.k] = null; continue; }
-    avail += c.w;
+    if (c.v == null) {
+      /* missing: keep the weight in the denominator when a conservative floor is known */
+      if (Object.prototype.hasOwnProperty.call(IMPUTE, c.k)) {
+        earned += c.w * IMPUTE[c.k];
+        parts[c.k] = IMPUTE[c.k] * c.w;
+        imputed.push(c.k);
+        confSum += CONF.low; confN++;      // an imputed value is the weakest evidence there is
+      } else {
+        parts[c.k] = null;
+      }
+      continue;
+    }
+    observed += c.w;
     earned += c.w * c.v;
     parts[c.k] = +(c.w * c.v).toFixed(1);
     confSum += (CONF[c.conf] || CONF.low);
@@ -124,12 +148,14 @@ function scoreP(d) {
     if (allSrc) evid += c.w;
   }
   parts.brk = -(W.brkPenalty * brk);
-  if (avail === 0) return null;
+  if (observed === 0) return null;      // nothing was actually observed — no basis to score
 
-  var coverage = avail / total;
+  /* coverage/evCoverage describe OBSERVED data only, so an imputed component still shows up as
+   * missing (wide band, `insufficient`) while never dropping out of the score denominator. */
+  var coverage = observed / total;
   var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
-  var P = Math.max(0, Math.min(100, Math.round((earned / avail) * 100 - W.brkPenalty * brk)));
+  var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - W.brkPenalty * brk)));
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
   var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
 
@@ -138,7 +164,7 @@ function scoreP(d) {
     conf: +avgConf.toFixed(2),
     insufficient: coverage < 0.8 || evCoverage < 0.8,
     missing: comps.filter(function (c) { return c.v == null; }).map(function (c) { return c.k; }),
-    parts: parts, version: SCORING_VERSION,
+    imputed: imputed, parts: parts, version: SCORING_VERSION,
     v1: scoreV1(d)
   };
 }
