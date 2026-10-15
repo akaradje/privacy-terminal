@@ -211,37 +211,207 @@
  },
  "DASH": {
   "g": "coin",
-  "hs": 1,
-  "hr": 1,
-  "ha": 1,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "PrivateSend = CoinJoin ที่ประสานโดย masternode · opt-in (เอกสาร CoinGecko/โปรเจกต์เขียนว่า \"Optional privacy\") · hr=0: ที่อยู่ผู้รับยังโปร่งใสบนเชน · ha=0: ใช้ denomination คงที่ มูลค่ารวมอนุมานได้ · tl=0: ต้องเชื่อ masternode quorum"
+  },
+  "hr": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "PrivateSend = CoinJoin ที่ประสานโดย masternode · opt-in (เอกสาร CoinGecko/โปรเจกต์เขียนว่า \"Optional privacy\") · hr=0: ที่อยู่ผู้รับยังโปร่งใสบนเชน · ha=0: ใช้ denomination คงที่ มูลค่ารวมอนุมานได้ · tl=0: ต้องเชื่อ masternode quorum"
+  },
+  "ha": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "PrivateSend = CoinJoin ที่ประสานโดย masternode · opt-in (เอกสาร CoinGecko/โปรเจกต์เขียนว่า \"Optional privacy\") · hr=0: ที่อยู่ผู้รับยังโปร่งใสบนเชน · ha=0: ใช้ denomination คงที่ มูลค่ารวมอนุมานได้ · tl=0: ต้องเชื่อ masternode quorum"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "PrivateSend = CoinJoin ที่ประสานโดย masternode · opt-in (เอกสาร CoinGecko/โปรเจกต์เขียนว่า \"Optional privacy\") · hr=0: ที่อยู่ผู้รับยังโปร่งใสบนเชน · ha=0: ใช้ denomination คงที่ มูลค่ารวมอนุมานได้ · tl=0: ต้องเชื่อ masternode quorum"
+  },
   "big": 0,
   "yr": 2014,
   "setup": "",
   "audit": "",
   "gov": "masternode DAO",
   "risk": "anonymity set เล็ก · AMLR 2027",
-  "nst": 1,
-  "hist": "2014 เปิดตัว (Xcoin→Darkcoin→Dash) · 2015 ระบบ masternode + PrivateSend · 2026 อยู่ในกลุ่มที่ EU AMLR (ก.ค. 2027) จะตัดช่องทาง regulated"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2014 เปิดตัว (Xcoin→Darkcoin→Dash) · 2015 ระบบ masternode + PrivateSend · 2026 อยู่ในกลุ่มที่ EU AMLR (ก.ค. 2027) จะตัดช่องทาง regulated",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: CoinJoin ต้องใช้ขนาด pool ต่อรอบ mixing/denomination — ยังไม่มีแหล่งนับ"
  },
  "DCR": {
   "g": "coin",
-  "hs": 1,
-  "hr": 1,
-  "ha": 1,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "CoinShuffle++ (decred docs /privacy/) — mixing แบบ opt-in ผ่าน mixnet · hs/hr=1 (ตัดความเชื่อมโยงในรอบ mixing) · ha=0: CoinJoin มาตรฐานไม่ซ่อนจำนวน · tl=1 (conf=low: พึ่ง mixnet server ซึ่งไม่ใช่ trusted setup เต็มรูปแบบ) · hnet=1 (mixing วิ่งบน mixnet)"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "CoinShuffle++ (decred docs /privacy/) — mixing แบบ opt-in ผ่าน mixnet · hs/hr=1 (ตัดความเชื่อมโยงในรอบ mixing) · ha=0: CoinJoin มาตรฐานไม่ซ่อนจำนวน · tl=1 (conf=low: พึ่ง mixnet server ซึ่งไม่ใช่ trusted setup เต็มรูปแบบ) · hnet=1 (mixing วิ่งบน mixnet)"
+  },
+  "ha": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "CoinShuffle++ (decred docs /privacy/) — mixing แบบ opt-in ผ่าน mixnet · hs/hr=1 (ตัดความเชื่อมโยงในรอบ mixing) · ha=0: CoinJoin มาตรฐานไม่ซ่อนจำนวน · tl=1 (conf=low: พึ่ง mixnet server ซึ่งไม่ใช่ trusted setup เต็มรูปแบบ) · hnet=1 (mixing วิ่งบน mixnet)"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "CoinShuffle++ (decred docs /privacy/) — mixing แบบ opt-in ผ่าน mixnet · hs/hr=1 (ตัดความเชื่อมโยงในรอบ mixing) · ha=0: CoinJoin มาตรฐานไม่ซ่อนจำนวน · tl=1 (conf=low: พึ่ง mixnet server ซึ่งไม่ใช่ trusted setup เต็มรูปแบบ) · hnet=1 (mixing วิ่งบน mixnet)"
+  },
   "big": 0,
   "yr": 2016,
   "setup": "",
   "audit": "",
   "gov": "PoS/PoW ผสม + Politeia",
   "risk": "ผสมต้องซื้อ ticket",
-  "nst": 1,
-  "hist": "2016-02 mainnet (Bitcoin fork + PoS ผสม) · 2017 ระบบ governance Politeia · 2019 CoinShuffle++ mixing · พัฒนาต่อเนื่องถึงปัจจุบัน (commit 2026-10)"
+  "nst": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "มี state layer บนเชน"
+  },
+  "hist": "2016-02 mainnet (Bitcoin fork + PoS ผสม) · 2017 ระบบ governance Politeia · 2019 CoinShuffle++ mixing · พัฒนาต่อเนื่องถึงปัจจุบัน (commit 2026-10)",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ขนาด pool ของ CoinShuffle++ ต่อรอบ — ยังไม่มีแหล่งนับ"
  },
  "BDX": {
   "g": "coin",
@@ -449,54 +619,309 @@
  },
  "ARRR": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 0,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · บังคับ shielded 100% ของธุรกรรม peer-to-peer (CoinGecko/เว็บโปรเจกต์) — coinbase/block reward ยังโปร่งใสเหมือน Zcash fork อื่น · hnet=0: ไม่พบ network-layer privacy ในตัว"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · บังคับ shielded 100% ของธุรกรรม peer-to-peer (CoinGecko/เว็บโปรเจกต์) — coinbase/block reward ยังโปร่งใสเหมือน Zcash fork อื่น · hnet=0: ไม่พบ network-layer privacy ในตัว"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · บังคับ shielded 100% ของธุรกรรม peer-to-peer (CoinGecko/เว็บโปรเจกต์) — coinbase/block reward ยังโปร่งใสเหมือน Zcash fork อื่น · hnet=0: ไม่พบ network-layer privacy ในตัว"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ทุกธุรกรรม"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · บังคับ shielded 100% ของธุรกรรม peer-to-peer (CoinGecko/เว็บโปรเจกต์) — coinbase/block reward ยังโปร่งใสเหมือน Zcash fork อื่น · hnet=0: ไม่พบ network-layer privacy ในตัว"
+  },
   "big": 1,
   "yr": 2018,
   "setup": "Sapling trusted setup ceremony",
   "audit": "",
   "gov": "",
   "risk": "CEX น้อยมาก",
-  "nst": 1,
-  "hist": "2018 mainnet (Zcash fork สาย Privacy) · บังคับ shielded 100% ตั้งแต่ต้น"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2018 mainnet (Zcash fork สาย Privacy) · บังคับ shielded 100% ตั้งแต่ต้น",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://piratechain.com/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน note commitment ใน Sapling pool ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก (ผล probe 23 endpoints)"
  },
  "FIRO": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "Lelantus Spark: เว็บโปรเจกต์ระบุว่า \"hides the sender, receiver, transaction amount\" และเป็น \"trustless\" → tl=2 (ไม่มี trusted setup) · opt-in (ที่อยู่ transparent ยังใช้ได้) · hmeta=1: ยังมี transparent tx ปนในเชน"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "Lelantus Spark: เว็บโปรเจกต์ระบุว่า \"hides the sender, receiver, transaction amount\" และเป็น \"trustless\" → tl=2 (ไม่มี trusted setup) · opt-in (ที่อยู่ transparent ยังใช้ได้) · hmeta=1: ยังมี transparent tx ปนในเชน"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "Lelantus Spark: เว็บโปรเจกต์ระบุว่า \"hides the sender, receiver, transaction amount\" และเป็น \"trustless\" → tl=2 (ไม่มี trusted setup) · opt-in (ที่อยู่ transparent ยังใช้ได้) · hmeta=1: ยังมี transparent tx ปนในเชน"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "Lelantus Spark: เว็บโปรเจกต์ระบุว่า \"hides the sender, receiver, transaction amount\" และเป็น \"trustless\" → tl=2 (ไม่มี trusted setup) · opt-in (ที่อยู่ transparent ยังใช้ได้) · hmeta=1: ยังมี transparent tx ปนในเชน"
+  },
   "big": 1,
   "yr": 2016,
   "setup": "Lelantus/Spark ไม่ต้อง trusted setup",
   "audit": "Lelantus + Lelantus Spark ตรวจวิชาการเปิด",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2016 เปิดตัวในชื่อ Zcoin · 2017 Znodes + Sigma · 2019 Lelantus · 2021 เปลี่ยนชื่อเป็น Firo · 2024 Lelantus Spark"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2016 เปิดตัวในชื่อ Zcoin · 2017 Znodes + Sigma · 2019 Lelantus · 2021 เปลี่ยนชื่อเป็น Firo · 2024 Lelantus Spark",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน coin ใน Spark pool ณ asof — ยังไม่มีแหล่งนับสาธารณะ"
  },
  "XVG": {
   "g": "coin",
-  "hs": 0,
-  "hr": 0,
-  "ha": 0,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "กฎ: ledger โปร่งใสทั้งหมด → hs/hr/ha = 0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่ายเท่านั้น (Tor/I2P ในตัว wallet) → hnet=1 · tl=0: Tor ต้องเชื่อ directory authorities + สมมติฐานว่า relay ส่วนใหญ่ซื่อสัตย์ · man=0"
+  },
+  "hr": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "กฎ: ledger โปร่งใสทั้งหมด → hs/hr/ha = 0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่ายเท่านั้น (Tor/I2P ในตัว wallet) → hnet=1 · tl=0: Tor ต้องเชื่อ directory authorities + สมมติฐานว่า relay ส่วนใหญ่ซื่อสัตย์ · man=0"
+  },
+  "ha": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "กฎ: ledger โปร่งใสทั้งหมด → hs/hr/ha = 0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่ายเท่านั้น (Tor/I2P ในตัว wallet) → hnet=1 · tl=0: Tor ต้องเชื่อ directory authorities + สมมติฐานว่า relay ส่วนใหญ่ซื่อสัตย์ · man=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "กฎ: ledger โปร่งใสทั้งหมด → hs/hr/ha = 0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่ายเท่านั้น (Tor/I2P ในตัว wallet) → hnet=1 · tl=0: Tor ต้องเชื่อ directory authorities + สมมติฐานว่า relay ส่วนใหญ่ซื่อสัตย์ · man=0"
+  },
   "big": 0,
   "yr": 2014,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "IP-level เท่านั้น — ไม่ใช่ on-chain privacy",
-  "nst": 1,
-  "hist": "2014 เปิดตัวในชื่อ DogeCoinDark → 2016 เปลี่ยนชื่อเป็น Verge · 2018 Wraith protocol (Tor/I2P) · ถูกวิจารณ์หนักว่าไม่ใช่ on-chain privacy"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2014 เปิดตัวในชื่อ DogeCoinDark → 2016 เปลี่ยนชื่อเป็น Verge · 2018 Wraith protocol (Tor/I2P) · ถูกวิจารณ์หนักว่าไม่ใช่ on-chain privacy",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://vergecurrency.com/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 3: ledger โปร่งใสทั้งหมด — ไม่มี anonymity set ระดับธุรกรรมให้วัด (ค่า cov = 0 สะท้อนเรื่องนี้แล้ว)"
  },
  "GRIN": {
   "g": "coin",
@@ -908,37 +1333,207 @@
  },
  "ZCL": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "Zcash fork (2016) — เอกสารโปรเจกต์ระบุว่าใช้พารามิเตอร์ชุดเดียวกับ trusted setup ceremony ของ Zcash → tl=1 · opt-in shielded · hnet=0"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "Zcash fork (2016) — เอกสารโปรเจกต์ระบุว่าใช้พารามิเตอร์ชุดเดียวกับ trusted setup ceremony ของ Zcash → tl=1 · opt-in shielded · hnet=0"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "Zcash fork (2016) — เอกสารโปรเจกต์ระบุว่าใช้พารามิเตอร์ชุดเดียวกับ trusted setup ceremony ของ Zcash → tl=1 · opt-in shielded · hnet=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "Zcash fork (2016) — เอกสารโปรเจกต์ระบุว่าใช้พารามิเตอร์ชุดเดียวกับ trusted setup ceremony ของ Zcash → tl=1 · opt-in shielded · hnet=0"
+  },
   "big": 0,
   "yr": 2016,
   "setup": "trusted setup (Sapling)",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2016 hardfork จาก Zcash (ก่อน Sapling) · เป็นต้นสายที่ Horizen (ZEN) แยกออกไป · activity ต่ำ"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2016 hardfork จาก Zcash (ก่อน Sapling) · เป็นต้นสายที่ Horizen (ZEN) แยกออกไป · activity ต่ำ",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://zclassic.org/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ (โปรเจกต์แทบไม่มี activity)"
  },
  "PIVX": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "SHIELD = \"anonymity protocol based on zk-SNARKs Sapling\" → tl=1 (trusted setup) · opt-in · hnet=0"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "SHIELD = \"anonymity protocol based on zk-SNARKs Sapling\" → tl=1 (trusted setup) · opt-in · hnet=0"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "SHIELD = \"anonymity protocol based on zk-SNARKs Sapling\" → tl=1 (trusted setup) · opt-in · hnet=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "SHIELD = \"anonymity protocol based on zk-SNARKs Sapling\" → tl=1 (trusted setup) · opt-in · hnet=0"
+  },
   "big": 0,
   "yr": 2016,
   "setup": "trusted setup",
   "audit": "",
   "gov": "masternode",
   "risk": "",
-  "nst": 1,
-  "hist": "2016 mainnet (Dash fork) · 2017-2019 เพิ่ม zk-SNARKs ชื่อ SHIELD · masternode governance"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2016 mainnet (Dash fork) · 2017-2019 เพิ่ม zk-SNARKs ชื่อ SHIELD · masternode governance",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://pivx.org/shield",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน SHIELD pool — ยังไม่มีแหล่งนับ"
  },
  "IRON": {
   "g": "coin",
@@ -1367,20 +1962,105 @@
  },
  "YEC": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · opt-in (transparent ยังเป็นค่าเริ่มต้น) · สืบทอดประวัติบล็อกจาก Zcash · hnet=0: ยังไม่พบหลักฐาน network privacy ในตัวโปรโตคอล"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · opt-in (transparent ยังเป็นค่าเริ่มต้น) · สืบทอดประวัติบล็อกจาก Zcash · hnet=0: ยังไม่พบหลักฐาน network privacy ในตัวโปรโตคอล"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · opt-in (transparent ยังเป็นค่าเริ่มต้น) · สืบทอดประวัติบล็อกจาก Zcash · hnet=0: ยังไม่พบหลักฐาน network privacy ในตัวโปรโตคอล"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "zk-SNARK Sapling: ซ่อนผู้ส่ง/ผู้รับ/จำนวนในธุรกรรม shielded · Sapling ต้องพึ่ง trusted-setup ceremony (ต่างจาก ZEC ปัจจุบันที่ใช้ Orchard/Halo 2 ซึ่งไม่มี trusted setup) · opt-in (transparent ยังเป็นค่าเริ่มต้น) · สืบทอดประวัติบล็อกจาก Zcash · hnet=0: ยังไม่พบหลักฐาน network privacy ในตัวโปรโตคอล"
+  },
   "big": 0,
   "yr": 2019,
   "setup": "trusted setup (Sapling)",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2019 hardfork จาก Zcash · เปลี่ยน emission เป็นแบบ linear · shielded pool แบบ Sapling"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019 hardfork จาก Zcash · เปลี่ยน emission เป็นแบบ linear · shielded pool แบบ Sapling",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://y.cash/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ"
  },
  "XEL": {
   "g": "coin",
@@ -1486,37 +2166,207 @@
  },
  "PART": {
   "g": "coin",
-  "hs": 1,
-  "hr": 1,
-  "ha": 1,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "particl-core ระบุ \"Privacy Protocols: Confidential Transactions (CT) and RingCT\" + Bulletproofs → tl=2 (ไม่มี trusted setup) · man=0 (conf=low: ต้องยืนยันว่า CT/RingCT เป็นค่าเริ่มต้นหรือเลือกใช้) · hnet=0"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "particl-core ระบุ \"Privacy Protocols: Confidential Transactions (CT) and RingCT\" + Bulletproofs → tl=2 (ไม่มี trusted setup) · man=0 (conf=low: ต้องยืนยันว่า CT/RingCT เป็นค่าเริ่มต้นหรือเลือกใช้) · hnet=0"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "particl-core ระบุ \"Privacy Protocols: Confidential Transactions (CT) and RingCT\" + Bulletproofs → tl=2 (ไม่มี trusted setup) · man=0 (conf=low: ต้องยืนยันว่า CT/RingCT เป็นค่าเริ่มต้นหรือเลือกใช้) · hnet=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "particl-core ระบุ \"Privacy Protocols: Confidential Transactions (CT) and RingCT\" + Bulletproofs → tl=2 (ไม่มี trusted setup) · man=0 (conf=low: ต้องยืนยันว่า CT/RingCT เป็นค่าเริ่มต้นหรือเลือกใช้) · hnet=0"
+  },
   "big": 0,
   "yr": 2017,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2017 mainnet (Bitcoin fork) · เพิ่ม confidential transactions + privacy marketplace · activity ลดลง"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2017 mainnet (Bitcoin fork) · เพิ่ม confidential transactions + privacy marketplace · activity ลดลง",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://github.com/particl/particl-core",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ขนาด ring/CT pool — ยังไม่มีแหล่งนับ"
  },
  "NAV": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 0,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "Navio (เดิม Navcoin) — เว็บทางการ: \"Confidential by default. Powered by BLSCT and Proof-of-Private-Stake\" → man=1 · blsCT (BLS signatures + confidential transactions) ไม่ต้อง trusted setup → tl=2 (conf=low: ต้องยืนยันกับสเปก libblsct) · hnet=0"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "Navio (เดิม Navcoin) — เว็บทางการ: \"Confidential by default. Powered by BLSCT and Proof-of-Private-Stake\" → man=1 · blsCT (BLS signatures + confidential transactions) ไม่ต้อง trusted setup → tl=2 (conf=low: ต้องยืนยันกับสเปก libblsct) · hnet=0"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "Navio (เดิม Navcoin) — เว็บทางการ: \"Confidential by default. Powered by BLSCT and Proof-of-Private-Stake\" → man=1 · blsCT (BLS signatures + confidential transactions) ไม่ต้อง trusted setup → tl=2 (conf=low: ต้องยืนยันกับสเปก libblsct) · hnet=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ทุกธุรกรรม"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "Navio (เดิม Navcoin) — เว็บทางการ: \"Confidential by default. Powered by BLSCT and Proof-of-Private-Stake\" → man=1 · blsCT (BLS signatures + confidential transactions) ไม่ต้อง trusted setup → tl=2 (conf=low: ต้องยืนยันกับสเปก libblsct) · hnet=0"
+  },
   "big": 0,
   "yr": 2014,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2014 เปิดตัวในชื่อ Navcoin · 2018 เพิ่ม zk-SNARKs (NavTech) · ต่อมาเป็น PoS + privacy layer"
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2014 เปิดตัวในชื่อ Navcoin · 2018 เพิ่ม zk-SNARKs (NavTech) · ต่อมาเป็น PoS + privacy layer",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://navcoin.org/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน output ที่ยังไม่ถูกใช้ใน confidential pool ณ asof — ยังไม่มีแหล่งนับ"
  },
  "ZER": {
   "g": "coin",
@@ -1814,18 +2664,104 @@
  },
  "VRSC": {
   "g": "proto",
-  "hs": 1,
-  "hr": 1,
-  "ha": 1,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "เอกสารโปรเจกต์: \"brings Sapling performance and zero knowledge features\" → tl=1 (trusted setup ของ Sapling) · opt-in · nst=0 เพราะ VerusID/PBaaS มี state บนเชน แต่ hst=0 เพราะ state นั้นโปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "เอกสารโปรเจกต์: \"brings Sapling performance and zero knowledge features\" → tl=1 (trusted setup ของ Sapling) · opt-in · nst=0 เพราะ VerusID/PBaaS มี state บนเชน แต่ hst=0 เพราะ state นั้นโปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "เอกสารโปรเจกต์: \"brings Sapling performance and zero knowledge features\" → tl=1 (trusted setup ของ Sapling) · opt-in · nst=0 เพราะ VerusID/PBaaS มี state บนเชน แต่ hst=0 เพราะ state นั้นโปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "state (ถ้ามี) โปร่งใส ไม่ได้ถูกซ่อน"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "opt-in — มีโหมดโปร่งใสให้เลือก"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "เอกสารโปรเจกต์: \"brings Sapling performance and zero knowledge features\" → tl=1 (trusted setup ของ Sapling) · opt-in · nst=0 เพราะ VerusID/PBaaS มี state บนเชน แต่ hst=0 เพราะ state นั้นโปร่งใส ไม่ได้ถูกซ่อน"
+  },
   "big": 0,
   "yr": 2018,
   "setup": "",
   "audit": "",
   "gov": "",
-  "risk": ""
+  "risk": "",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "nst": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "มี state layer บนเชน"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve — ไม่มี post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://verus.io/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน Sapling pool — ยังไม่มีแหล่งนับ"
  },
  "NOCK": {
   "g": "proto",

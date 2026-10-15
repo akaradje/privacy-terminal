@@ -45,6 +45,8 @@ var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits 
  * buy credit; this makes it binding in the arithmetic instead of only in prose.
  * An imputed component keeps its weight in the denominator at the floor value, is listed in
  * `imputed`, still appears in `missing`, and still widens `band` / lowers `coverage`.
+ * A component with NO known floor keeps the null-aware behaviour (weight dropped, uncertainty
+ * carried by `coverage`/`band`) — we do not pretend an unknown value is zero either.
  * Scoped to `bits` for now: it is the one component whose missing value is knowably low across
  * a whole family. Extending this table changes scores and needs its own evidence. */
 var IMPUTE = { bits: 0 };
@@ -116,24 +118,28 @@ function scoreP(d) {
     { k: 'pq', w: W.pq, v: pq == null ? null : pq / 2, conf: pq == null ? null : gconf(d, 'pq') }
   ];
 
-  var total = 0, observed = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {}, imputed = [];
+  var total = 0, avail = 0, observed = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {}, imputed = [];
   var EV_KEYS = { cov: ['hs', 'hr', 'ha', 'hst'], bits: ['aset'], man: ['man'], tl: ['tl'],
                   hmeta: ['hmeta'], hnet: ['hnet'], mat: ['mat'], pq: ['pq'] };
   for (var i = 0; i < comps.length; i++) {
     var c = comps[i];
     total += c.w;
     if (c.v == null) {
-      /* missing: keep the weight in the denominator when a conservative floor is known */
+      /* Missing. If a conservative floor is known for this component the weight STAYS in the
+       * denominator (so omitting the data cannot pay); otherwise the weight is dropped and the
+       * uncertainty is carried by coverage/band instead. Never assume the average. */
       if (Object.prototype.hasOwnProperty.call(IMPUTE, c.k)) {
+        avail += c.w;
         earned += c.w * IMPUTE[c.k];
         parts[c.k] = IMPUTE[c.k] * c.w;
         imputed.push(c.k);
-        confSum += CONF.low; confN++;      // an imputed value is the weakest evidence there is
+        confSum += CONF.low; confN++;      // a floored value is the weakest evidence there is
       } else {
         parts[c.k] = null;
       }
       continue;
     }
+    avail += c.w;
     observed += c.w;
     earned += c.w * c.v;
     parts[c.k] = +(c.w * c.v).toFixed(1);
@@ -148,14 +154,14 @@ function scoreP(d) {
     if (allSrc) evid += c.w;
   }
   parts.brk = -(W.brkPenalty * brk);
-  if (observed === 0) return null;      // nothing was actually observed — no basis to score
+  if (observed === 0 || avail === 0) return null;   // nothing observed — no basis to score
 
-  /* coverage/evCoverage describe OBSERVED data only, so an imputed component still shows up as
+  /* coverage/evCoverage describe OBSERVED data only, so a floored component still shows up as
    * missing (wide band, `insufficient`) while never dropping out of the score denominator. */
   var coverage = observed / total;
   var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
-  var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - W.brkPenalty * brk)));
+  var P = Math.max(0, Math.min(100, Math.round((earned / avail) * 100 - W.brkPenalty * brk)));
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
   var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
 
