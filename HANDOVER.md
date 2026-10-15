@@ -279,6 +279,9 @@ cd site && git add -A && git -c user.name="akaradje" \
 
 ## 11. Roadmap เสริม (เรียงตาม impact/effort)
 
+> **อัปเดต 2026-10-15 (พัฒนาแล้วรอบนี้):** ข้อ 1 `validate.py` + clamp คะแนน · ข้อ 11 GitHub Actions refresh · ข้อ 12 LICENSE — **เสร็จแล้ว** และ repo ถูกปรับเป็น full project (มี pipeline + data อยู่ในตัว clone แล้ว build ได้เลย)
+> สถานะ validate ล่าสุด: 51 assets · **0 error · 0 warning** · score band 15–100 · median 60 · A+ 15 ตัว
+
 **ข้อมูล/ความลึก**
 1. เพิ่ม gene: quantum-resistance, MEV exposure, anonymous-set size เป็นตัวเลข, supply/unlock schedule, TVL/ผู้้Сред
 2. On-chain metrics: shielded % (ZEC มี ~29% ของ supply ใน pool), tx count, fee trajectory

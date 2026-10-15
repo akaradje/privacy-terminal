@@ -1,0 +1,4 @@
+output/
+data/_check.js
+*.pyc
+__pycache__/

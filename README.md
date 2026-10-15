@@ -60,13 +60,27 @@ Market data carries its own timestamp; anything unverified is left blank rather 
 
 ## Rebuild
 
+The repository contains the **full pipeline**, not just the built page — a clone is enough:
+
 ```bash
-python data/fetch_detail.py     # refresh dossiers + sparklines from CoinGecko
-python data/enrich_gh.py        # refresh GitHub dev stats
-python build.py                 # template.html + app.js + data/*.json -> privacy-terminal.html
+git clone https://github.com/akaradje/privacy-terminal.git && cd privacy-terminal
+
+bash scripts/snapshot.sh        # market snapshot, all 8 privacy categories -> data/cat_*.json
+python data/fetch_detail.py     # dossiers + 7d sparklines from CoinGecko -> data/detail/*.json
+python data/enrich_gh.py        # GitHub dev stats (stars/forks/issues/last commit)
+python validate.py              # data-contract check — must exit 0 before you build
+python build.py                 # template.html + app.js + data/* -> privacy-terminal.html
 ```
 
-`privacy-terminal.html` is the deployable artefact — drop it on any static host.
+`privacy-terminal.html` is the deployable artefact; a copy lives at `index.html`, which GitHub Pages serves.
+
+`validate.py` enforces the data contract: every asset in `data/tiers.json` needs a CoinGecko id, a dossier and complete gene flags; gene ranges are checked (`hs/hr/ha/hst` ternary, `man/tl/big/nst` binary); `nst=1` together with `hst>0` is rejected; DNA scores must stay inside 0–100. Current state: **51 assets, 0 errors, 0 warnings**.
+
+Data refreshes automatically every day at 01:00 UTC via `.github/workflows/refresh.yml` (snapshot → dossiers → GitHub → validate → build → commit if changed).
+
+## Licence
+
+MIT — see [LICENSE](LICENSE). Market data is compiled from the public CoinGecko and GitHub APIs and stays subject to their terms; the curated DNA profiles, tiering and timelines are MIT.
 
 ## Colour convention
 

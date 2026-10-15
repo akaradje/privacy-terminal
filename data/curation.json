@@ -1,0 +1,392 @@
+{
+ "ZEC": {
+  "mech": "zk-SNARKs shielded pool (Orchard)",
+  "model": "Opt-in",
+  "access": "US spot ETF (ZCSH) + all majors",
+  "note": "Sector leader. Jun-2026 Orchard soundness bug fixed via Ironwood Jul-2026. EU AMLR restricts regulated venues Jul-2027."
+ },
+ "XMR": {
+  "mech": "Ring signatures + RingCT",
+  "model": "Mandatory",
+  "access": "No ETF; 73+ CEX delistings",
+  "note": "Strongest on-chain privacy; structurally incompatible with MiCA/FATF travel rule."
+ },
+ "AZTEC": {
+  "mech": "Programmable privacy zkRollup (private-by-default execution)",
+  "model": "Default",
+  "access": "13+ CEXs, no ETF",
+  "note": "V5 proving-system vuln disclosed Jul-2026; alpha stage; 71% supply locked until 2027+; auction buyers underwater."
+ },
+ "DASH": {
+  "mech": "CoinJoin (PrivateSend)",
+  "model": "Opt-in",
+  "access": "CEXs; EU AMLR watch",
+  "note": "Mixing requires collateral in masternodes."
+ },
+ "TORN": {
+  "mech": "zk mixer (Tornado Cash)",
+  "model": "Opt-in",
+  "access": "OFAC-sanctioned (Aug-2022)",
+  "note": "SANCTIONED by US Treasury; developer prosecutions; legal risk for venues. Listed for completeness only."
+ },
+ "RAIL": {
+  "mech": "zk shielded transfers SDK for EVM dApps (RAILGUN)",
+  "model": "Opt-in",
+  "access": "DEX / CEX",
+  "note": "Privacy layer for Ethereum DeFi; shielded balances can earn yield."
+ },
+ "ZAMA": {
+  "mech": "FHE - fully homomorphic encryption",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "Programmable privacy via FHE; strong VC backing."
+ },
+ "NIGHT": {
+  "mech": "Cardano partner chain; selective disclosure via ZK",
+  "model": "Selective",
+  "access": "CEXs",
+  "note": "Cardano's privacy sidechain; viewing keys for compliance."
+ },
+ "NOCK": {
+  "mech": "ZK proof-of-work L1 (Nock)",
+  "model": "Default",
+  "access": "Small-cap venues",
+  "note": "New ZK PoW chain; very early stage."
+ },
+ "ZANO": {
+  "mech": "zk confidential transactions + assets",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Confidential assets on dPoS chain."
+ },
+ "ARRR": {
+  "mech": "zk-SNARKs, fully shielded (Sapling forks)",
+  "model": "Mandatory",
+  "access": "Niche venues",
+  "note": "100% shielded funds; smallest compliance surface among majors."
+ },
+ "FIRO": {
+  "mech": "Lelantus Spark (zk burn-and-redeem)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Anonymity sets without trusted setup."
+ },
+ "BDX": {
+  "mech": "CryptoNote ring signatures",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "BChat private messenger ecosystem."
+ },
+ "XVG": {
+  "mech": "Tor/I2P IP obfuscation (Wraith)",
+  "model": "Opt-in (weak)",
+  "access": "Many CEXs",
+  "note": "IP-level obfuscation, NOT on-chain privacy - treat with skepticism."
+ },
+ "DCR": {
+  "mech": "StakeShuffle coin mixing",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Mixing via time-locked tickets."
+ },
+ "GRIN": {
+  "mech": "Mimblewimble",
+  "model": "Default",
+  "access": "Niche venues",
+  "note": "No amounts/addresses on chain; DEX-only flows."
+ },
+ "BEAM": {
+  "mech": "Mimblewimble + opt-in audit tags",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Confidential assets; Dandelion++."
+ },
+ "MWC": {
+  "mech": "Mimblewimble (BTC-atomic-swap variant)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Atomic swaps with Bitcoin."
+ },
+ "DERO": {
+  "mech": "DAG + homomorphically encrypted smart contracts",
+  "model": "Default",
+  "access": "CEXs",
+  "note": "Private smart contracts on a DAG."
+ },
+ "ZEPH": {
+  "mech": "CryptoNote + overcollateralized stable (ZSD)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Privacy L1 with internal DEX and stable asset."
+ },
+ "ZCL": {
+  "mech": "zk-SNARKs (Bitcoin fork, Zclassic lineage)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Classic BTC-privacy fork lineage."
+ },
+ "ZER": {
+  "mech": "zk-SNARKs (Bitcoin fork, Zero)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Zero-knowledge BTC fork; slim activity."
+ },
+ "SYS": {
+  "mech": "Syscoin NEVM + optional zkDA rollux",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Merged-mined L1; optional zkDA validium."
+ },
+ "SCRT": {
+  "mech": "TEE-encrypted smart contracts (Secret)",
+  "model": "Default",
+  "access": "CEXs",
+  "note": "Encrypted execution; trust anchored in TEE hardware, not ZK."
+ },
+ "VRSC": {
+  "mech": "PBaaS + zk-consensus (Verus)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "Public blockchains as a service; identity layer."
+ },
+ "ERG": {
+  "mech": "Sigma-protocols (non-interactive ZK) + ErgoMixer",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "ZK-friendly scripting (non-trusted-setup sigma protocols); optional mixer."
+ },
+ "PHA": {
+  "mech": "TEE confidential compute (Phala)",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Off-chain compute with on-chain attestation."
+ },
+ "ROSE": {
+  "mech": "Oasis Sapphire confidential paraTime (TEE)",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Confidential EVM via TEE, not ZK."
+ },
+ "ZEN": {
+  "mech": "Shielded pool + zk sidechains (Horizen)",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Node network + sidechain architecture."
+ },
+ "MINA": {
+  "mech": "Succinct ZK L1 (constant-size chain)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "22KB chain; recursive ZK proofs."
+ },
+ "ALEO": {
+  "mech": "ZK private execution L1 (Leo)",
+  "model": "Default",
+  "access": "CEXs",
+  "note": "Private programs on snarkVM."
+ },
+ "KEEP": {
+  "mech": "Threshold ECDSA / tBTC (Threshold)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "Threshold cryptography; legacy KEEP to T migration."
+ },
+ "NIL": {
+  "mech": "Blind computation (Nillion, MPC)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "MPC-based blind computing network."
+ },
+ "ARX": {
+  "mech": "MPC confidential compute (Arcium)",
+  "model": "Infra",
+  "access": "New CEX listings",
+  "note": "Solana-based MPC network."
+ },
+ "XAN": {
+  "mech": "Intent-centric privacy architecture (Anoma)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "Information-flow control; intent solver architecture."
+ },
+ "OCT": {
+  "mech": "FHE blockchain (Octra)",
+  "model": "Default",
+  "access": "New listing",
+  "note": "FHE L1; very early stage."
+ },
+ "ZBT": {
+  "mech": "ZK proof infrastructure (ZEROBASE)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "zkProver / zkDB infrastructure."
+ },
+ "DUSK": {
+  "mech": "ZK privacy for securities/RWA",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Regulator-friendly privacy claims; institutional settlement focus."
+ },
+ "CC": {
+  "mech": "Canton - institutional privacy L1",
+  "model": "Selective",
+  "access": "Permissioned",
+  "note": "Need-to-know sub-transactions for institutional settlement."
+ },
+ "STRK": {
+  "mech": "STARK validity proofs (Cairo)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "ZK rollup infra; not privacy by default."
+ },
+ "ZK": {
+  "mech": "ZK rollup infra (ZKsync Era)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "ZK rollup infra; not privacy by default."
+ },
+ "LINEA": {
+  "mech": "zkEVM rollup (Consensys)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "ZK rollup infra; not privacy by default."
+ },
+ "POL": {
+  "mech": "AggLayer ZK infra (ex-MATIC)",
+  "model": "Infra",
+  "access": "CEXs",
+  "note": "Aggregated ZK chains; not privacy by default."
+ },
+ "LTC": {
+  "mech": "MimbleWimble extension blocks (MWEB)",
+  "model": "Opt-in",
+  "access": "ETF + majors",
+  "note": "Optional MWEB privacy on Litecoin; in CoinGecko privacy parent category."
+ },
+ "COTI": {
+  "mech": "Garbled-circuits privacy L2",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "Privacy-on-demand via garbled circuits on an L2."
+ },
+ "PIVX": {
+  "mech": "zk-SNARKs (SHIELD) + masternodes",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "shielded opt-in ผ่าน SHIELD protocol"
+ },
+ "IRON": {
+  "mech": "zk-SNARK privacy L1 (Sapling-derived)",
+  "model": "Mandatory",
+  "access": "CEXs",
+  "note": "ออกแบบมาให้ compliance-friendly กว่า XMR"
+ },
+ "XTM": {
+  "mech": "MimbleWimble สำหรับ digital assets (Tari)",
+  "model": "Mandatory",
+  "access": "Niche venues",
+  "note": "merge-mined กับ Monero"
+ },
+ "ABEL": {
+  "mech": "post-quantum privacy (lattice-based)",
+  "model": "Mandatory",
+  "access": "Niche venues",
+  "note": "ทนต่อ quantum แต่ assumption ใหม่ ยังไม่ผ่านการทดสอบระยะยาว"
+ },
+ "EPIC": {
+  "mech": "MimbleWimble private cash",
+  "model": "Mandatory",
+  "access": "Niche venues",
+  "note": "เน้น cash-like UX (Epic Pay)"
+ },
+ "YEC": {
+  "mech": "Zcash fork (Sapling shielded)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "emission แบบ linear ต่างจาก ZEC"
+ },
+ "XEL": {
+  "mech": "zk confidential transactions L1",
+  "model": "Mandatory",
+  "access": "Niche venues",
+  "note": "dev ยัง active"
+ },
+ "PART": {
+  "mech": "Confidential transactions + privacy marketplace",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "privacy marketplace (PART swap)"
+ },
+ "NAV": {
+  "mech": "zk-SNARKs (NavTech) + PoS",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "privacy layer สำหรับการจ่าย"
+ },
+ "UMBRA": {
+  "mech": "Shielded transfers/claims ด้วย zk บน Solana/EVM",
+  "model": "Opt-in",
+  "access": "DEX",
+  "note": "เหมาะกับการจ่าย/เคลมที่ไม่ต้องเปิดยอด"
+ },
+ "DARK": {
+  "mech": "Privacy DEX (ซ่อน order flow)",
+  "model": "Opt-in",
+  "access": "Early",
+  "note": "stage early มาก"
+ },
+ "ZKP": {
+  "mech": "ZK proof ของข้อมูลจากเว็บ (privacy identity)",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "privacy identity ไม่ใช่การโอน"
+ },
+ "AZERO": {
+  "mech": "Privacy L1 (zk-SNARKs + private smart contracts)",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "มี liminal/private contract layer"
+ },
+ "NYM": {
+  "mech": "Mixnet (Sphinx packets) — network/metadata privacy",
+  "model": "Mandatory",
+  "access": "CEXs",
+  "note": "ซ่อน IP/metadata ไม่ใช่ยอดโอน"
+ },
+ "HOPR": {
+  "mech": "Incentivized mixnet (layer-0 metadata privacy)",
+  "model": "Mandatory",
+  "access": "CEXs",
+  "note": "token ใช้จ่ายให้ relay node"
+ },
+ "SESH": {
+  "mech": "Onion-routed messenger (ไม่ต้องใช้เบอร์โทร)",
+  "model": "Mandatory",
+  "access": "CEXs",
+  "note": "privacy ที่ชั้นการสื่อสาร"
+ },
+ "MYST": {
+  "mech": "Mysterium dVPN — ซ่อน IP/traffic",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "ซ่อน IP ไม่ซ่อนยอด"
+ },
+ "P2P": {
+  "mech": "Sentinel dVPN",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "node network กระจาย; commit ล่าสุด 2021-04"
+ },
+ "ANYONE": {
+  "mech": "Onion routing + relay network (ANyONe)",
+  "model": "Opt-in",
+  "access": "Niche venues",
+  "note": "ชื่อเดิม ATOR protocol"
+ },
+ "MPC": {
+  "mech": "MPC (secret sharing) ประมวลผลข้าม node",
+  "model": "Opt-in",
+  "access": "CEXs",
+  "note": "เชื่อ honest-majority ของคณะ MPC"
+ }
+}
