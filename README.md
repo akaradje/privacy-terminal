@@ -79,4 +79,6 @@ python build.py                 # template.html + app.js + data/*.json -> privac
 - DNA profiles are summaries for screening, **not security audits** — read each project's own documentation before acting.
 - One sparkline (DERO) is missing due to API rate limiting.
 
-> **免责声明**：以上内容基于公开数据和量化分析，仅供参考，不构成投资建议。市场有风险，投资需谨慎。任何投资决策应结合个人风险承受能力、资金状况和投资目标独立判断，必要时咨询持牌专业机构。过往表现不预示未来收益。
+> **Disclaimer** — All data is compiled from public sources (CoinGecko, GitHub) for research and screening only. Nothing here is financial advice or a recommendation to buy or sell. Digital-asset markets are highly volatile; do your own research and verify each project's own documentation before acting.
+>
+> **ข้อควรทราบ** — ข้อมูลทุกตัวรวบรวมจากแหล่งสาธารณะเพื่อการค้นคว้าวิจัยและคัดกรอง ไม่ใช่คำแนะนำทางการเงิน และไม่ใช่คำแนะนำให้ซื้อหรือขาย ตลาดสินทรัพย์ดิจิทัลมีความผันผวนสูง โปรดศึกษาข้อมูลเองและอ่านเอกสารของแต่ละโครงการก่อนตัดสินใจ
