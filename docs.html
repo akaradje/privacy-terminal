@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIVACY//TERMINAL — docs &amp; data</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#0b0f14;--panel:#10161f;--line:#1e2936;--tx:#c9d4e0;--bright:#eef4fb;--dim:#6b7a8d;--accent:#4cc2ff;--up:#2ecc71;--down:#ff4d4f;--mono:ui-monospace,'Cascadia Mono',Consolas,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:12px/1.6 var(--mono);padding:0 0 40px}
+header{padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;color:var(--bright);letter-spacing:.5px}
+h1 span{color:var(--accent)}
+.sub{color:var(--dim);font-size:11px;margin-top:4px}
+nav{display:flex;flex-wrap:wrap;gap:2px;padding:8px 20px 0;border-bottom:1px solid var(--line)}
+.tab{background:none;border:1px solid transparent;border-bottom:none;color:var(--dim);font:600 11px var(--mono);padding:6px 12px;cursor:pointer;border-radius:4px 4px 0 0}
+.tab:hover{color:var(--tx)}
+.tab.on{color:var(--accent);border-color:var(--line);background:var(--panel)}
+main{padding:16px 20px;max-width:1100px}
+.pane{display:none}
+.pane.on{display:block}
+.src{color:var(--dim);font-size:10px;margin-bottom:10px}
+h2{font-size:13px;color:var(--accent);margin:22px 0 8px;letter-spacing:.4px}
+h3{font-size:12px;color:var(--bright);margin:16px 0 6px}
+h4{font-size:11px;color:var(--tx);margin:12px 0 4px}
+p{margin:6px 0}
+ul,ol{margin:6px 0 6px 20px}
+li{margin:2px 0}
+code{background:#151d27;padding:0 4px;border-radius:3px;font-size:11px}
+pre.code{background:#0d1319;border:1px solid var(--line);border-radius:4px;padding:9px 11px;overflow-x:auto;font-size:10.5px;margin:8px 0}
+table.tbl{border-collapse:collapse;margin:10px 0;width:100%}
+table.tbl th{background:var(--panel);text-align:left}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:4px 7px;font-size:10.5px;vertical-align:top}
+blockquote{border-left:3px solid var(--accent);background:var(--panel);padding:6px 10px;margin:8px 0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+ul.files{list-style:none;margin-left:0;columns:2;column-gap:24px}
+ul.files li{margin:1px 0;font-size:10.5px;break-inside:avoid}
+.sz{color:var(--dim);font-size:9.5px}
+.dim{color:var(--dim)}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:12px 20px;color:var(--dim);font-size:10px}
+</style></head><body>
+<header>
+  <h1>&gt;_ PRIVACY<span>//</span>TERMINAL <span>· docs &amp; data</span></h1>
+  <div class="sub">ทุกไฟล์ของโปรเจกต์เปิดอ่านได้จากหน้านี้ — เอกสาร, ข้อมูลที่คนคัด, engine, pipeline และ history · <a href="./">กลับไปหน้า terminal</a> · ข้อมูลรวม 1.4 MB</div>
+</header>
+<nav><button class="tab on" data-pane="doc0">Pilot round — result</button><button class="tab" data-pane="doc1">Pilot — expected ranking (pre-registered)</button><button class="tab" data-pane="doc2">Changelog</button><button class="tab" data-pane="doc3">Handover</button><button class="tab" data-pane="doc4">README</button></nav>
+<main><section class="pane on" id="doc0"><div class="src">pilot/result.md · <a href="pilot/result.md">raw</a></div><h1>Pilot round — result (6 coins × 12 genes)</h1>
+<p>Run: 2026-10-16 · <code>scoring_version 2.0.0-preview</code> · expected ranking was committed first in <code>pilot/expected.md</code></p>
+<p>Fill script: <code>pilot/fill_pilot.py</code> · raw values now live in <code>data/dna3.json</code> as <code>{v, conf, src, asof}</code></p>
+<h2>1. Scores vs expected</h2>
+<table class="tbl"><tr><th>Coin</th><th>P</th><th>band</th><th>coverage</th><th>conf</th><th>insufficient</th><th>missing</th></tr><tr><td>XMR</td><td><strong>77</strong></td><td>±2</td><td>100%</td><td>0.86</td><td>no</td><td>—</td></tr><tr><td>NYM</td><td><strong>64</strong></td><td>±11</td><td>85%</td><td>0.67</td><td>no</td><td>bits</td></tr><tr><td>ZEC</td><td><strong>52</strong></td><td>±8</td><td>85%</td><td>0.89</td><td>no</td><td>bits</td></tr><tr><td>SCRT</td><td><strong>44</strong></td><td>±11</td><td>85%</td><td>0.67</td><td>no</td><td>bits</td></tr><tr><td>MPC</td><td><strong>44</strong></td><td>±14</td><td>85%</td><td>0.49</td><td>no</td><td>bits</td></tr><tr><td>AZTEC</td><td><strong>42</strong></td><td>±12</td><td>85%</td><td>0.63</td><td>no</td><td>bits</td></tr></table>
+<ul><li><strong>Expected:</strong> XMR &gt; ZEC &gt; AZTEC ≈ MPC &gt; SCRT &gt; NYM</li><li><strong>Actual:</strong> XMR &gt; <strong>NYM</strong> &gt; ZEC &gt; SCRT &gt; MPC &gt; AZTEC</li><li><strong>Verdict: the order does not match, and the mismatch is a real signal, not noise.</strong></li></ul>
+<p>The pre-registered falsifiable expectation fired: *"if NYM &gt; 55 then the coverage genes are not</p>
+<p>discriminating metadata-only privacy"*. NYM scored <strong>64</strong>, second overall, ahead of ZEC.</p>
+<h3>Why NYM ranked second (evidence, not opinion)</h3>
+<p>The fill gave NYM <code>hs=1, hr=1</code> on the grounds that a mixnet hides the sender/receiver of</p>
+<p><em>communication</em>. But <code>hs/hr/ha</code> are defined in <code>rubric.json</code> as hiding the sender, receiver and</p>
+<p>amount <strong>of an on-chain transfer</strong> — NYM does not do that at all. Its <code>ha=0</code> was the only penalty,</p>
+<p>and <code>ha</code> is one of four equally weighted genes inside the 30-point coverage component, so it lost</p>
+<p>only ~7.5 points while collecting full marks on <code>hmeta</code> (10), <code>hnet</code> (8), <code>man</code> (12) and <code>mat</code> (8).</p>
+<p><strong>This is a rubric defect, not an engine defect:</strong> the rubric has no rule for systems with no</p>
+<p>on-chain value transfer.</p>
+<h2>2. rankStability() — ±20% jitter on all eight weights, 1000 runs</h2>
+<table class="tbl"><tr><th>Coin</th><th>p10–p90 rank</th><th>mode</th><th>spread</th><th>gate (≤1)</th></tr><tr><td>XMR</td><td>1–1</td><td>1</td><td>0</td><td>pass</td></tr><tr><td>NYM</td><td>2–2</td><td>2</td><td>0</td><td>pass</td></tr><tr><td>ZEC</td><td>3–3</td><td>3</td><td>0</td><td>pass</td></tr><tr><td>SCRT</td><td>4–5</td><td>4</td><td>1</td><td>pass</td></tr><tr><td>MPC</td><td>5–6</td><td>5</td><td>1</td><td>pass</td></tr><tr><td>AZTEC</td><td>4–6</td><td>6</td><td>2</td><td><strong>fail</strong></td></tr></table>
+<p>Rankings are stable for the top three; AZTEC wobbles two places, which is consistent with it</p>
+<p>having the thinnest evidence (conf 0.63) and no <code>aset</code>.</p>
+<h2>3. Values that could not be sourced (left null, never guessed as 0)</h2>
+<table class="tbl"><tr><th>Coin</th><th>Gene</th><th>Why it is null</th></tr><tr><td>ZEC</td><td><code>aset</code></td><td>Orchard note-commitment count is not published in a citable form; the shielded-pool figure is in ZEC, not in notes</td></tr><tr><td>AZTEC</td><td><code>aset</code></td><td>No public count of notes/users per epoch for the rollup</td></tr><tr><td>SCRT</td><td><code>aset</code></td><td>No public count of users interacting per contract/epoch</td></tr><tr><td>MPC</td><td><code>aset</code></td><td>Same — epoch-level user counts are not published</td></tr><tr><td>NYM</td><td><code>aset</code></td><td>No published count of active mixnet users per epoch</td></tr><tr><td>AZTEC</td><td><code>brk</code></td><td>The July 2026 V5 proving-system vulnerability is disclosed, but I could not confirm that remediation is complete; setting 0 would understate, setting 1 would overstate</td></tr></table>
+<p>Consequence: the <code>bits</code> component (weight 15) is missing for 5 of 6 coins, so coverage caps at 85%.</p>
+<h2>4. Pilot gate — result</h2>
+<table class="tbl"><tr><th>Gate</th><th>Result</th><th>Detail</th></tr><tr><td>100% gene coverage, every value with src + asof</td><td><strong>FAIL</strong></td><td>5/6 coins missing <code>aset</code>; all other 71 values carry src + asof</td></tr><tr><td>band ≤ ±10</td><td><strong>FAIL</strong></td><td>XMR ±2, ZEC ±8 pass; SCRT ±11, NYM ±11, AZTEC ±12, MPC ±14 fail</td></tr><tr><td>order matches <code>expected.md</code></td><td><strong>FAIL</strong></td><td>NYM ranked 2nd instead of 6th</td></tr><tr><td>rankStability within ±1</td><td><strong>5/6 pass</strong></td><td>AZTEC spread 2</td></tr><tr><td>blind second pass on 2 coins</td><td><strong>NOT DONE</strong></td><td>needs a second independent pass; cannot be self-administered</td></tr></table>
+<p><strong>Conclusion: the pilot round does not pass.</strong> The engine and schema work; the rubric and the</p>
+<p>evidence procedure do not yet support a defensible fill.</p>
+<h2>5. What must change before filling all 51</h2>
+<ol><li><strong>Rubric: add a rule for systems with no on-chain value transfer.</strong> <code>hs/hr/ha</code> must score 0 for</li></ol>
+<p>   them and be excluded from the coverage denominator (the same way <code>nst</code> excludes <code>hst</code>), so a</p>
+<p>   mixnet is judged on <code>hmeta</code>/<code>hnet</code> instead of being credited for hiding transfers it does not hide.</p>
+<ol><li><strong><code>aset</code> needs an evidence procedure, not a hope.</strong> Either (a) define a repeatable measurement</li></ol>
+<p>   (explorer query + date, recorded as <code>src</code>), or (b) accept <code>aset</code> as a "measured" field that is</p>
+<p>   allowed to be null in the first pass, with the <code>bits</code> weight redistributed instead of silently</p>
+<p>   widening the band.</p>
+<ol><li><strong>The band gate needs restating.</strong> With several low-confidence genes, a global band ≤ ±10 is not</li></ol>
+<p>   reachable without either better evidence or a per-component confidence rule (e.g. require</p>
+<p>   conf ≥ med on the three heaviest available components).</p>
+<ol><li><strong>Three of my own calls need a second opinion</strong> before they harden into data:</li></ol>
+<p>   ZEC <code>hs/hr/ha = 1</code> (opt-in) rather than 2 · AZTEC <code>man = 0</code> because public functions exist ·</p>
+<p>   NYM <code>man = 1</code> and <code>hs/hr = 1</code> (the modelling question in item 1).</p>
+<ol><li><strong>Retraction:</strong> my earlier statement "ZEC 62 vs XMR 79 ยังออกมาถูกทาง" is withdrawn. This</li></ol>
+<p>   pre-registered run shows the opposite for NYM, and that is the more useful result.</p>
+<h2>6. Where the evidence came from</h2>
+<p>Every non-null value carries <code>src</code> + <code>asof</code> (2026-10-16) in <code>data/dna3.json</code>, pointing at the</p>
+<p>project's own specification or documentation: Zero-to-Monero, the Zcash protocol spec (ZIP-224 /</p>
+<p>Halo 2), Aztec docs, Secret Network docs, Partisia docs, Nym docs, and the Monero research-lab repo</p>
+<p>for the anonymity-set literature. Confidence is marked honestly: <code>high</code> where the source states the</p>
+<p>claim, <code>med</code> where it is derived, <code>low</code> where it is an inference — the low-confidence values are</p>
+<p>listed above and are the reason MPC's band reaches ±14.</p></section><section class="pane" id="doc1"><div class="src">pilot/expected.md · <a href="pilot/expected.md">raw</a></div><h1>Pilot round — expected ranking (written BEFORE any gene value was filled)</h1>
+<blockquote>Commit this file <strong>before</strong> filling the pilot coins. If the result differs from this list,</blockquote>
+<blockquote>the difference must be explained by evidence — never by re-tuning weights to match a wish.</blockquote>
+<blockquote>Written: 2026-10-16 · scoring_version under test: <code>2.0.0-preview</code></blockquote>
+<h2>Pilot set (6 coins, 6 mechanism families)</h2>
+<table class="tbl"><tr><th>Coin</th><th>Family</th><th>Why it is in the pilot</th></tr><tr><td>XMR</td><td>ring signature</td><td>mandatory currency privacy, the reference point for "strong"</td></tr><tr><td>ZEC</td><td>zk-SNARK shielded pool</td><td>opt-in shielded pool, ETF-listed, the sector's largest cap</td></tr><tr><td>AZTEC</td><td>zk-rollup (private-by-default execution)</td><td>hides contract state, client-side proving</td></tr><tr><td>SCRT</td><td>TEE</td><td>confidential contracts, hardware trust — should be punished by <code>tl</code></td></tr><tr><td>MPC (Partisia)</td><td>MPC</td><td>secret-sharing compute, honest-majority assumption</td></tr><tr><td>NYM</td><td>mixnet</td><td>metadata/IP privacy only — tests whether coverage genes discriminate</td></tr></table>
+<h2>Expected order (P, descending)</h2>
+<ol><li><strong>XMR</strong> — every coverage gene mandatory (<code>hs/hr/ha</code> = 2), trustless (no trusted setup),</li></ol>
+<p>   no address graph at all, 12 years of operation. Its weak spot is the ring-based <code>aset</code>,</p>
+<p>   which is modest in absolute terms — but <code>man</code> and <code>tl</code> are both maximal.</p>
+<p>   <strong>Expected P ≈ 85–95.</strong></p>
+<ol><li><strong>ZEC</strong> — best-in-class cryptography (Halo 2, no trusted setup) but <strong>opt-in</strong> (<code>man</code> = 0)</li></ol>
+<p>   and a pool-based <code>aset</code>; metadata resistance is partial at best.</p>
+<p>   <strong>Expected P ≈ 65–75.</strong></p>
+<ol><li><strong>AZTEC</strong> — private-by-default execution (<code>man</code> = 1, <code>hst</code> = 2) and trustless proving, but</li></ol>
+<p>   young (maturity low) and the rollup's effective set is still small.</p>
+<p>   <strong>Expected P ≈ 55–65.</strong></p>
+<ol><li><strong>MPC (Partisia)</strong> — hides contract inputs, but opt-in and honest-majority (<code>tl</code> = 1);</li></ol>
+<p>   <code>aset</code> = users interacting in the epoch, which is small for a niche network.</p>
+<p>   <strong>Expected P ≈ 50–62.</strong></p>
+<ol><li><strong>SCRT</strong> — confidential contracts with <strong>mandatory</strong> private state, but the trust anchor is</li></ol>
+<p>   hardware (<code>tl</code> = 1 by definition: operator trust is counted in <code>tl</code>, never in <code>aset</code>).</p>
+<p>   <strong>Expected P ≈ 50–60.</strong></p>
+<ol><li><strong>NYM</strong> — metadata-only privacy: strong <code>hmeta</code>/<code>hnet</code>, but the amount gene cannot be</li></ol>
+<p>   satisfied and there is no state layer to hide, so coverage caps it.</p>
+<p>   <strong>Expected P ≈ 40–52.</strong></p>
+<h2>Falsifiable expectations (what would tell us the engine is wrong)</h2>
+<table class="tbl"><tr><th>If this happens</th><th>It means</th></tr><tr><td>SCRT ≥ ZEC</td><td><code>tl</code> is not discriminating — TEE trust is not being priced</td></tr><tr><td>NYM &gt; 55</td><td>the coverage genes are not discriminating metadata-only privacy</td></tr><tr><td>XMR &lt; 75</td><td>the ring-based <code>aset</code> is dominating a design that is mandatory end-to-end</td></tr><tr><td>band &gt; ±10 on any pilot coin</td><td>evidence is too thin to call the score (fails the pilot gate)</td></tr><tr><td>two coins tie within ±2</td><td>the engine may be under-specified; check the parts before trusting the tie</td></tr></table>
+<h2>Pilot gate (from the review)</h2>
+<ul><li>[ ] all 6 coins at 100% gene coverage, every value with <code>src</code> + <code>asof</code></li><li>[ ] band ≤ ±10 on every pilot coin</li><li>[ ] order matches this file, or every deviation is justified from evidence</li><li>[ ] <code>rankStability()</code> keeps each rank within ±1 (p10–p90)</li><li>[ ] a blind second pass over 2 of the 6 coins differs by ≤ 1 level per gene</li></ul></section><section class="pane" id="doc2"><div class="src">CHANGELOG.md · <a href="CHANGELOG.md">raw</a></div><h1>Changelog</h1>
+<p>All notable changes to the scoring engine and data contract.</p>
+<p><code>scoring_version</code> is written into every build (<code>STATS.scoring_version</code>) — the formula lives only in <code>engine/score.js</code>.</p>
+<h2>2.0.0-preview — 2026-10-15</h2>
+<p>DNA v2 engine + red-flag engine, added on top of the published v1 scoring.</p>
+<p><strong>Added</strong></p>
+<ul><li><code>engine/score.js</code>: 12-gene DNA v2 (adds <code>hmeta</code>, <code>hnet</code>, <code>mat</code>, <code>pq</code>, <code>aset</code>; <code>man</code> accepts 0.5 = default-on; <code>tl</code> is 0–2), anonymity set measured in bits (<code>log₂(aset) / 20</code>), evidence confidence band, four weighting presets, <code>rankStability()</code>.</li><li><code>engine/flags.js</code>: 14 red-flag rules (CRITICAL/HIGH/MED/LOW) + <code>metricsFor()</code>.</li><li><code>data/schema/curated.schema.json</code>: gene values may be bare numbers (legacy) or <code>{v, conf, src, asof, note}</code>.</li><li><code>scripts/snapshot_history.py</code>: daily <code>history/YYYY-MM-DD.json.gz</code> snapshot (scores + prices) so rankings can be compared over time.</li><li><code>CHANGELOG.md</code> (this file).</li></ul>
+<p><strong>Fixed (review of the first v2 draft)</strong></p>
+<ul><li><strong>Missing data is no longer zero.</strong> A gene with no value is <code>null</code>; the score is computed over the available weight and rescaled to 100. <code>coverage</code> and <code>insufficient</code> are reported, and v2 is labelled <strong>PREVIEW</strong> in the UI until coverage passes 80%. v1 remains the score the UI ranks on.</li><li><strong><code>aset</code> now has one definition for every mechanism family</strong> (effective per-transaction anonymity set), documented in <code>engine/score.js</code> and the schema. Ring-based coins legitimately score low on this one component and recover the difference through <code>man</code>.</li><li><strong>Band capped at ±25</strong> and scaled by evidence quality plus missing weight (it used to reach 48, which made it useless for decisions).</li><li><strong><code>brk</code> verified as a −15 penalty, not a reset</strong>: XMR-like 79 → 64.</li><li><strong>DERO repo false positive:</strong> CoinGecko pointed at <code>deroproject/derosuite</code> (archived 2022), which triggered CRITICAL <code>dead_repo</code>. <code>REPO_OVERRIDE</code> in <code>data/enrich_gh.py</code> now pins the maintained repo <code>deroproject/derohe</code> (last push 2026-08-21).</li></ul>
+<p><strong>Changed</strong></p>
+<ul><li><code>validate.py</code> no longer errors on a missing <code>src</code> (it warns and treats the value as <code>conf = low</code>, per the blueprint) and now also counts bare-number genes, reporting evidence coverage as a percentage.</li><li><code>validate.py</code> never re-implements the formula: it shells out to <code>node engine/score.js</code>.</li></ul>
+<p><strong>Known gaps</strong></p>
+<ul><li>Evidence coverage is 0%: all 330 gene values are still bare numbers. Phase 2 fills them with <code>src</code> + <code>asof</code>.</li><li>Pillars S/D/T/L/R/U are not implemented yet (only P).</li><li><code>history/</code> starts empty — the first snapshot lands with the next scheduled refresh.</li></ul></section><section class="pane" id="doc3"><div class="src">HANDOVER.md · <a href="HANDOVER.md">raw</a></div><h1>PRIVACY//TERMINAL — Project Handover</h1>
+<blockquote>เอกสารฉบับสมบูรณ์สำหรับนำไปพัฒนาต่อ · อัปเดต 2026-10-15 · build ล่าสุด commit <code>6fddff9</code></blockquote>
+<blockquote><strong>Live:</strong> https://akaradje.github.io/privacy-terminal/ · <strong>Repo:</strong> https://github.com/akaradje/privacy-terminal (public)</blockquote>
+<p>---</p>
+<h2>0. TL;DR สำหรับนักพัฒนาใหม่</h2>
+<p>เว็บ <strong>หน้าเดียว (single-file HTML)</strong> คัดกรองเหรียญคริปโตที่ <em>privacy เป็นแกนหลักของโปรโตคอล</em> <strong>51 ตัว</strong> พร้อม "DNA profile" เจาะลึกถึงชั้นคริปโต — ต่างจากเครื่องมือทั่วไปตรงที่ไม่นับ ZK-rollup infra / L1 ทั่วไป ที่แค่ "มี privacy features"</p>
+<ul><li><strong>ไม่มี framework, ไม่มี build frontend, ไม่มี runtime dependency</strong> — เปิดไฟล์เดียวใช้ได้ (works offline ยกเว้น LIVE refresh)</li><li><strong>ข้อมูลแยกจากโค้ดชัดเจน</strong>: <code>template.html</code> (โครง+CSS) + <code>app.js</code> (logic) + <code>data/*.json</code> (ข้อมูล) → <code>build.py</code> รวมเป็น <code>privacy-terminal.html</code> ตัวเดียว</li><li><strong> rebuild ข้อมูลได้หมด</strong> จากสคริปต์ 3 ตัว (ดู§5)</li><li><strong>QA แบบไม่ต้องเปิดเบราว์เซอร์</strong>: <code>node --check</code> + DOM-stub harness (ดู§8)</li><li><strong>Deploy</strong> = git push ไป GitHub Pages (ดู§9)</li></ul>
+<p>---</p>
+<h2>1. โปรเจกต์คืออะไร / ทำไมออกแบบแบบนี้</h2>
+<table class="tbl"><tr><th>ประเด็น</th><th>คำตอบ</th></tr><tr><td>จุดเริ่ม</td><td>ผู้ใช้ถาม ZEC (mcap $600M→$28B ใน 1 ปี) vs AZTEC (Vitalik ร่วมลงทุน) จากนั้นต้องการเว็บเก็บเหรียญ "แบบเดียวกัน" ให้มากที่สุด</td></tr><tr><td>ขอบเขตที่เลือก</td><td><strong>Pure privacy only</strong> — ตัด ZK-rollup infra (Starknet/ZKsync/Linea…), L1 ทั่วไป (LTC/NEAR/LINK…), infra สำรอง (KEEP/ARPA/COTI…) ออกทั้งหมด (200 ตัวจาก 251 ที่สำรวจ) เหตุผล: ของเหล่านั้นไม่ใช่ privacy โดยตัวมันเอง ทำให้ข้อมูลในเว็บมีสัญญาณสูง</td></tr><tr><td>กลุ่มที่เหลือ 51 ตัว</td><td>Privacy Coins (สกุลเงิน) · Privacy Protocols (เลเยอร์บนเชนอื่น) · Network Privacy (metadata/IP) · Confidential Compute (FHE·MPC·TEE)</td></tr><tr><td>ชั้น sauce สำคัญ</td><td><strong>DNA</strong> — ไม่ใช่แค่ price/mcap แต่ "ซ้นอะไรจริง เชื่ออะไร/ใคร"</td></tr><tr><td>Audience</td><td>ผู้ใช้ (ไทย, สไตล์ trading terminal มืออาชีพ, คีย์บอร์ดใช้ได้, โหลดเร็ว)</td></tr></table>
+<p>---</p>
+<h2>2. สถาปัตยกรรม</h2>
+<pre class="code"> CoinGecko API ─┐
+ GitHub API ────┼─→  data/*.json ( curated + fetched )
+ (docs/research)┘         │
+                          ▼
+ template.html ─┐    build.py ──→  privacy-terminal.html  ──→  site/index.html ──→ git push ──→ GitHub Pages
+ app.js ────────┘    (merge)         (ไฟล์เดียว ~168KB)         (repo source dir)      (akaradje/privacy-terminal)</pre>
+<h3>แผนที่ไฟล์ (ทุกไฟล์ที่เกี่ยวข้อง)</h3>
+<table class="tbl"><tr><th>ไฟล์</th><th>หน้าที่</th><th>แก้แล้วต้องทำอะไร</th></tr><tr><td><code>template.html</code></td><td>โครง HTML + CSS ทั้งหมด + placeholder <code>__DATA__ __CUR__ __DNA__ __DETAIL__ __STATS__ __APPJS__ __SNAP__</code></td><td>แก้แล้ว → rebuild</td></tr><tr><td><code>app.js</code></td><td>ทั้งหมดฝั่ง client: state, render ตาราง/matrix/panel/stats/sparkline, filter, sort, keyboard, LIVE refresh</td><td>แก้แล้ว → rebuild</td></tr><tr><td><code>build.py</code></td><td>อ่าน <code>data/*</code> → inline เข้า template → เขียน <code>privacy-terminal.html</code></td><td>แก้แล้ว → รัน build</td></tr><tr><td><code>data/tiers.json</code></td><td>ลิสต์ <code>t1</code> = 51 เหรียญ pure privacy (จุดตัดสินตอนนี้มีที่เดียว)</td><td>แก้แล้ว → rebuild</td></tr><tr><td><code>data/dna1.json</code></td><td>DNA prose 20 เหรียญกลุ่มหลัก (prim/hides/trust/anonset/sec/comp/stage)</td><td>rebuild</td></tr><tr><td><code>data/dna2.json</code></td><td>DNA prose 32 เหรียญที่เหลือ</td><td>rebuild</td></tr><tr><td><code>data/dna3.json</code></td><td><strong>gene flags</strong> (<code>hs hr ha hst man tl big nst yr g setup audit gov risk hist</code>)</td><td>rebuild</td></tr><tr><td><code>data/curation.json</code></td><td><code>mech/model/access/note</code> สำหรับ 45 ตัว (ชั้นเดิม ยังใช้ต่อใน spotlight + panel)</td><td>rebuild</td></tr><tr><td><code>data/ids.json</code></td><td>map SYMBOL → CoinGecko id (51)</td><td>ใช้กับสคริปต์ refresh</td></tr><tr><td><code>data/cat_*.json</code></td><td>snapshot CoinGecko <code>/coins/markets</code> (7 category + parent) — <strong>แหล่งของ c1y/24h/7d/30d</strong></td><td>rebuild</td></tr><tr><td><code>data/detail/*.json</code></td><td>dossier 51 โมดูล: desc, links ×9, genesis, algo, cats, GitHub stats, spark</td><td>rebuild</td></tr><tr><td><code>data/fetch_detail.py</code></td><td>สคริปต์ดึง <code>data/detail/*</code> (2 pass: dossier → sparkline)</td><td>รันสคริปต์</td></tr><tr><td><code>data/enrich_gh.py</code></td><td>สคริปต์เติม GitHub dev stats (ผ่าน <code>gh api</code>)</td><td>รันสคริปต์</td></tr><tr><td><code>site/</code></td><td>git repo (remote <code>akaradje/privacy-terminal</code>) — <code>index.html</code> คือตัว deploy</td><td>commit+push</td></tr><tr><td><code>site/README.md</code></td><td>README สาธารณะ (methodology, sources, limits)</td><td>แก้แล้ว push</td></tr><tr><td><code>site/docs/logo.svg</code>, <code>favicon.svg</code>, <code>og-image.png</code></td><td>โลโก้/ไอคอน/OG banner (og-image = AI-generated 1200×630)</td><td>แก้แล้ว push</td></tr><tr><td><code>privacy-re-rating-zec-aztec-20261015.html</code></td><td>รายงาน ZEC vs AZTEC เวอร์ชันแรกสุด (ยังมีภาษาจีนใน disclaimer — ต้นแบบ)</td><td>archive</td></tr><tr><td><code>.workbuddy-ai/memory/2026-10-15.md</code></td><td>session log ทุก commit/decision ของวันนี้</td><td>append</td></tr></table>
+<blockquote><strong>กฎเหล็ก:</strong> <code>privacy-terminal.html</code> คือ <em>generated artifact</em> — ห้ามแก้มือ ถ้าแก้แล้วไม่ได้ตรวจสอบ จะหายตอน build รอบต่อไป (แก้ <code>template.html</code>/<code>app.js</code>/<code>data/*</code> แทน)</blockquote>
+<p>---</p>
+<h2>3. Data model (อ้างอิงเต็ม)</h2>
+<h3>3.1 <code>DATA[]</code> — record 1 ตัวต่อเหรียญ (จาก CoinGecko <code>/coins/markets</code>)</h3>
+<table class="tbl"><tr><th>field</th><th>type</th><th>ความหมาย</th></tr><tr><td><code>id</code></td><td>str</td><td>CoinGecko id (เช่น <code>zcash</code>) — <strong>ใช้แทน symbol ตอน lookup ทุกที่</strong></td></tr><tr><td><code>s</code></td><td>str</td><td>symbol ตัวพิมพ์ใหญ่ (แสดง)</td></tr><tr><td><code>n</code></td><td>str</td><td>ชื่อเต็ม</td></tr><tr><td><code>p</code></td><td>float</td><td>ราคา USD</td></tr><tr><td><code>m</code></td><td>float</td><td>market cap</td></tr><tr><td><code>v</code></td><td>float</td><td>volume 24h</td></tr><tr><td><code>c24 / c7 / c30 / c1y</code></td><td>float\</td><td>null</td><td>% เปลี่ยนราคา (CoinGecko <code>price_change_percentage_*</code>)</td></tr><tr><td><code>cs / ms</code></td><td>float\</td><td>null</td><td>circulating / max supply</td></tr><tr><td><code>img</code></td><td>str</td><td>ไอคอน (coin-images.coingecko.com)</td></tr><tr><td><code>tags</code></td><td>[str]</td><td>เก็บจาก category (ตกเก่า ไม่ได้ใช้แล้ว)</td></tr><tr><td><code>priv</code></td><td>bool</td><td>อยู่ใน parent <code>privacy</code> category</td></tr><tr><td><code>tier</code></td><td>str</td><td><code>t1</code> = pure (ตอนนี้ทุกตัวเป็น t1 เพราะกรองไว้แล้ว)</td></tr><tr><td><code>dna</code></td><td>0\</td><td>1</td><td>มี DNA profile</td></tr><tr><td><code>g</code></td><td>str</td><td>กลุ่ม: <code>coin</code> / <code>proto</code> / <code>net</code> / <code>compute</code></td></tr></table>
+<h3>3.2 <code>DNA{sym}</code> — จาก dna1+dna2+dna3 merge</h3>
+<table class="tbl"><tr><th>field</th><th>ชนิด</th><th>ความหมาย / ค่าที่ใช้</th></tr><tr><td><code>fam</code></td><td>str</td><td>ตระกูลคริปโต: <code>ZK</code> <code>RingCT</code> <code>MW</code> <code>FHE</code> <code>MPC</code> <code>TEE</code> <code>Mix</code> <code>CT</code> <code>CoinJoin</code> <code>Selective</code></td></tr><tr><td><code>prim</code></td><td>str</td><td>primitive แกนของโปรโตคอล</td></tr><tr><td><code>hides</code></td><td>str</td><td>ซ้นอะไรจริง (prose)</td></tr><tr><td><code>trust</code></td><td>str</td><td>เชื่ออะไร (prose)</td></tr><tr><td><strong>genes</strong></td><td></td><td></td></tr><tr><td><code>hs</code></td><td>0/1/2</td><td>ซ้นผู้ส่ง: 0=ไม่ · 1=opt-in · 2=always</td></tr><tr><td><code>hr</code></td><td>0/1/2</td><td>ซ้นผู้รับ</td></tr><tr><td><code>ha</code></td><td>0/1/2</td><td>ซ้นจำนวน</td></tr><tr><td><code>hst</code></td><td>0/1/2</td><td>ซ้น state (สำหรับ hypervisor smart contract)</td></tr><tr><td><code>man</code></td><td>0/1</td><td>บังคับใช้ทุกธุรกรรม (mandatory privacy)</td></tr><tr><td><code>tl</code></td><td>0/1</td><td>trustless (ไม่มี trusted setup / TEE / committee)</td></tr><tr><td><code>big</code></td><td>0/1</td><td>anonymity set = ทั้งเครือข่าย (ไม่ใช่ pool ย่อย)</td></tr><tr><td><code>nst</code></td><td>0/1</td><td>ไม่มี gene state (สกุลเงินล้วน) → <strong>ใช้เป็นตัวหารรองในสูตรคะแนน</strong></td></tr><tr><td><strong>ข้อความเสริม</strong></td><td></td><td></td></tr><tr><td><code>setup</code> <code>audit</code> <code>gov</code> <code>risk</code> <code>sec</code> <code>comp</code> <code>anonset</code> <code>stage</code> <code>yr</code> <code>hist</code></td><td>str/int</td><td>trusted setup · audit · governance · ความเสี่ยงหลัก · ประวัติความปลอดภัย · compliance · stage · ปี mainnet · ไทม์ไลน์เหตุการณ์</td></tr></table>
+<h3>3.3 <code>DETAIL[id]</code> — จาก <code>data/detail/*.json</code></h3>
+<p><code>desc</code> (≤1000 ตัว, html strip) · <code>home</code> <code>wp</code> <code>gh</code> <code>tw</code> <code>tg</code> <code>dc</code> <code>reddit</code> <code>forum</code> <code>explorer</code> (ลิงก์ 9 ช่องทาง) · <code>genesis</code> <code>alg o</code> <code>cats</code> · <code>stars</code> <code>forks</code> <code>gh_issues</code> <code>gh_lang</code> <code>gh_pushed</code> <code>gh_lic</code> <code>gh_watch</code> <code>gh_archived</code> (GitHub) · <code>gh_org_repo</code> / <code>gh_repo_used</code> (ระบุว่า repo ไหนถูกใช้วัด — สำคัญ! เพราะ org URL ต้อง resolve เป็น repo ดาวมากสุด) · <code>spark</code> ([float] 7 วัน, ~8 คู่) · <code>reddit_sub</code> (null = Reddit API บล็อก)</p>
+<h3>3.4 <code>STATS</code> — คำนวณตอน build</h3>
+<p><code>n</code> (51) · <code>sector_mcap</code> · <code>median_1y</code> · <code>n_cur</code> · <code>n_dna</code> · <code>n_cut</code> (จำนวนที่ตัดออก) · <code>n_coin/proto/net/compute</code> · <code>snap</code> (UTC timestamp)</p>
+<p>---</p>
+<h2>4. DNA framework (หัวใจของโปรเจกต์)</h2>
+<h3>4.1 เกณฑ์อยู่ใน pure list (<code>data/tiers.json</code>)</h3>
+<p>privacy เป็นแกนหลักของโปรโตคอล <strong>และ</strong> มีเอกสารเทคนิคยืนยันกลไกได้ — ไม่มี "หวังว่าใกล้มา" เช่น <code>xVG</code> (IP-level) ก็ยังอยู่เพราะมีเอกสารชัดเจน แต่ถูก gene flags บอกให้เห็นว่า ha/hr/hs=0</p>
+<h3>4.2 สูตรคะแนน (คำนวณสดฝั่ง client, โปร่งใส)</h3>
+<pre class="code">denom = 8 - (nst ? 2 : 0);                       // สกุลเงินล่วงไม่มี gene state → หารด้วย 6
+cov   = (hs + hr + ha + hst) / denom;
+score = round(cov*60 + man*15 + tl*15 + big*10); // เต็ม 100
+// A+ ≥85 · A ≥70 · B ≥55 · C ≥40 · D &lt;40</pre>
+<p>ผลจริง: XMR/GRIN/EPIC/MWC/XTM = 100 · AZTEC/ALEO/OCT = 90 · ZEC = 75 · DASH/TORN = 45 · MYST = 15</p>
+<p><strong>หมายเหตุที่ฝังในหน้าเว็บ:</strong> คะแนนวัด "ความแข็งของกลไก" ไม่ได้วัดมูลค่า/การลงทุน/ทีม</p>
+<h3>4.3 ข้อตกลงความซื่อตรงในการ curated (ทำตามสัญญาตลอดมา)</h3>
+<ol><li><strong>ไม่เดา</strong> — ไม่มีหลักฐาน → ทิ้งว่าง <code>—</code> หรือไม่ใส่ (ตัวอย่าง: 3 เหรียญไม่มี GitHub repo ที่มั่นใจ → ไม่มี dev stats)</li><li><strong>แสดงที่มาของ repo</strong> — ถ้าดึงจากระดับ org การ์ดบอก "repo ดาวมากสุดใน org"</li><li><strong>ระบุถึงกรณีพิเศษ</strong> — XVG (IP-level), TORN (sanctioned), AZTEC (alpha + vuln) ถูกทำเครื่องหมายชัดเจนในหน้าที่มี</li><li><strong>numeric เกี่ยวกับตลาดทุกตัวมี timestamp + แหลมา</strong> (CoinGecko snapshot ใน stats bar)</li></ol>
+<p>---</p>
+<h2>5. Pipeline — refresh ข้อมูล (runbook)</h2>
+<pre class="code">cd "C:/Users/akara/WorkBuddy AI/privacy"
+
+# A) snapshot ราคา/สกุลเงิน (7 category, โปรเจกต์ list ใน data/fetch_detail.py/ids.json)
+for cat in privacy privacy-coins zero-knowledge-zk \
+           privacy-infrastructure privacy-blockchain \
+           privacy-focused-browser zero-network-ecosystem beamprivacy-ecosystem; do
+  curl -s -m 30 "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&amp;category=${cat}\
+&amp;order=market_cap_desc&amp;per_page=250&amp;page=1&amp;price_change_percentage=24h,7d,30d,1y" \
+       -o "data/cat_${cat}_p1.json"
+  sleep 4
+done
+
+# B) dossier + sparkline (ใช้เวลา ~35-40 นาที เพราะโดน 429 ค่อนข้างบ่อย; script retry ให้)
+python data/fetch_detail.py          # 51 dossiers + 50/51 sparkline (DERO มักพลาด)
+
+# C) GitHub dev stats
+python data/enrich_gh.py             # stars/forks/issues/lang/pushed/licence
+
+# D) build single file
+python build.py                      # → privacy-terminal.html
+
+# E) QA (ดู§8) แล้ว deploy (ดู§9)</pre>
+<p><strong>หมายเหตุอัตรา CoinGecko (free tier):</strong> <code>/coins/{id}</code> และ <code>/market_chart</code> โดน 429 บ่อย — สคริปต์ sleep 8s + backoff 75s แล้ว retry; <code>/coins/markets</code> ยังใช้ได้ ~4s/req; <strong>community_data/developer_data ตัดศักย์ (คืน null)</strong> — นั่นคือเหตุผลที่ dev stats มาจาก GitHub แทน</p>
+<p>---</p>
+<h2>6. Frontend architecture (<code>app.js</code>)</h2>
+<pre class="code">state = { view:'table'|'matrix', q, sortKey, dir, minMcap, minGrade, sel, expanded }
+DATA / CUR / DNA / DETAIL / STATS / IDMAP / TIERMAP</pre>
+<p><strong>ลำดับ render ตอนโหลด:</strong> <code>augment()</code> → <code>renderStats()</code> → <code>renderSpot()</code> (watchlist 11 ตัว) → <code>renderViewSwitch()</code> (ปุ่ม ตาราง/DNA Matrix) → <code>renderTable()</code> → <code>markSort()</code></p>
+<p><strong>ฟังก์ชันหลัก:</strong></p>
+<table class="tbl"><tr><th>ฟังก์ชัน</th><th>หน้าที่</th></tr><tr><td><code>renderTable()</code></td><td>ถ้า <code>state.view==='matrix'</code> → ซ่อนตาราง + <code>renderMatrix()</code>; ไม่งั้น render แถว 51 + แถว DNA panel ใต้แถวที่ expand + sparkline ในช่องชื่อ</td></tr><tr><td><code>renderMatrix()</code></td><td>ตาราง gene × 51 + rubric + เกรด (เรียงตามคะแนน)</td></tr><tr><td><code>dnaPanel(c)</code></td><td>head (กลุ่ม/family/badge/grade) + gene strip + grid: prim/hides/trust/setup/anonset/audit/gov/sec/comp/stage/ปี/ไทม์ไลน์/notes + <code>dossierHtml</code></td></tr><tr><td><code>dossierHtml(c)</code></td><td>links ×9, desc, sparkline 7d, stats (genesis, algorithm, กระดานเทรด, GitHub repo/stars/last commit/license, หมวดหมู่)</td></tr><tr><td><code>matchesQuery(c)</code></td><td>mcap filter + grade filter + search ผ่าน <code>hayOf()</code> = symbol+name+กลุ่ม+CUR+<strong>ทั้ง DNA text</strong> (ค้น <code>sgx</code> <code>mimblewimble</code> <code>ringct</code> <code>ofac</code> จึงเจอ)</td></tr><tr><td><code>gradeOf(d)</code> / <code>gradeLetter(s)</code> / <code>gradeCls(s)</code></td><td>สูตรคะแนน§4.2 + ตัวอักษร + คลาสสี</td></tr><tr><td><code>liveRefresh()</code></td><td>ดึง 5 category จากเบราว์เซอร์ → merge by id → <strong>filter กลับเหลือ pure id set (IDMAP)</strong> → re-render ทั้งหมด (fail → คง snapshot)</td></tr><tr><td><code>sparkSvg(arr,w,h,col)</code> / <code>sparkColor(arr)</code></td><td>inline SVG polyline (ไม่มี chart lib)</td></tr></table>
+<p><strong>Event/keys:</strong> คลิก header th = sort (คลิกซ้ำ = reverse) · คลิกแถว = toggle DNA panel · <code>/</code> = โฟกัส search · <code>Esc</code> = ล้าง · <code>j/k</code>/<code>↑↓</code> = เลื่อนแถว · <code>Enter</code> = เปิดหน้า CoinGecko · เปลี่ยน mcap/grade select = กรองใหม่ · ปุ่ม LIVE = refresh</p>
+<p>---</p>
+<h2>7. Design system</h2>
+<table class="tbl"><tr><th>ตัวแปร</th><th>ค่า</th><th>หมายเหตุ</th></tr><tr><td><code>--bg/--panel/--line/--tx/--dim</code></td><td><code>#0b0f14</code> <code>#10161f</code> <code>#1e2936</code> <code>#c9d4e0</code> <code>#6b7a8d</code></td><td>dark terminal</td></tr><tr><td><strong><code>--up</code></strong></td><td><strong><code>#2ecc71</code> เขียว</strong></td><td><strong>ราคาขึ้น/ผลบวก</strong> — international crypto convention (ผู้ใช้ขอสลับจากธรรมเนียมจีนในวันที่ 2026-10-15)</td></tr><tr><td><strong><code>--down</code></strong></td><td><strong><code>#ff4d4f</code> แดง</strong></td><td><strong>ราคาลง/ผลลบ</strong></td></tr><tr><td><code>--accent</code></td><td><code>#4cc2ff</code> ฟ้าจาง</td><td>โฮวเวอร์/โลโก้/family chip</td></tr><tr><td>gene chips</td><td><code>g2</code> เขียว FULL · <code>g1</code> เหือง OPT · <code>g0</code> เทา —</td><td>ค่าของดีเอ็นเอ</td></tr><tr><td>grade colors</td><td><code>gA</code> เขียวมแวดล้อม · <code>gC</code> เหือง</td><td><strong>ไม่ผูกกับราคา</strong> (budget เอง)</td></tr><tr><td>font</td><td>monospace, <code>font-variant-numeric: tabular-nums</code></td><td>ตัวเลขตรงคอลัมน์</td></tr></table>
+<p><strong>สัญญาสัญกรณ์อื่นๆ (ที่ไม่ใช่ราคา)</strong> ใช้สีแดงกะทัดฝั้น (<code>#ff4d4f</code>) แยกจาก <code>--up/--down</code> — จริงทำให้ขั้นตอน swap สีครั้งแล้วกร<code>SANCTIONED</code> / ป้าย Mandatory ไม่กลายเป็นเขียว</p>
+<p>---</p>
+<h2>8. QA &amp; test harness (ต้องทำก่อนทุกครั้งที่ push)</h2>
+<pre class="code"># 1) JS syntax — ดึง inline script ออกมาก่อน แล้ว check
+python -c "import re,io; h=io.open('privacy-terminal.html',encoding='utf-8').read(); \
+  io.open('data/_check.js','w',encoding='utf-8').write(re.search(r'&lt;script&gt;(.*)&lt;/script&gt;',h,re.S).group(1))"
+node --check data/_check.js
+
+# 2) DOM-stub smoke test (จับ runtime error โดยไม่ต้องเปิดเบราว์เซอร์)
+node -e "
+const fs=require('fs');const E={};
+function el(id){ if(!E[id]) E[id]={id,innerHTML:'',textContent:'',value:'',checked:false,style:{},classList:{add(){},remove(){}},addEventListener(){},setAttribute(){},getAttribute(){return null;},querySelectorAll(){return[];},querySelector(){return null;},focus(){},blur(){},scrollInto(){},onclick:null}; return E[id]; }
+global.document={getElementById:el,querySelectorAll(){return[];},addEventListener(){}};global.window={open(){}};
+eval(fs.readFileSync('data/_check.js','utf8'));
+// ทดสอบ: state.view, view.length, state.tab/st.expanded, แล้วตรวจ innerHTML ต้องมี marker
+"</pre>
+<p><strong>ที่เจอบั๊กจริงจาก harness นี้ (และวิธีแก้):</strong></p>
+<ol><li>tab <code>all</code> ว่างทั้งตาราง → <code>hasTab</code> ไม่มี case <code>'all'</code></li><li>symbol <code>ZKP</code> ชนกัน 2 เหรียญ (zkPass / Panther) → Panther ได้ DNA/tier ผิด → แก้ด้วย <code>ID_LOCK</code> (build.py) + lookup แบบ id-aware (<code>IDMAP</code>)</li><li><code>DETAIL</code> key ด้วย symbol แต่โค้ด lookup ด้วย id → panel ทั้งหมดไม่โชว์ → แก้ key ด้วย id เท่านั้น (เคยลอง key ซ้ำสองแบบ = payload 2 เท่า)</li><li>สูตรคะแนนให้ XMR แค่ 85 (gene state ไม่ควรนับสกุลเงิน) → เพิ่ม flag <code>nst</code> = หารด้วย 6</li><li>repo ของ Dash จาก CoinGecko ชี้ไป <code>tenderdash</code> (31★) ไม่ใช่ repo หลัก → 오버라이ดเป็น <code>dashpay/dash</code></li></ol>
+<p><strong>ตรวจก่อน push ทุกครั้ง:</strong> grep marker บน live page (เช่น <code>og:image</code>, <code>PURE PRIVACY (T1)</code>, <code>โครงการ</code> ไม่ควรมี) + <code>curl -o /dev/null -w "%{http_code} %{size_download}B"</code> + ตรวจว่าไฟล์ static ใหม่ 200</p>
+<p>---</p>
+<h2>9. Deploy (GitHub Pages)</h2>
+<pre class="code">cd "C:/Users/akara/WorkBuddy AI/privacy"
+python build.py &amp;&amp; cp privacy-terminal.html site/index.html
+cd site &amp;&amp; git add -A &amp;&amp; git -c user.name="akaradje" \
+    -c user.email="35655438+akaradje@users.noreply.github.com" \
+    commit -m "&lt;what changed&gt;" &amp;&amp; git push origin main
+# Pages rebuild ~45-90s → เช็ค marker บน https://akaradje.github.io/privacy-terminal/</pre>
+<ul><li><strong>ที่มา:</strong> <code>gh</code> CLI บนเครื่องล็อกอินบัญชี <code>akaradje</code> อยู่แล้ว (scopes <code>repo,workflow,gist,read:org</code>) → สร้าง repo + เปิด Pages ผ่าน <code>gh api -X POST repos/akaradje/privacy-terminal/pages -f "source[branch]=main" -f "source[path]=/"</code></li><li><strong>ข้อควรระวัง:</strong> เครื่อง <strong>ไม่มี git user.name/email</strong> → ต้องส่ง <code>-c</code> ทุกคอมมิต (ไม่งั้นล้ม)</li><li>เครื่อง <strong>ไม่มี Vercel token/CLI</strong> — ถ้าจะลง Vercel ต้องขอ token จากผู้ใช้ หรือ drag-drop ที่ vercel.com/new</li><li>ระบบ publish ในตัวของ WorkBuddy (<code>workbuddy_sites_deploy</code>) <strong>เสียอยู่</strong> (2026-10-15 — deploy success แต่ลิงก์ <code>sg2.agentos-app.run</code> = ERR_CONNECTION_TIMED_OUT ทั้ง 2 ครั้ง) — ไม่ต้องลองซ้ำถ้าไม่ fix</li></ul>
+<p>---</p>
+<h2>10. Known gaps / หนี้ที่มีทั้ง aware (ไม่ใช่บั๊ก)</h2>
+<table class="tbl"><tr><th>ประเด็น</th><th>สถานะ</th><th>แนวทาง</th></tr><tr><td>DERO ไม่มี sparkline</td><td>แบ่ง 429 ตอนดึง</td><td><code>python data/fetch_detail.py</code> รอบใหม่ หรือปล่อยว่าง</td></tr><tr><td>ABEL / CC / DARK ไม่มี GitHub stats</td><td>ไม่มั่นใจว่า repo ไหน</td><td>ไปดู whitepaper/official site แล้วเติม gh link ใน <code>data/detail/*.json</code></td></tr><tr><td>community metrics (X followers, TG users, Reddit subs)</td><td>CoinGecko ตัด, Reddit API บล็อก</td><td>ดึงผ่านทางอื่นถ้าจำเป็น หรือตัดออกไปก่อน</td></tr><tr><td>OG banner ตัวเลขเป็น illustrative (ZEC 42.17)</td><td>AI-generated</td><td>ถ้าอยากให้ตรงของจริง → สร้าง SVG logo จากข้อมูล live แล้ว render</td></tr><tr><td>c1y บางตัว null (เหรียญTGE น้อยกว่า 1 ปี เช่น AZTEC)</td><td>ถูกต้องตามจริง</td><td>คอลัมน์โชว์ <code>n/a</code></td></tr><tr><td>251 coin ต้นทางถูกตัดเหลือ 51</td><td>ตัดใจ</td><td><code>data/tiers.json</code> เพิ่มกลับได้ (ต้องระวังว่ามี DNA ไหม)</td></tr><tr><td>README/HANDOVER เป็น Thai+English</td><td>ผู้ใช้ตัดภาษาจีนออก</td><td>คงไว้</td></tr></table>
+<p>---</p>
+<h2>11. Roadmap เสริม (เรียงตาม impact/effort)</h2>
+<blockquote><strong>อัปเดต 2026-10-15 (พัฒนาแล้วรอบนี้):</strong> ข้อ 1 <code>validate.py</code> + clamp คะแนน · ข้อ 11 GitHub Actions refresh · ข้อ 12 LICENSE — <strong>เสร็จแล้ว</strong> และ repo ถูกปรับเป็น full project (มี pipeline + data อยู่ในตัว clone แล้ว build ได้เลย)</blockquote>
+<blockquote>สถานะ validate ล่าสุด: 51 assets · <strong>0 error · 0 warning</strong> · score band 15–100 · median 60 · A+ 15 ตัว</blockquote>
+<p><strong>ข้อมูล/ความลึก</strong></p>
+<ol><li>เพิ่ม gene: quantum-resistance, MEV exposure, anonymous-set size เป็นตัวเลข, supply/unlock schedule, TVL/ผู้้Сред</li><li>On-chain metrics: shielded % (ZEC มี ~29% ของ supply ใน pool), tx count, fee trajectory</li><li>ขอ API key CoinGecko (Pro) → ปลดล็้อก community/developer data + sparkline ย้อนหลังไกลขึ้น + ไม่โดน 429</li></ol>
+<p><strong>Product</strong></p>
+<ol><li>URL state (deep link ไป #coin=ZEC) + filter ตอนแชร์ลิงก์</li><li>Export CSV/JSON ของตาราง/matrix</li><li>Watchlist เก็บใน localStorage + การแจ้งเตือน (threshold ราคา / grade)</li><li>Time-travel: เก็บ snapshot ประวัติ → ดูประวัติคะแนน/ราคาย้อนหลัง</li><li>i18n (th/en) — ตอนนี้ UI th + README en</li></ol>
+<p><strong>วิศวกรรม</strong></p>
+<ol><li>ย้าย build.py → TypeScript/Node (เฉพาะ json stuffing) หรือ python เก็บไว้ก็ได้ (มีอยู่แล้ว แค่ 1 ไฟล์ 120 บรรทัด)</li><li>Playwright snapshot test (screenshot ตรวจ visual regression) เลี่ยง DOM-stub เมื่อซับซ้อนขึ้น</li><li>GitHub Action: refresh ราคาอัตโนมัcfgทุกวัน → commit ใหม่ (data บนเว็บจึง fresh)</li></ol>
+<p><strong>ฝากประชาชนขีป</strong></p>
+<ol><li>License file (repo public ไม่มี LICENSE — ถ้าอยากให้คนเอาไปใช้ต่อ ควรใส่ MIT)</li><li>ถอด GitHub Pages → Vercel/Netlify ถ้าอยากได้ custom domain / analytics</li></ol>
+<p>---</p>
+<h2>12. Cheat sheet</h2>
+<table class="tbl"><tr><th>อยากทำอะไร</th><th>คำสั่ง/ที่แก้</th></tr><tr><td>แก้ข้อความ/UI</td><td><code>template.html</code> → <code>python build.py</code> → test → push</td></tr><tr><td>แก้ logic/filter</td><td><code>app.js</code> → rebuild → test → push</td></tr><tr><td>เพิ่ม/แก้ DNA ของเหรียญ</td><td><code>data/dna3.json</code> (gene) หรือ <code>dna1/2.json</code> (prose) → rebuild</td></tr><tr><td>เพิ่มเหรียญเข้า pure list</td><td><code>data/tiers.json</code> + DNA + (CoinGecko id ใน <code>data/ids.json</code>) → rebuild</td></tr><tr><td>อัปเดตราคา snapshot</td><td>curl <code>/coins/markets</code> (ดู§5A) + <code>ids.json</code> ไม่ต้องแก้ถ้า lิสต์เดิม</td></tr><tr><td>ดูเวอร์ชันปัจจุบัน</td><td><code>git -C site log --oneline -5</code></td></tr><tr><td>ย้อนเวอร์ชันก่อน</td><td><code>git -C site revert &lt;sha&gt; &amp;&amp; git push</code></td></tr><tr><td>เอาออก/กลับเข้า repo</td><td><code>gh repo edit akaradje/privacy-terminal --visibility private</code></td></tr></table>
+<p>---</p>
+<h2>13. Environment gotchas (เจอแล้วแก้ไปแล้ว)</h2>
+<ol><li><strong>Git Bash <code>/tmp</code> มองไม่เห็นสำหรับ Windows python</strong> — เขียนไฟล์ temp ใน workspace เสมอ (ใช้ <code>data/_check.js</code> แทน <code>/tmp/x.js</code>)</li><li><strong>WebFetch คืนempty สำหรับ JSON API</strong> — ใช้ <code>curl</code> ทาง Bash แทน</li><li><strong>heredoc โยงเข้า <code>python.exe</code> ตรงๆ อาจโดนบล็อก</strong> — เขียน <code>.py</code> ด้วย Write tool แล้วรัน</li><li><strong>CoinGecko 429</strong> — retry + backoff; ปล่อยว่างดีกว่าปลอมตัวเลข</li><li><strong><code>.gitattributes</code> CRLF</strong> — git เตือน LF→CRLF บนไฟล์ text ใหม่ (harmless)</li><li><strong>git identity ไม่ตั้ง</strong> — ส่ง <code>-c user.name/user.email</code> ต่อคอมมิต</li><li><strong>ภาษาเกณฑ์/ตัวเลขเพี้ยน</strong> — build/verify ผ่าน grep (เช่น CJK scan ก่อน commit)</li></ol>
+<blockquote><strong>Disclaimer</strong> — All data is compiled from public sources (CoinGecko, GitHub) for research and screening only. Nothing here is financial advice or a recommendation to buy or sell. Digital-asset markets are highly volatile; do your own research and verify each project's own documentation before acting.</blockquote></section><section class="pane" id="doc4"><div class="src">README.md · <a href="README.md">raw</a></div><p>&lt;div align="center"&gt;</p>
+<p>  &lt;img src="docs/logo.svg" alt="PRIVACY//TERMINAL" width="720"&gt;</p>
+<p>&lt;/div&gt;</p>
+<h1>PRIVACY//TERMINAL</h1>
+<p><strong>A single-file research terminal for pure-privacy crypto assets.</strong></p>
+<p>51 assets where <strong>privacy is the protocol's core purpose</strong> — no ZK-rollup infrastructure, no general-purpose L1s that merely flirt with privacy. Every row carries a hand-built <strong>DNA profile</strong>: what the cryptography actually hides, what you have to trust, the shape of the anonymity set, the security history and the regulatory posture.</p>
+<p><strong>🔴 Live: <a href="https://akaradje.github.io/privacy-terminal/">akaradje.github.io/privacy-terminal</a></strong> — one self-contained HTML file, no build step, no dependencies, works offline.</p>
+<p>---</p>
+<h2>What's inside</h2>
+<h3>1. Pure-privacy dataset (51 assets)</h3>
+<p>Hand-classified into four families — the only inclusion rule is that privacy <em>is</em> the protocol, with a publicly verifiable mechanism:</p>
+<table class="tbl"><tr><th>Family</th><th>Assets</th></tr><tr><td>Privacy Coins (currency-level privacy)</td><td>ZEC, XMR, GRIN, BEAM, MWC, FIRO, ARRR, DERO, ABEL, IRON, XTM, EPIC, DASH, DCR, BDX, ZANO, XVG, ZCL, ZER, PIVX, NAV, PART, YEC, XEL, ZEPH, NOCK</td></tr><tr><td>Privacy Protocols (layers on other chains)</td><td>AZTEC, RAIL, ZAMA, TORN, NIGHT, ALEO, XAN, UMBRA, DARK, ZKP, DUSK, CC, AZERO, VRSC</td></tr><tr><td>Network Privacy (metadata / IP layer)</td><td>NYM, HOPR, SESH, MYST, P2P, ANYONE</td></tr><tr><td>Confidential Compute (FHE · MPC · TEE)</td><td>SCRT, ROSE, PHA, MPC, OCT</td></tr></table>
+<p>Everything else in CoinGecko's privacy categories — ZK rollups, general L1s, adjacent tooling — is <strong>deliberately excluded</strong> (200 assets cut) because it is not privacy by design.</p>
+<h3>2. DNA profiles (52, hand-curated from project documentation)</h3>
+<p>Click any row to open the dossier:</p>
+<ul><li><strong>Gene strip</strong> — what is hidden (sender / receiver / amount / state), each marked <code>FULL</code> (always) or <code>OPT</code> (opt-in); <strong>mandatory?</strong> <strong>trustless?</strong> (no trusted setup / TEE / committee)</li><li><strong>primitive</strong> — the actual cryptography (Halo 2, RingCT+CLSAG, MimbleWimble, TFHE, MPC, TEE, mixnet…)</li><li><strong>trust assumption · anonymity set · audit · governance · security history · compliance · stage · event timeline</strong></li><li><strong>Project dossier</strong> — description, nine link channels (website / whitepaper / GitHub / X / Telegram / Discord / Reddit / forum / explorer), 7-day price sparkline, and dev activity pulled from the GitHub API (stars, forks, open issues, language, last commit, licence)</li></ul>
+<h3>3. DNA Matrix</h3>
+<p>A gene-by-gene comparison table of all 51 assets with a <strong>transparent, computed score</strong>:</p>
+<pre class="code">coverage (what is hidden) ÷ applicable max × 60  +  mandatory 15  +  trustless 15  +  network-wide anonymity set 10  =  100</pre>
+<p>The rubric is printed on the page. Scores measure <strong>mechanism strength</strong>, not value or investment merit. Notable outcomes: XMR / GRIN / EPIC / MWC / XTM = 100, AZTEC / ALEO / OCT = 90, ZEC = 75 (opt-in, pool-based), DASH / TORN = 45.</p>
+<h3>4. Terminal UX</h3>
+<p>Single view, sortable columns, <code>/</code>-to-focus search that reaches into the DNA text (<code>mimblewimble</code>, <code>sgx</code>, <code>ringct</code>, <code>trusted setup</code>, <code>ofac</code>), mcap and DNA-grade filters, <code>j/k</code> + <code>Enter</code> keyboard navigation, 7-day sparklines inline, and a <strong>⟳ LIVE</strong> button that re-fetches prices from CoinGecko in the browser.</p>
+<h2>Data sources &amp; method</h2>
+<table class="tbl"><tr><th>Layer</th><th>Source</th><th>Coverage</th></tr><tr><td>Price / mcap / volume / 1Y change</td><td>CoinGecko public API (<code>/coins/markets</code>, 8 privacy-related categories) — snapshot 2026-10-15</td><td>251 assets surveyed, 51 kept</td></tr><tr><td>Project dossier (description, links, genesis, algorithm)</td><td>CoinGecko <code>/coins/{id}</code></td><td>51/51</td></tr><tr><td>Dev activity (stars/forks/issues/last commit/licence)</td><td>GitHub API (repo resolved from the CoinGecko link; org-level links resolved to the org's top-starred non-fork repo and labelled as such)</td><td>48/51</td></tr><tr><td>7-day price history</td><td>CoinGecko <code>/market_chart?days=7</code></td><td>50/51</td></tr><tr><td>DNA profiles, tiering, timelines</td><td>Hand-curated from project documentation and public security disclosures</td><td>52 profiles + 13 timelines</td></tr></table>
+<p>Market data carries its own timestamp; anything unverified is left blank rather than estimated. Three assets (ABEL, CC, DARK) have no confidently identifiable GitHub repo and are shown without dev stats.</p>
+<h2>Rebuild</h2>
+<p>The repository contains the <strong>full pipeline</strong>, not just the built page — a clone is enough:</p>
+<pre class="code">git clone https://github.com/akaradje/privacy-terminal.git &amp;&amp; cd privacy-terminal
+
+bash scripts/snapshot.sh        # market snapshot, all 8 privacy categories -&gt; data/cat_*.json
+python data/fetch_detail.py     # dossiers + 7d sparklines from CoinGecko -&gt; data/detail/*.json
+python data/enrich_gh.py        # GitHub dev stats (stars/forks/issues/last commit)
+python validate.py              # data-contract check — must exit 0 before you build
+python build.py                 # template.html + app.js + data/* -&gt; privacy-terminal.html</pre>
+<p><code>privacy-terminal.html</code> is the deployable artefact; a copy lives at <code>index.html</code>, which GitHub Pages serves.</p>
+<p><code>validate.py</code> enforces the data contract: every asset in <code>data/tiers.json</code> needs a CoinGecko id, a dossier and complete gene flags; gene ranges are checked (<code>hs/hr/ha/hst</code> ternary, <code>man/tl/big/nst</code> binary); <code>nst=1</code> together with <code>hst&gt;0</code> is rejected; DNA scores must stay inside 0–100. Current state: <strong>51 assets, 0 errors, 0 warnings</strong>.</p>
+<p>Data refreshes automatically every day at 01:00 UTC via <code>.github/workflows/refresh.yml</code> (snapshot → dossiers → GitHub → validate → build → commit if changed).</p>
+<h2>Licence</h2>
+<p>MIT — see <a href="LICENSE">LICENSE</a>. Market data is compiled from the public CoinGecko and GitHub APIs and stays subject to their terms; the curated DNA profiles, tiering and timelines are MIT.</p>
+<h2>Colour convention</h2>
+<p><strong>Green = up, red = down</strong> (international crypto standard). Non-price semantics (sanction/severity badges) use their own colours and are deliberately decoupled from the price convention.</p>
+<h2>Limits</h2>
+<ul><li>Prices snapshot to the data timestamp; the LIVE button needs a browser with internet access.</li><li>CoinGecko's free tier no longer serves community/developer data, so dev activity comes from GitHub directly.</li><li>DNA profiles are summaries for screening, <strong>not security audits</strong> — read each project's own documentation before acting.</li><li>One sparkline (DERO) is missing due to API rate limiting.</li></ul>
+<blockquote><strong>Disclaimer</strong> — All data is compiled from public sources (CoinGecko, GitHub) for research and screening only. Nothing here is financial advice or a recommendation to buy or sell. Digital-asset markets are highly volatile; do your own research and verify each project's own documentation before acting.</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>ข้อควรทราบ</strong> — ข้อมูลทุกตัวรวบรวมจากแหล่งสาธารณะเพื่อการค้นคว้าวิจัยและคัดกรอง ไม่ใช่คำแนะนำทางการเงิน และไม่ใช่คำแนะนำให้ซื้อหรือขาย ตลาดสินทรัพย์ดิจิทัลมีความผันผวนสูง โปรดศึกษาข้อมูลเองและอ่านเอกสารของแต่ละโครงการก่อนตัดสินใจ</blockquote></section><h2>เอกสาร / Documents</h2><ul class="files"><li><a href="pilot/result.md">pilot/result.md</a> <span class="sz">5.6 KB</span></li><li><a href="pilot/expected.md">pilot/expected.md</a> <span class="sz">3.2 KB</span></li><li><a href="CHANGELOG.md">CHANGELOG.md</a> <span class="sz">2.5 KB</span></li><li><a href="HANDOVER.md">HANDOVER.md</a> <span class="sz">28.1 KB</span></li><li><a href="README.md">README.md</a> <span class="sz">7.0 KB</span></li></ul><h2>ข้อมูลที่คนคัด / Curated data</h2><ul class="files"><li><a href="data/tiers.json">data/tiers.json</a> <span class="sz">771 B</span></li><li><a href="data/dna1.json">data/dna1.json</a> <span class="sz">7.7 KB</span></li><li><a href="data/dna2.json">data/dna2.json</a> <span class="sz">7.4 KB</span></li><li><a href="data/dna3.json">data/dna3.json</a> <span class="sz">34.8 KB</span></li><li><a href="data/curation.json">data/curation.json</a> <span class="sz">11.5 KB</span></li><li><a href="data/ids.json">data/ids.json</a> <span class="sz">1.1 KB</span></li><li><a href="data/curated/repos.json">data/curated/repos.json</a> <span class="sz">614 B</span></li><li><a href="data/schema/rubric.json">data/schema/rubric.json</a> <span class="sz">8.8 KB</span></li><li><a href="data/schema/curated.schema.json">data/schema/curated.schema.json</a> <span class="sz">5.2 KB</span></li><li><a href="data/categories.txt">data/categories.txt</a> <span class="sz">151 B</span></li></ul><h2>ข้อมูลที่ดึงอัตโนมัติ / Generated</h2><ul class="files"><li><a href="data/cat_beamprivacy-ecosystem_p1.json">data/cat_beamprivacy-ecosystem_p1.json</a> <span class="sz">972 B</span></li><li><a href="data/cat_privacy-blockchain_p1.json">data/cat_privacy-blockchain_p1.json</a> <span class="sz">42.6 KB</span></li><li><a href="data/cat_privacy-coins_p1.json">data/cat_privacy-coins_p1.json</a> <span class="sz">49.8 KB</span></li><li><a href="data/cat_privacy-focused-browser_p1.json">data/cat_privacy-focused-browser_p1.json</a> <span class="sz">4.7 KB</span></li><li><a href="data/cat_privacy-infrastructure_p1.json">data/cat_privacy-infrastructure_p1.json</a> <span class="sz">83.1 KB</span></li><li><a href="data/cat_privacy_p1.json">data/cat_privacy_p1.json</a> <span class="sz">154.0 KB</span></li><li><a href="data/cat_zero-knowledge-zk_p1.json">data/cat_zero-knowledge-zk_p1.json</a> <span class="sz">97.6 KB</span></li><li><a href="data/cat_zero-network-ecosystem_p1.json">data/cat_zero-network-ecosystem_p1.json</a> <span class="sz">1.9 KB</span></li><li><a href="data/curation.json">data/curation.json</a> <span class="sz">11.5 KB</span></li><li><a href="data/dna1.json">data/dna1.json</a> <span class="sz">7.7 KB</span></li><li><a href="data/dna2.json">data/dna2.json</a> <span class="sz">7.4 KB</span></li><li><a href="data/dna3.json">data/dna3.json</a> <span class="sz">34.8 KB</span></li><li><a href="data/ids.json">data/ids.json</a> <span class="sz">1.1 KB</span></li><li><a href="data/tiers.json">data/tiers.json</a> <span class="sz">771 B</span></li></ul><h2>Engine (สูตรคะแนน + flags)</h2><ul class="files"><li><a href="engine/score.js">engine/score.js</a> <span class="sz">7.7 KB</span></li><li><a href="engine/flags.js">engine/flags.js</a> <span class="sz">4.1 KB</span></li></ul><h2>Pipeline</h2><ul class="files"><li><a href="build.py">build.py</a> <span class="sz">6.0 KB</span></li><li><a href="template.html">template.html</a> <span class="sz">15.7 KB</span></li><li><a href="app.js">app.js</a> <span class="sz">27.3 KB</span></li><li><a href="validate.py">validate.py</a> <span class="sz">7.6 KB</span></li><li><a href="scripts/snapshot.sh">scripts/snapshot.sh</a> <span class="sz">1.2 KB</span></li><li><a href="scripts/snapshot_history.py">scripts/snapshot_history.py</a> <span class="sz">3.8 KB</span></li><li><a href="data/fetch_detail.py">data/fetch_detail.py</a> <span class="sz">4.7 KB</span></li><li><a href="data/enrich_gh.py">data/enrich_gh.py</a> <span class="sz">3.6 KB</span></li><li><a href="data/fill_gaps.py">data/fill_gaps.py</a> <span class="sz">7.0 KB</span></li><li><a href="pilot/fill_pilot.py">pilot/fill_pilot.py</a> <span class="sz">11.7 KB</span></li><li><a href=".github/workflows/refresh.yml">.github/workflows/refresh.yml</a> <span class="sz">1.3 KB</span></li></ul><h2>History snapshots</h2><ul class="files"><li><a href="history/2026-10-15.json.gz">history/2026-10-15.json.gz</a> <span class="sz">8.5 KB</span></li></ul></main>
+<footer>เพื่อการวิจัย ไม่ใช่คำแนะนำการลงทุน · ทุกค่าที่คนคัดมี src/asof; ค่าที่หาแหล่งอ้างอิงไม่ได้จะเว้นว่าง ไม่เดา</footer>
+<script>
+document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+  document.querySelectorAll('.pane').forEach(function(x){x.classList.remove('on')});
+  b.classList.add('on');
+  document.getElementById(b.getAttribute('data-pane')).classList.add('on');
+});});
+</script>
+</body></html>
