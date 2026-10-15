@@ -44,12 +44,39 @@ if os.path.exists(p1):
 
 recs = []
 for c in coins.values():
+    mcap = c.get('market_cap')
+    price = c.get('current_price')
+    cs = c.get('circulating_supply')
+    ms = c.get('max_supply')
+    fdv = c.get('fully_diluted_valuation')
+    # CoinGecko occasionally reports market_cap = 0 while the coin is live (observed on MWC,
+    # which has a price of $11.84 and volume but market_cap AND circulating_supply = 0).
+    # Imputing the cap keeps pillar L meaningful instead of reading a working coin as worthless.
+    # Fallback order, each step guarded so a nonsense number can never be produced:
+    #   1. price x circulating_supply                       (the normal case)
+    #   2. price x (FDV / price) = FDV, i.e. the supply figure CoinGecko itself used, only when
+    #      that implied supply is > 0 and no larger than max_supply
+    # The record carries `mi` so the UI, the flags and the anomaly check can all say the number
+    # was derived rather than reported.
+    mcap_imputed = False
+    if (not mcap or mcap <= 0) and price and price > 0:
+        implied_supply = None
+        if cs and cs > 0:
+            implied_supply = cs
+        elif fdv and fdv > 0:
+            implied_supply = fdv / price
+            if implied_supply > 0 and ms and implied_supply > ms:
+                implied_supply = None
+        if implied_supply and implied_supply > 0:
+            mcap = price * implied_supply
+            mcap_imputed = True
     recs.append({
         'id': c['id'],
         's': c['symbol'].upper(),
         'n': c['name'],
-        'p': c.get('current_price'),
-        'm': c.get('market_cap'),
+        'p': price,
+        'm': mcap,
+        'mi': 1 if mcap_imputed else 0,
         'v': c.get('total_volume'),
         'c24': c.get('price_change_percentage_24h_in_currency'),
         'c7': c.get('price_change_percentage_7d_in_currency'),
@@ -125,7 +152,7 @@ snap = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC
 
 STATS = {
     'n': len(recs),
-    'scoring_version': '2.4.0-preview',
+    'scoring_version': '2.5.0-preview',
     'scoring_v1': 'dna-v1 (primary)',
     'sector_mcap': sector_mcap,
     'median_1y': median_1y,
@@ -184,7 +211,7 @@ html = html.replace('__DOCS__', json.dumps(DOCSPAY, ensure_ascii=False, separato
 
 out = os.path.join(D, 'privacy-terminal.html')
 open(out, 'w', encoding='utf-8').write(html)
-print('scoring: v2.4.0-preview (preview) | v1 primary')
+print('scoring: v2.5.0-preview (preview) | v1 primary')
 print('coins:', len(recs), '| t1 pure:', STATS['n_t1'], '| DNA profiles:', len(DNA), '| dossiers:', len(DETAIL))
 print('sector_mcap: %.1fB | median 1y: %.0f%%' % (sector_mcap/1e9, median_1y or 0))
 print('wrote', out)

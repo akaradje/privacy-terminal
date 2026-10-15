@@ -18,6 +18,7 @@ var FLAG_RULES = [
   { id: 'illiquid', lv: 'HIGH', test: function (x) { return x.turnover != null && x.turnover < 0.002; }, msg: 'turnover ต่อวันต่ำกว่า 0.2% ของ mcap — ออกของไม่ได้โดยไม่กดราคา' },
   { id: 'dev_stalled', lv: 'MED', test: function (x) { return x.days_since_push > 90 && x.days_since_push <= 365; }, msg: 'ไม่มีการ push โค้ดเกิน 90 วัน' },
   { id: 'micro_cap', lv: 'MED', test: function (x) { return x.mcap != null && x.mcap < 5000000; }, msg: 'mcap ต่ำกว่า $5M — ความเสี่ยงสภาพคล่องและการเพิกถอน' },
+  { id: 'mcap_imputed', lv: 'LOW', test: function (x) { return x.mcap_imputed === 1; }, msg: 'market cap มาจากการคำนวณ (price × supply) เพราะ API รายงาน 0 — ตัวเลขสภาพคล่องอ่านโดยประมาณ' },
   { id: 'no_dev_data', lv: 'LOW', test: function (x) { return x.days_since_push == null; }, msg: 'ไม่มีข้อมูล repo ที่ยืนยันได้ — ประเมิน pillar D ไม่ได้' },
   { id: 'high_inflation', lv: 'MED', test: function (x) { return x.inflation > 10; }, msg: 'เงินเฟ้อปีละเกิน 10%' },
   { id: 'fdv_overhang', lv: 'MED', test: function (x) { return x.fdv_mcap > 3; }, msg: 'FDV สูงกว่า mcap เกิน 3 เท่า' },
@@ -81,6 +82,7 @@ function metricsFor(coin, detail, dna) {
     if (coin.m && coin.v) out.turnover = +(coin.v / coin.m).toFixed(4);
     if (coin.ms && coin.cs) out.fdv_mcap = +((coin.m / coin.cs * coin.ms) / coin.m).toFixed(2);
     if (coin.m != null) out.mcap = coin.m;
+    if (coin.mi != null) out.mcap_imputed = coin.mi;
     if (coin.cs != null) out.cs = coin.cs;
     if (coin.ms != null) out.ms = coin.ms;
     if (coin.c30 != null) out.c30 = coin.c30;

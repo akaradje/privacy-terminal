@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.4.0-preview
+ * scoring_version: 2.5.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.4.0-preview';
+var SCORING_VERSION = '2.5.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 /* Conservative floor — makes the score strictly monotonic.
@@ -236,18 +236,71 @@ function pillarsOf(d, coin, det, asof) {
     P: (p && !p.insufficient) ? p.P : null,
     D: devScore(det, asof),
     L: liqScore(coin),
+    T: maturityScore(d, asof),
+    S: securityScore(d),
     Pdetail: p, Ddetail: devDetail(det, asof)
   };
 }
 
+function hasText(g, key) {
+  if (!g) return false;
+  var x = g[key];
+  if (x == null) return false;
+  if (typeof x === 'object') return !!(x.v || x.src);
+  return !!String(x).trim();
+}
+
+/* --- Pillar T: tech / network maturity ------------------------------------------------------
+ * What "battle-tested" actually means here, from fields we already have:
+ *   45% age of the mainnet (from `yr`)   35% the `mat` gene (age + public audits)   20% an
+ *   `audit` record. Hard-capped at 40 when the mainnet is less than a year old — a pre-mainnet
+ *   or freshly launched protocol cannot be battle-tested no matter how good the design is.
+ *   This is what stops a young FHE project from riding dev + liquidity into the top 10. */
+function maturityScore(d, asof) {
+  var mat = gval(d, 'mat'), yr = gval(d, 'yr');
+  if (mat == null && yr == null) return null;
+  var age = (yr && asof) ? (parseInt(String(asof).slice(0, 4), 10) - yr) : null;
+  var ageS = age == null ? null : (age >= 5 ? 100 : age >= 3 ? 80 : age >= 1 ? 50 : 20);
+  var matS = mat == null ? null : (mat / 2) * 100;
+  var auditS = hasText(d, 'audit') ? 100 : 0;
+  var parts = [];
+  if (ageS != null) parts.push([0.45, ageS]);
+  if (matS != null) parts.push([0.35, matS]);
+  parts.push([0.20, auditS]);
+  var tw = 0, acc = 0;
+  for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
+  var T = tw ? Math.round(acc / tw) : null;
+  if (T != null && age != null && age < 1) T = Math.min(T, 40);
+  return T;
+}
+
+/* --- Pillar S: security & audit posture -----------------------------------------------------
+ * 50% "is there an unpatched privacy break?" (`brk`) + 50% "is there a public audit record?".
+ * S is null when `brk` is unknown: we cannot score the security posture of a coin whose exploit
+ * history has not been checked. Note that most `brk = 0` values carry conf=low, so an unaudited
+ * coin gets 50 and an audited one gets 100 — the gap is real but the absolute level is soft. */
+function securityScore(d) {
+  var brk = gval(d, 'brk');
+  if (brk == null) return null;
+  return Math.round(0.5 * (brk ? 0 : 100) + 0.5 * (hasText(d, 'audit') ? 100 : 0));
+}
+
 /* composite over whatever pillars exist; `composite()` already skips nulls and renormalises.
- * One guard: if the preset gives P any weight and P is unavailable, there is no composite — a coin
- * whose mechanism has not been evidenced must not be ranked on dev/liquidity alone. */
-function compositeOf(d, coin, det, asof, preset) {
+ * Two guards:
+ *   1. if the preset gives P any weight and P is unavailable, there is no composite — a coin
+ *      whose mechanism has not been evidenced must not be ranked on dev/liquidity alone;
+ *   2. `riskAdjust` (used by privacy_investor) replaces the P point estimate with its lower
+ *      half (P - band/2). An institutional reader does not act on a point estimate, and without
+ *      this a wide-band coin with strong dev and liquidity climbs on momentum alone. */
+function compositeOf(d, coin, det, asof, preset, riskAdjust) {
   var w = PRESETS[preset || 'investor'];
   var p = pillarsOf(d, coin, det, asof);
   if ((w.P || 0) > 0 && p.P == null) return null;
-  return composite(p, w);
+  var vals = { P: p.P, D: p.D, L: p.L, T: p.T, S: p.S };
+  if (riskAdjust && p.P != null && p.Pdetail && p.Pdetail.band) {
+    vals.P = Math.max(0, p.P - Math.round(0.5 * p.Pdetail.band));
+  }
+  return composite(vals, w);
 }
 
 /* composite presets (§4.1) — defaults, meant to be tuned in the Weight Lab */
@@ -261,7 +314,12 @@ var PRESETS = {
    * coin with a weak mechanism outranks a strong one (measured: DASH and XVG both land in the
    * top 15 of it). This terminal exists to find privacy assets, so P carries the weight here.
    * Added, not replaced — both are shown in the panel so the difference is visible. */
-  privacy_investor: { P: 45, D: 30, L: 25 }
+  /* privacy_investor: P is the mechanism, but a strong mechanism alone is not an asset — the
+   * other four pillars are what separate XMR from a well-marketed fork. Extended from the
+   * P/D/L-only version (45/30/25) once T and S existed, and it is risk-adjusted: the P point
+   * estimate is replaced by its lower half (P - band/2) so a wide-band coin with strong dev and
+   * liquidity cannot climb on momentum alone. Measured on the ZAMA case below. */
+  privacy_investor: { P: 35, D: 20, L: 15, T: 15, S: 15 }
 };
 
 function composite(pillars, w) {

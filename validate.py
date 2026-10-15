@@ -78,8 +78,9 @@ def anomaly_check(syms, ids):
                     out.append('%s: %s became 0 (was %s yesterday) — feed failure or delisting' %
                                (s, label, ov))
                 else:
-                    out.append('%s: %s reports 0 — no market data for this asset (check the CoinGecko id or a delisting)' %
-                               (s, label))
+                    out.append('%s: %s reports 0 — no market data for this asset '
+                               '(build.py imputes it from price x FDV/price when possible; '
+                               'otherwise the asset keeps a null L and is not ranked)' % (s, label))
                 continue
             if ov > 0 and abs(nv - ov) / ov > ANOMALY_THRESHOLD:
                 out.append('%s: %s moved %.0f%% in one day (%s -> %s) — verify before trusting the build' %

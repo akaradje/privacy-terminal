@@ -317,8 +317,8 @@ function v3Block(c) {
     var pos = [];
     try { pos = evaluatePositives(metricsFor(c, det_, d)); } catch (e) { pos = []; }
     var dd = pl.Ddetail;
-    out += '<div class="v3"><div class="v3t">PILLAR D / L <span class="dim">(developer · liquidity)</span></div><div class="v3parts">' +
-      plChip('D', pl.D) + plChip('L', pl.L) + plChip('P', pl.P) +
+    out += '<div class="v3"><div class="v3t">PILLAR D · L · T · S <span class="dim">(developer · liquidity · maturity · security)</span></div><div class="v3parts">' +
+      plChip('D', pl.D) + plChip('L', pl.L) + plChip('T', pl.T) + plChip('S', pl.S) + plChip('P', pl.P) +
       '</div>';
     if (dd) {
       out += '<div class="dim" style="font-size:10px">' + (dd.repo || 'repo ไม่ระบุ') + ' · push ล่าสุด ' + dd.pushed +
@@ -357,7 +357,7 @@ function compositeRank(c, preset) {
     var list = [];
     for (var i = 0; i < DATA.length; i++) {
       var x = DATA[i], s = null;
-      try { s = compositeOf(dna(x), x, det(x), ASOF_DATE, key); } catch (e) { s = null; }
+      try { s = compositeOf(dna(x), x, det(x), ASOF_DATE, key, key === 'privacy_investor'); } catch (e) { s = null; }
       if (s != null) list.push([x.s, s]);
     }
     list.sort(function (a, b) { return b[1] - a[1]; });

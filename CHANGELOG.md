@@ -3,6 +3,44 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.5.0-preview — 2026-10-16
+
+Three corrections from review: the MimbleWimble `hmeta` over-credit, the MWC market cap, and the
+pillars that let a wide-band coin climb on momentum.
+
+**1. MimbleWimble `hmeta` 2 → 1.** Cut-through hides the graph *after* a block closes, but the
+mempool/stem phase still leaks: Ivan Bogatyy (Dragonfly Research, Nov 2019), *"Breaking
+MimbleWimble's Privacy Model"*, traced ~96% of Grin transactions in real time (~$60/week of AWS) by
+sniffing the stem phase before blocks closed, and interactive slate exchange adds connection
+metadata on top. Vitalik Buterin's response to it — a medium anonymity set *is* a small anonymity
+set — is the argument for capping this family at the same level as RingCT. The criterion now states
+the cap explicitly. Effect: GRIN/BEAM/MWC/EPIC/XTM 80 → **75**, and **XMR is back at rank 1 (78)**
+of both P and the composite, on technical grounds rather than a weight change.
+
+**2. Market-cap imputation in `build.py`.** MWC reports `market_cap: 0` **and**
+`circulating_supply: 0` while carrying a live price ($11.84) and volume, so the plain
+`price × supply` fallback could not fire. The fallback now tries `price × circulating_supply`
+first, then `price × (FDV / price)` — the supply figure CoinGecko itself used — guarded so the
+implied supply must be positive and no larger than max supply. MWC → **$130.4M**, implying 11.015M
+coins, which matches the known circulating supply (~10.9–11M). The record carries `mi: 1`, a new
+`mcap_imputed` LOW flag exists, and the panel says the number was derived.
+
+**3. Pillars T and S, and a risk-adjusted composite.**
+- **T** (tech/network maturity) = 45% mainnet age + 35% the `mat` gene + 20% an audit record, hard
+  capped at **40** when the mainnet is under a year old.
+- **S** (security/audit posture) = 50% "no unpatched break" + 50% "has an audit record"; **null**
+  when `brk` is unknown — the security posture of a coin whose exploit history has not been
+  checked cannot be scored.
+- `privacy_investor` extended from `{P 45, D 30, L 25}` to **`{P 35, D 20, L 15, T 15, S 15}`** and
+  is now **risk-adjusted**: the P point estimate is replaced by its lower half (`P − band/2`), the
+  way an institutional reader treats a wide estimate.
+
+**Effect on the ZAMA case:** #10 → **#27**. P 30 with band ±17 becomes 22, T is 9 (2026 mainnet →
+the <1yr cap), S is 50 (no audit record). Dev 100 and liquidity 91 can no longer carry it alone.
+
+**Final composite (risk-adjusted, top 12):** XMR 86 > GRIN 74 > BDX 72 > EPIC 69 = BEAM 69 >
+ZEC 68 = ZANO 68 = FIRO 68 > ARRR 65 = XTM 65 > SCRT 62 > MWC 61.
+
 ## 2.4.0-preview — 2026-10-16
 
 Closes the P core: the `hst` definition now covers off-chain private computation, `hnet`/`hmeta`

@@ -1,5 +1,5 @@
 {
- "version": "2.4.0-preview",
+ "version": "2.5.0-preview",
  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
  "genes": {
   "hs": {
@@ -37,8 +37,9 @@
    "label": "ต้านทาน metadata (fee / timing / ขนาด tx)",
    "0": "เปิดเผยกราฟความเชื่อมโยงชัดเจน (transparent addresses, gas/timing/size ครบ)",
    "1": "ซ่อนเนื้อหาธรรมเนียม แต่ยังเห็นจังหวะการเรียกใช้ contract, ค่า gas, หรือขนาด input/output ในโครงสร้าง tx",
-   "2": "ซ่อนทั้งกราฟและมีกลไกกัน timing/size correlation (fixed-size packet ใน mixnet, cut-through + kernel aggregation ใน Mimblewimble, shielded pool ที่ไม่มี linkage)",
-   "src_hint": "เอกสารโปรโตคอล/รูปแบบธุรกรรม + งานวิจัย transaction graph"
+   "2": "ซ่อนทั้งกราฟและมีกล mechanism กัน timing/size correlation (fixed-size packet ใน mixnet · shielded pool ที่ไม่มี linkage)",
+   "src_hint": "เอกสารโปรโตคอล/รูปแบบธุรกรรม + งานวิจัย transaction graph",
+   "mw_cap": "ตระกาล Mimblewimble มีเพดาน 1 ไม่ใช่ 2: cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว — Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking Mimblewimble's Privacy Model\" ดัก sniffer node ปลอมได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่า อนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก · src: https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ"
   },
   "hnet": {
    "label": "privacy ชั้นเครือข่าย",
@@ -155,5 +156,16 @@
   "monotonicity": "เพิ่มหลักฐานเข้ามาได้ ΔP >= 0 เสมอ — กรอกค่าจริงแล้วคะแนนตกไม่ได้ (ทดสอบ: 510 การลบ component, 0 violation)",
   "reporting": "ค่าที่ถูก floor อยู่ใน missing + imputed, coverage ลด, band กว้างขึ้น, insufficient บล็อกการจัดอันดับ — ผู้้อ่านยังแยก \"ไม่รู้\" (band กว้าง) จาก \"รู้ว่าเป็น 0\" (band แคบ) ได้",
   "structural_exception": "การลดตัวหารที่ยังเหลืออยู่คือ structural non-applicability ซึ่งสถาปัตยกรรมกำหนด ไม่ใช่ข้อมูล: nst=1 (ไม่มี execution layer) ตัด hst ออกจากตัวหารของ cov"
+ },
+ "pillars": {
+  "P": "Privacy strength (DNA v2) — engine/score.js scoreP()",
+  "D": "Developer velocity (PROXY): วันที่ push ล่าสุดของ repo · ≤7d 100 · ≤30d 80 · ≤90d 55 · ≤365d 25 · อื่นๆ 0 · archived = 0 · ยังไม่มี commit-level velocity (GitHub GraphQL pass อยู่ใน roadmap) · คำนวณเทียบ ASOF_DATE ไม่ใช่ Date.now()",
+  "L": "Liquidity & market health: 0.45×turnover + 0.35×depth + 0.20×float · turnover = vol24h/mcap (10%/วัน = เต็ม) · depth = log10(mcap) อัตรา $1M→$1B · float = cs/ms",
+  "T": "Tech / network maturity: 45% อายุ mainnet (yr) + 35% gene mat (อายุ+audit) + 20% มีบันทึก audit · เพดาน 40 เมื่อ mainnet ไม่ถึง 1 ปี",
+  "S": "Security & audit posture: 50% brk (ไม่มีช่องโหว่ที่ยังไม่ปิด = 100, มี = 0, ไม่ทราบ = null → ไม่คิด S) + 50% มีบันทึก audit"
+ },
+ "composite_presets": {
+  "privacy_investor": "P 35 / D 20 / L 15 / T 15 / S 15 · RISK-ADJUSTED: P แทนด้วยครึ่งล่างของ band (P − band/2) เพราะนักลงทุนไม่ใช้ค่าประมาณจุดเดียว",
+  "note": "preset investor ของ blueprint ไม่ได้แก้ — มันให้ P แค่ 15/50 เมื่อมีแค่ P/D/L ทำให้ DASH/XVG ขึ้น top-15"
  }
 }

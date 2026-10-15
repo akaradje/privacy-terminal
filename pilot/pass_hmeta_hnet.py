@@ -77,6 +77,9 @@ HNET = {
  'ZEPH': (2, 'low', 'https://www.zephyrprotocol.com/', 'Zephyr เป็น Monero fork → น่าจะสืบทอด Dandelion++ แต่ยังไม่ยืนยัน'),
 }
 
+MW_SRC = 'https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ'
+MW_NOTE = 'cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) "Breaking MimbleWimble\'s Privacy Model" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2'
+
 # name: (hmeta, hmeta_conf, hmeta_src, hmeta_note)
 HMETA = {
  # --- 2: graph hidden AND timing/size correlation mitigated -------------------------------------
@@ -84,11 +87,11 @@ HMETA = {
  'HOPR': (2, 'high', 'https://hoprnet.org/', 'mixnet packet ขนาดคงที่'),
  'ANYONE': (2, 'med', 'https://anyone.io/', 'onion routing — ขนาด packet คงที่ตามเส้นทาง'),
  'SESH': (2, 'high', 'https://getsession.org/', 'onion routing + sealed sender — ไม่มีโหมดเปิดกราฟ'),
- 'GRIN': (2, 'med', 'https://docs.grin.mw/', 'cut-through + kernel aggregation: ธุรกรรมกลางทางไม่ขึ้นเชน และ kernel ไม่ผูกกับ output'),
- 'BEAM': (2, 'med', 'https://docs.beam.mw/', 'cut-through + kernel aggregation'),
- 'MWC':  (2, 'low', 'https://www.mwc.mw/', 'สืบทอด MimbleWimble cut-through จาก Grin'),
- 'EPIC': (2, 'low', 'https://epiccash.com/', 'สืบทอด MimbleWimble cut-through'),
- 'XTM':  (2, 'low', 'https://rfc.tari.com/', 'MimbleWimble cut-through'),
+ 'GRIN': (1, 'med', MW_SRC, MW_NOTE),
+ 'BEAM': (1, 'med', MW_SRC, MW_NOTE),
+ 'MWC':  (1, 'low', MW_SRC, MW_NOTE + ' (สืบทอดจาก Grin)'),
+ 'EPIC': (1, 'low', MW_SRC, MW_NOTE + ' (สืบทอดจาก Grin)'),
+ 'XTM':  (1, 'low', MW_SRC, MW_NOTE),
  'ZEC':  (2, 'med', 'https://zips.z.cash/protocol/protocol.pdf', 'Orchard shielded pool: note commitment ไม่มี linkage กับที่อยู่ และไม่เปิดกราฟ'),
  'CC':   (2, 'low', 'https://www.canton.network/', 'sub-transaction privacy — คู่สัญญาที่ไม่เกี่ยวข้องไม่เห็นกราฟธุรกรรมนั้นเลย'),
  # --- 1: content hidden but timing/size still visible -------------------------------------------

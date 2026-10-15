@@ -989,11 +989,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 2,
+   "v": 1,
    "conf": "med",
-   "src": "https://docs.grin.mw/",
+   "src": "https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ",
    "asof": "2026-10-16",
-   "note": "cut-through + kernel aggregation: ธุรกรรมกลางทางไม่ขึ้นเชน และ kernel ไม่ผูกกับ output"
+   "note": "cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking MimbleWimble's Privacy Model\" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2"
   },
   "hnet": {
    "v": 2,
@@ -1091,11 +1091,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 2,
+   "v": 1,
    "conf": "med",
-   "src": "https://docs.beam.mw/",
+   "src": "https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ",
    "asof": "2026-10-16",
-   "note": "cut-through + kernel aggregation"
+   "note": "cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking MimbleWimble's Privacy Model\" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2"
   },
   "hnet": {
    "v": 2,
@@ -1703,11 +1703,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 2,
+   "v": 1,
    "conf": "low",
-   "src": "https://rfc.tari.com/",
+   "src": "https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ",
    "asof": "2026-10-16",
-   "note": "MimbleWimble cut-through"
+   "note": "cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking MimbleWimble's Privacy Model\" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2"
   },
   "hnet": {
    "v": 2,
@@ -1907,11 +1907,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 2,
+   "v": 1,
    "conf": "low",
-   "src": "https://epiccash.com/",
+   "src": "https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ",
    "asof": "2026-10-16",
-   "note": "สืบทอด MimbleWimble cut-through"
+   "note": "cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking MimbleWimble's Privacy Model\" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2 (สืบทอดจาก Grin)"
   },
   "hnet": {
    "v": 2,
@@ -2009,11 +2009,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 2,
+   "v": 1,
    "conf": "low",
-   "src": "https://www.mwc.mw/",
+   "src": "https://github.com/mimblewimble/docs/wiki/Privacy-Prerequisites-and-FAQ",
    "asof": "2026-10-16",
-   "note": "สืบทอด MimbleWimble cut-through จาก Grin"
+   "note": "cut-through ซ่อนกราฟหลังบล็อกปิด แต่ mempool/stem phase ยังรั่ว: Ivan Bogatyy (Dragonfly Research, พ.ย. 2019) \"Breaking MimbleWimble's Privacy Model\" ดัก sniffer node ปลอมใน stem phase ได้ ~96% ของธุรกรรม Grin แบบเรียลไทม์ (~60 USD/สัปดาห์) ก่อนบล็อกปิด · interactive slate exchange (ผู้ส่ง-ผู้รับต้องสื่อสารกัน) ก็ทิ้ง metadata การเชื่อมต่อ · Vitalik Buterin ระบุว่าอนุภูมิเซ็ตระดับกลางเท่ากับอนุภูมิเซ็ตเล็ก → hmeta = 1 ไม่ใช่ 2 (สืบทอดจาก Grin)"
   },
   "hnet": {
    "v": 2,
