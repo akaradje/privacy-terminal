@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.0.0-preview
+ * scoring_version: 2.2.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.0.0-preview';
+var SCORING_VERSION = '2.2.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 var W = { cov: 30, bits: 15, man: 12, tl: 12, hmeta: 10, hnet: 8, mat: 8, pq: 5, brkPenalty: 15 };
