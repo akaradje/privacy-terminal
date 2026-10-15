@@ -317,7 +317,7 @@ function v3Block(c) {
     var pos = [];
     try { pos = evaluatePositives(metricsFor(c, det_, d)); } catch (e) { pos = []; }
     var dd = pl.Ddetail;
-    out += '<div class="v3"><div class="v3t">PILLAR D · L · T · S <span class="dim">(developer · liquidity · maturity · security)</span></div><div class="v3parts">' +
+    out += '<div class="v3"><div class="v3t">PILLAR D · L · T · S · R <span class="dim">(developer · liquidity · maturity · security · regulatory)</span></div><div class="v3parts">' +
       plChip('D', pl.D) + plChip('L', pl.L) + plChip('T', pl.T) + plChip('S', pl.S) + plChip('P', pl.P) +
       '</div>';
     if (dd) {
