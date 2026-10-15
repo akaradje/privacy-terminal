@@ -1,107 +1,131 @@
 {
-  "version": "2.0.0-preview",
-  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
-  "genes": {
-    "hs": {
-      "label": "ซ่อนผู้ส่ง",
-      "0": "ผู้ส่งเปิดเผยบนเชน (transparent address / public sender)",
-      "1": "ซ่อนได้เมื่อผู้ใช้เลือกใช้กลไก (opt-in: shielded pool, mixer, coinjoin)",
-      "2": "ซ่อนทุกธุรกรรมโดยปริยาย — ไม่มีโหมดที่เปิดเผยผู้ส่งเลย",
-      "src_hint": "protocol spec / whitepaper ของโปรเจกต์"
-    },
-    "hr": {
-      "label": "ซ่อนผู้รับ",
-      "0": "ที่อยู่ผู้รับปรากฏบนเชน",
-      "1": "ซ่อนได้แบบ opt-in",
-      "2": "ซ่อนทุกธุรกรรมโดยปริยาย (stealth address / shielded note)",
-      "src_hint": "protocol spec"
-    },
-    "ha": {
-      "label": "ซ่อนจำนวน",
-      "0": "จำนวนธุรกรรมเปิดเผย",
-      "1": "ซ่อนได้แบบ opt-in (confidential transactions)",
-      "2": "ซ่อนทุกธุรกรรมโดยปริยาย (RingCT / Pedersen commitment บังคับ)",
-      "src_hint": "protocol spec"
-    },
-    "hst": {
-      "label": "ซ่อน state ของ smart contract",
-      "0": "state เปิดทั้งหมด หรือโปรโตคอลไม่มี state ให้ซ่อน",
-      "1": "ซ่อน state ได้แบบ opt-in (private contract ที่เลือกใช้)",
-      "2": "state ถูกเข้ารหัสโดยปริยาย (private-by-default execution)",
-      "src_hint": "docs ของ execution layer · โปรโตคอลที่ไม่มี smart contract ให้ใช้ 0 และตั้ง nst=1"
-    },
-    "hmeta": {
-      "label": "ต้านทาน metadata (fee / timing / ขนาด tx)",
-      "0": "fee, timing และขนาด tx เปิดเผยทั้งหมด",
-      "1": "แก้ได้บางส่วน เช่น fee แบบ fixed tier หรือมี Dandelion แบบ opt-in",
-      "2": "ทุกธุรกรรมมีรูปแบบเหมือนกัน (uniform fee/size, timing ที่เบลอโดยปริยาย)",
-      "src_hint": "งานวิจัยด้าน transaction graph / fee analysis"
-    },
-    "hnet": {
-      "label": "privacy ชั้นเครือข่าย",
-      "0": "ไม่มีการป้องกัน IP เลย",
-      "1": "รองรับ Tor/I2P แบบ opt-in (ผู้ใช้ต้องตั้งเอง)",
-      "2": "มีในตัว เช่น Dandelion++ หรือ mixnet ที่ทำงานโดยปริยาย",
-      "src_hint": "protocol spec / whitepaper ของ network layer"
-    },
-    "man": {
-      "label": "บังคับใช้ privacy",
-      "0": "opt-in — ผู้ใช้ต้องเลือกเปิดเอง (ค่าเริ่มต้นเปิดเผย)",
-      "0.5": "default-on — เปิดให้โดยปริยาย แต่ผู้ใช้ปิดได้",
-      "1": "บังคับ — ทุกธุรกรรมเป็น private ไม่มีทางเลือกอื่น",
-      "src_hint": "protocol spec (ดูว่าโหมด transparent ยังมีอยู่ไหม)"
-    },
-    "tl": {
-      "label": "trust assumption",
-      "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (trusted setup ที่ยังมีผล, single sequencer, permissioned validator)",
-      "1": "เชื่อคณะที่กระจายตัวแต่ยังมีสมมติฐาน (honest-majority MPC, TEE hardware, threshold KMS, committee)",
-      "2": "trustless เต็มรูปแบบ (ไม่มี trusted setup, พิสูจน์ได้บนเชน, PoW/PoS เปิด)",
-      "src_hint": "งานวิจัย setup / docs สถาปัตยกรรม — ห้ามนับ trust ของ operator ซ้ำใน aset"
-    },
-    "mat": {
-      "label": "ความพร้อมใช้งานจริง",
-      "0": "ใช้งานจริงไม่ถึง 1 ปี หรือยังไม่มี audit สาธารณะ",
-      "1": "ใช้งานจริง 1–3 ปี และมี audit อย่างน้อย 1 ครั้ง",
-      "2": "ใช้งานจริงเกิน 3 ปี และมี audit หลายครั้ง",
-      "src_hint": "genesis/mainnet date + หน้ารวม audit ของโปรเจกต์"
-    },
-    "pq": {
-      "label": "ทนต่อ quantum computer",
-      "0": "พึ่ง elliptic-curve/Discrete-log ล้วน (ไม่มีการเตรียม post-quantum)",
-      "1": "มีแผน/roadmap หรือ hybrid ที่เริ่มใช้ lattice-based signature บางส่วน",
-      "2": "ใช้ post-quantum cryptography เป็นแกนของกลไก privacy แล้ว",
-      "src_hint": "เอกสารด้าน cryptography ของโปรเจกต์"
-    },
-    "brk": {
-      "label": "เคยมีช่องโหว่ privacy ที่ยังไม่ปิด",
-      "0": "ไม่เคยมี หรือมีแล้วปิดครบพร้อม disclosure สาธารณะ",
-      "1": "มีช่องโหว่ที่ส่งผลต่อ privacy และยังไม่ปิด หรือปิดไม่ครบ",
-      "src_hint": "advisory ของทีม / รายงานความปลอดภัย",
-      "effect": "หัก −15 คะแนนจาก P (ไม่ใช่การรีเซ็ตเป็นศูนย์)"
-    },
-    "aset": {
-      "label": "effective per-transaction anonymity set",
-      "definition": "จำนวนคู่สนทนาที่เป็นไปได้ซึ่งผู้สังเกตต้องพิจารณาสำหรับ 'หนึ่งธุรกรรม' ณ เวลาที่ทำ — ไม่ใช่ขนาดสะสมของ pool ทั้งก้อน และไม่ใช่จำนวนผู้ถือ",
-      "by_family": {
-        "ring": "ค่าหลังหักผลของ heuristic ที่รู้จัก (decoy selection, change output, timing) ไม่ใช่ ring size ดิบ และต้องอ้างงานวิจัย",
-        "shielded_pool": "นับ note commitment ทั้งหมดใน pool นั้น (รวม note ที่ใช้ไปแล้ว เพราะยังแยกไม่ออก) และนับแยกแต่ละ pool (Sapling / Orchard ห้ามรวมกัน)",
-        "mixer": "ขนาด pool ของ denomination/epoch เดียวกัน",
-        "tee_mpc": "จำนวนผู้ใช้ที่ interact กับ contract หรือ pool เดียวกันในช่วง epoch นั้น (ความเสี่ยงที่ต้องไว้ใจ operator ให้นับใน tl เท่านั้น — ห้ามนับซ้ำ)"
-      },
-      "scoring": "bits = min(log2(aset) / 20, 1) แล้วคูณน้ำหนัก 15",
-      "src_hint": "งานวิจัย anonymity-set analysis / explorer ที่นับ note ได้"
-    },
-    "nst": {
-      "label": "ไม่มี state ให้ซ่อน",
-      "0": "โปรโตคอลมี state/smart contract",
-      "1": "สกุลเงินล้วน ไม่มี state (ตัด hst ออกจากตัวหารของ coverage)",
-      "src_hint": "ดูว่ามี execution layer ไหม"
-    },
-    "big": {
-      "label": "anonymity set ระดับเครือข่าย (legacy v1)",
-      "0": "pool/กลุ่มย่อยเท่านั้น",
-      "1": "ทั้งเครือข่าย",
-      "src_hint": "ใช้กับคะแนน v1 เท่านั้น — v2 ใช้ aset แทน"
-    }
+ "version": "2.1.0-preview",
+ "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
+ "genes": {
+  "hs": {
+   "label": "ซ่อนผู้ส่ง",
+   "0": "ผู้ส่งเปิดเผยบนเชน (transparent address / public sender)",
+   "1": "ซ่อนได้เมื่อผู้ใช้เลือกใช้กลไก (opt-in: shielded pool, mixer, coinjoin)",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย — ไม่มีโหมดที่เปิดเผยผู้ส่งเลย",
+   "src_hint": "protocol spec / whitepaper ของโปรเจกต์",
+   "non_value_transfer_rule": "ถ้า arch != value-transfer → hs = 0 (โทเค็นบนเชนโฮสต์โปร่งใส) ห้ามให้ 1/2 เพราะความลับของ data packet ไม่ใช่ความลับของการโอนโทเค็น"
+  },
+  "hr": {
+   "label": "ซ่อนผู้รับ",
+   "0": "ที่อยู่ผู้รับปรากฏบนเชน",
+   "1": "ซ่อนได้แบบ opt-in",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย (stealth address / shielded note)",
+   "src_hint": "protocol spec",
+   "non_value_transfer_rule": "เหมือน hs"
+  },
+  "ha": {
+   "label": "ซ่อนจำนวน",
+   "0": "จำนวนธุรกรรมเปิดเผย",
+   "1": "ซ่อนได้แบบ opt-in (confidential transactions)",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย (RingCT / Pedersen commitment บังคับ)",
+   "src_hint": "protocol spec",
+   "non_value_transfer_rule": "เหมือน hs"
+  },
+  "hst": {
+   "label": "ซ่อน state ของ smart contract",
+   "0": "state เปิดทั้งหมด หรือโปรโตคอลไม่มี state ให้ซ่อน",
+   "1": "ซ่อน state ได้แบบ opt-in (private contract ที่เลือกใช้)",
+   "2": "state ถูกเข้ารหัสโดยปริยาย (private-by-default execution)",
+   "src_hint": "docs ของ execution layer · โปรโตคอลที่ไม่มี smart contract ให้ใช้ 0 และตั้ง nst=1"
+  },
+  "hmeta": {
+   "label": "ต้านทาน metadata (fee / timing / ขนาด tx)",
+   "0": "fee, timing และขนาด tx เปิดเผยทั้งหมด",
+   "1": "แก้ได้บางส่วน เช่น fee แบบ fixed tier หรือมี Dandelion แบบ opt-in",
+   "2": "ทุกธุรกรรมมีรูปแบบเหมือนกัน (uniform fee/size, timing ที่เบลอโดยปริยาย)",
+   "src_hint": "งานวิจัยด้าน transaction graph / fee analysis"
+  },
+  "hnet": {
+   "label": "privacy ชั้นเครือข่าย",
+   "0": "ไม่มีการป้องกัน IP เลย",
+   "1": "รองรับ Tor/I2P แบบ opt-in (ผู้ใช้ต้องตั้งเอง)",
+   "2": "มีในตัว เช่น Dandelion++ หรือ mixnet ที่ทำงานโดยปริยาย",
+   "src_hint": "protocol spec / whitepaper ของ network layer"
+  },
+  "man": {
+   "label": "บังคับใช้ privacy",
+   "0": "opt-in — ผู้ใช้ต้องเลือกเปิดเอง (ค่าเริ่มต้นเปิดเผย)",
+   "0.5": "default-on — เปิดให้โดยปริยาย แต่ผู้ใช้ปิดได้",
+   "1": "บังคับ — ทุกธุรกรรมเป็น private ไม่มีทางเลือกอื่น",
+   "src_hint": "protocol spec (ดูว่าโหมด transparent ยังมีอยู่ไหม)"
+  },
+  "tl": {
+   "label": "trust assumption",
+   "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (trusted setup ที่ยังมีผล, single sequencer, permissioned validator)",
+   "1": "เชื่อคณะที่กระจายตัวแต่ยังมีสมมติฐาน (honest-majority MPC, TEE hardware, threshold KMS, committee)",
+   "2": "trustless เต็มรูปแบบ (ไม่มี trusted setup, พิสูจน์ได้บนเชน, PoW/PoS เปิด)",
+   "src_hint": "งานวิจัย setup / docs สถาปัตยกรรม — ห้ามนับ trust ของ operator ซ้ำใน aset"
+  },
+  "mat": {
+   "label": "ความพร้อมใช้งานจริง",
+   "0": "ใช้งานจริงไม่ถึง 1 ปี หรือยังไม่มี audit สาธารณะ",
+   "1": "ใช้งานจริง 1–3 ปี และมี audit อย่างน้อย 1 ครั้ง",
+   "2": "ใช้งานจริงเกิน 3 ปี และมี audit หลายครั้ง",
+   "src_hint": "genesis/mainnet date + หน้ารวม audit ของโปรเจกต์"
+  },
+  "pq": {
+   "label": "ทนต่อ quantum computer",
+   "0": "พึ่ง elliptic-curve/Discrete-log ล้วน (ไม่มีการเตรียม post-quantum)",
+   "1": "มีแผน/roadmap หรือ hybrid ที่เริ่มใช้ lattice-based signature บางส่วน",
+   "2": "ใช้ post-quantum cryptography เป็นแกนของกลไก privacy แล้ว",
+   "src_hint": "เอกสารด้าน cryptography ของโปรเจกต์"
+  },
+  "brk": {
+   "label": "เคยมีช่องโหว่ privacy ที่ยังไม่ปิด",
+   "0": "ไม่เคยมี หรือมีแล้วปิดครบพร้อม disclosure สาธารณะ",
+   "1": "มีช่องโหว่ที่ส่งผลต่อ privacy และยังไม่ปิด หรือปิดไม่ครบ",
+   "src_hint": "advisory ของทีม / รายงานความปลอดภัย",
+   "effect": "หัก −15 คะแนนจาก P (ไม่ใช่การรีเซ็ตเป็นศูนย์)"
+  },
+  "aset": {
+   "label": "effective per-transaction anonymity set",
+   "definition": "จำนวนคู่สนทนาที่เป็นไปได้ซึ่งผู้สังเกตต้องพิจารณาสำหรับ \"หนึ่งธุรกรรม\" ณ เวลาที่ทำ — ไม่ใช่ขนาดสะสมของ pool ทั้งก้อน และไม่ใช่จำนวนผู้ถือ",
+   "precedence": [
+    "ชั้น 1 — protocol-enforced per-tx set: ถ้าโปรโตคอลบังคับวงไว้ที่ระดับ consensus (เช่น ring size ของ Monero = 16) ให้ใช้ตัวเลขที่บังคับนั้นเป็นค่าตั้งต้น (conf=high, src = protocol spec) และบันทึกผลของ heuristic ไว้ใน note",
+    "ชั้น 2 — active pool depth: ระบบแบบ pool (Zcash Orchard/Sapling, Railgun, Aztec, mixer) ต้องวัดจากจำนวน note/UTXO ที่มีอยู่จริง ณ วัน asof (หรือ % ของ circulating supply ที่อยู่ใน pool) ห้ามใช้ค่าทางทฤษฎี",
+    "ชั้น 3 — fallback: ถ้าอ้างว่ามี anonymity set ใหญ่แต่ตรวจสอบซ้ำไม่ได้ (ไม่มี explorer/สถิติ) ให้ใช้ค่าต่ำสุดของกลุ่มจนกว่าจะมี src ยืนยัน"
+   ],
+   "thresholds": {
+    "note": "ใช้กับชั้น 2 และการตีความค่าที่วัดได้",
+    "lt_1000": "เล็กมาก — bits เกือบศูนย์",
+    "1000_to_100k": "กลาง",
+    "gt_100k": "ใหญ่"
+   },
+   "scoring": "bits = min(log2(aset) / 20, 1) × น้ำหนัก 15",
+   "unverifiable_cap": "ถ้า aset ไม่มี src หรือมี conf=low → bits ถูกจำกัดที่ค่าของกลุ่มต่ำสุด (aset ถือเป็น < 1,000) จนกว่าจะมีหลักฐาน",
+   "src_hint": "งานวิจัย anonymity-set analysis / explorer ที่นับ note ได้ / protocol spec ที่ระบุวงบังคับ"
+  },
+  "nst": {
+   "label": "ไม่มี state ให้ซ่อน",
+   "0": "โปรโตคอลมี state/smart contract",
+   "1": "สกุลเงินล้วน ไม่มี state (ตัด hst ออกจากตัวหารของ coverage)",
+   "src_hint": "ดูว่ามี execution layer ไหม"
+  },
+  "big": {
+   "label": "anonymity set ระดับเครือข่าย (legacy v1)",
+   "0": "pool/กลุ่มย่อยเท่านั้น",
+   "1": "ทั้งเครือข่าย",
+   "src_hint": "ใช้กับคะแนน v1 เท่านั้น — v2 ใช้ aset แทน"
+  },
+  "arch": {
+   "label": "architecture role",
+   "values": [
+    "value-transfer",
+    "transport",
+    "compute"
+   ],
+   "src_hint": "เอกสารสถาปัตยกรรมของโปรเจกต์ — ต้องระบุว่าตัวโทเค็นอยู่บนเชนใด"
   }
+ },
+ "arch_roles": {
+  "note": "Architecture role decides WHICH layer the token is judged on. A token that lives as a transparent ERC-20/Cosmos asset is judged as transparent, no matter how private the data packets its network carries.",
+  "value-transfer": "เหรียญ/เชนที่โอนมูลค่าเอง (Privacy Coins, L1, L2 rollup) — ประเมิน hs/hr/ha จากกลไกของตัวเชน",
+  "transport": "โครงข่ายพา metadata (mixnet, dVPN, messenger) — โทเค็นอาศัยเชนโฮสต์แบบโปร่งใส → hs/hr/ha = 0 และถูกตัดสินด้วย hmeta/hnet เป็นหลัก",
+  "compute": "ชั้นประมวลผล/จัดเก็บ (TEE, MPC, FHE, storage) — ประเมิน hs/hr/ha จากเลเยอร์ที่โทเค็นอยู่; hst/ความลับของ state ประเมินจากกลไกของมันเอง"
+ }
 }

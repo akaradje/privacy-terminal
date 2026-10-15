@@ -1,5 +1,8 @@
 # Pilot round — result (6 coins × 12 genes)
 
+> **Superseded for §1–§4 by [`pilot/result-rubric-2.1.md`](result-rubric-2.1.md)** — the rubric defect this run
+> exposed was fixed in rubric 2.1 (arch roles + aset precedence + unverifiable cap).
+
 Run: 2026-10-16 · `scoring_version 2.0.0-preview` · expected ranking was committed first in `pilot/expected.md`
 Fill script: `pilot/fill_pilot.py` · raw values now live in `data/dna3.json` as `{v, conf, src, asof}`
 

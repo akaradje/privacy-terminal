@@ -17,6 +17,7 @@ D = os.path.dirname(os.path.abspath(__file__))
 DOCS = [
     ('pilot/result.md', 'Pilot round — result', 'ผลรอบ pilot 6 เหรียญ: คะแนน, เกณฑ์ที่ไม่ผ่าน, ค่าที่หาแหล่งอ้างอิงไม่ได้'),
     ('pilot/expected.md', 'Pilot — expected ranking (pre-registered)', 'อันดับที่เขียนไว้ก่อนกรอกข้อมูล + เงื่อนไขที่ทำให้รู้ว่า engine ผิด'),
+    ('pilot/result-rubric-2.1.md', 'Pilot round 2 — after rubric 2.1', 'ผลรอบสองหลังแก้ rubric: NYM ตกจากอันดับ 2, อันดับในกลุ่ม value-transfer ตรงกับที่คาดไว้'),
     ('pilot/plan-review-v4.md', 'Review of the v4 upgrade plan', 'ประเมินแผนอัปเกรด v4: อะไรทำก่อน/ทีหลัง/ไม่ทำ พร้อมเหตุผล และลำดับที่ถูกต้อง'),
     ('CHANGELOG.md', 'Changelog', 'ทุกการเปลี่ยนสูตรและ data contract พร้อม scoring_version'),
     ('HANDOVER.md', 'Handover', 'คู่มือส่งต่องาน: สถาปัตยกรรม, data model, runbook, QA, roadmap'),

@@ -123,6 +123,16 @@ function tierChip(t) {
   return '<span class="chip tier-' + t + '">' + lbl + '</span>';
 }
 function famChip(f) { return f ? '<span class="chip fam">' + f + '</span>' : ''; }
+function archOf(d) {
+  var x = (d || {}).arch;
+  return x == null ? null : (typeof x === 'object' ? x.v : x);
+}
+function archChip(d) {
+  var a = archOf(d);
+  if (!a) return '';
+  var cls = a === 'value-transfer' ? 'tier-t1' : (a === 'transport' ? 'tier-t2' : 'tier-t3');
+  return '<span class="chip ' + cls + '" title="แยก leaderboard ตามสถาปัตยกรรม — ห้ามเทียบข้ามกลุ่ม">' + a + '</span>';
+}
 function geneCell(v) {
   if (v === 2) return '<span class="gene g2">FULL</span>';
   if (v === 1) return '<span class="gene g1">OPT</span>';
@@ -223,7 +233,7 @@ function sortVal(c, k) {
 function dnaPanel(c) {
   var d = dna(c), q = cur(c.s), g = gradeOf(d);
   var head = '<div class="dnaHead"><b>' + c.s + '</b><span class="dim">' + c.n + '</span>' +
-    '<span class="chip">' + (c.g || 'proto') + '</span>' + famChip(d.fam) + badge(q.model) +
+    '<span class="chip">' + (c.g || 'proto') + '</span>' + archChip(d) + famChip(d.fam) + badge(q.model) +
     (g == null ? '' : '<span class="' + gradeCls(g) + '">DNA ' + g + '/100 · ' + gradeLetter(g) + '</span>') + '</div>';
   var strip = '<div class="geneRow"><span class="lbl">ซ่อน:</span>' +
     '<span class="lbl">ผู้ส่ง</span>' + geneCell(d.hs) +
@@ -372,7 +382,7 @@ function renderMatrix() {
     out.push('<tr data-sym="' + c.s + '" class="row">' +
       '<td class="num dim">' + (j + 1) + '</td>' +
       '<td class="coin"><span class="sym">' + c.s + '</span><span class="nm">' + c.n + '</span></td>' +
-      '<td><span class="chip">' + grpOf(c) + '</span></td>' +
+      '<td><span class="chip">' + grpOf(c) + '</span> ' + archChip(d) + '</td>' +
       '<td>' + famChip(d.fam) + '</td>' +
       '<td>' + geneCell(d.hs) + '</td>' +
       '<td>' + geneCell(d.hr) + '</td>' +

@@ -91,7 +91,15 @@
    "src": "https://z.cash/",
    "asof": "2026-10-16",
    "note": "Orchard soundness bug มิ.ย. 2026 ถูกเปิดเผยและแก้ถาวรด้วย Ironwood ก.ค. 2026"
-  }
+  },
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน Orchard ณ asof — ต้องดึงจาก explorer ที่นับ note ได้ (ยังไม่มี src)"
  },
  "XMR": {
   "g": "coin",
@@ -187,11 +195,18 @@
    "note": "ข้อค้นพบเรื่อง traceability ในอดีตถูกแก้แล้ว (decoy sampling 2019)"
   },
   "aset": {
-   "v": 4,
-   "conf": "low",
-   "src": "https://github.com/monero-project/research-lab",
+   "v": 16,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
    "asof": "2026-10-16",
-   "note": "effective ไม่เท่า ring size: งานวิจัยด้าน heuristic (Miller et al. 2017; Kumar et al. 2017) ชี้ว่า effective set เล็กกว่ามาก หลังแก้ decoy sampling ยังเป็นที่ถกเถียง — ค่านี้ต้องยืนยันด้วยการวัดจริง"
+   "note": "ชั้น 1: ring size บังคับที่ระดับ consensus = 16 · งานวิจัย heuristic (Miller et al. 2017; Kumar et al. 2017) ชี้ว่า effective ต่ำกว่านี้ — บันทึกไว้ใน note แต่ค่าตั้งต้นใช้ตัวเลขที่โปรโตคอลบังคับเพื่อให้ทำซ้ำได้"
+  },
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
   }
  },
  "DASH": {
@@ -669,7 +684,15 @@
    "src": "https://docs.aztec.network/",
    "asof": "2026-10-16",
    "note": "พึ่ง elliptic curve"
-  }
+  },
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน rollup ณ asof — ยังไม่มีแหล่งที่นับได้"
  },
  "RAIL": {
   "g": "proto",
@@ -886,25 +909,25 @@
  "NYM": {
   "g": "net",
   "hs": {
-   "v": 1,
-   "conf": "med",
-   "src": "https://nymtech.net/",
+   "v": 0,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "ซ่อนผู้ส่งที่ระดับ network/metadata ไม่ใช่ผู้ส่งบนเชน"
+   "note": "กฎ non-value-transfer: โทเค็น NYM อยู่บนเชนโฮสต์แบบโปร่งใส ความลับของ Sphinx packet ไม่ใช่ความลับของการโอนโทเค็น"
   },
   "hr": {
-   "v": 1,
-   "conf": "med",
-   "src": "https://nymtech.net/",
+   "v": 0,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "เหมือน hs — mixnet ซ่อนปลายทางของการสื่อสาร"
+   "note": "กฎ non-value-transfer: โทเค็น NYM อยู่บนเชนโฮสต์แบบโปร่งใส ความลับของ Sphinx packet ไม่ใช่ความลับของการโอนโทเค็น"
   },
   "ha": {
    "v": 0,
    "conf": "high",
    "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "ไม่มีการซ่อนจำนวน เพราะไม่ได้เป็นระบบโอนมูลค่า"
+   "note": "กฎ non-value-transfer: โทเค็น NYM อยู่บนเชนโฮสต์แบบโปร่งใส ความลับของ Sphinx packet ไม่ใช่ความลับของการโอนโทเค็น"
   },
   "hst": {
    "v": 0,
@@ -975,7 +998,15 @@
    "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
    "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ให้ครบ"
-  }
+  },
+  "arch": {
+   "v": "transport",
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
+  },
+  "aset_note": "ชั้น 3: ไม่มีสถิติผู้ใช้ mixnet ต่อ epoch ที่ตรวจสอบซ้ำได้"
  },
  "HOPR": {
   "g": "net",
@@ -1145,7 +1176,15 @@
    "src": "https://docs.scrt.network/",
    "asof": "2026-10-16",
    "note": "งานวิจัย SGX side-channel ถูกเปิดเผยและมีการ upgrade/rotation แต่ผลกระทบต่อ privacy ยังถกเถียง"
-  }
+  },
+  "arch": {
+   "v": "compute",
+   "conf": "high",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
+  },
+  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้"
  },
  "ROSE": {
   "g": "compute",
@@ -1268,7 +1307,15 @@
    "src": "https://partisiablockchain.com/",
    "asof": "2026-10-16",
    "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ย้อนหลังให้ครบ"
-  }
+  },
+  "arch": {
+   "v": "compute",
+   "conf": "high",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
+  },
+  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้"
  },
  "OCT": {
   "g": "compute",

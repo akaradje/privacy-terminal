@@ -16,6 +16,11 @@
  *   TEE / MPC        -> number of USERS interacting with the same contract/pool during that
  *                       epoch. Trusting the operator is NOT anonymity: that risk belongs in
  *                       `tl` only, and counting it here would double-count it.
+ * Precedence (rubric 2.1): protocol-enforced per-tx value -> live pool depth at asof ->
+ * fallback to the lowest band when the claim is unverifiable (no src / conf=low).
+ * Architecture role: `arch` = value-transfer | transport | compute. A transport/compute token
+ * that lives on a transparent host chain scores hs/hr/ha = 0 — the privacy of its data packets
+ * is not the privacy of its transfers, and is captured by hmeta/hnet instead.
  * It is NOT the cumulative size of the whole pool, and NOT the number of holders.
  * Consequence (accepted, not a bug): ring-based coins score low on the bits component by
  * construction; they recover the difference through `man` (mandatory privacy), which is the
@@ -72,7 +77,12 @@ function scoreP(d) {
   var cov = hasCov ? Math.min((hs + hr + ha + hst) / denom, 1) : null;
 
   var aset = gval(d, 'aset');
+  var asetConf = gconf(d, 'aset'), asetSrc = gsrc(d, 'aset');
   var bits = (aset != null && aset > 1) ? Math.min(Math.log(aset) / Math.LN2 / ASET_BITS_FULL, 1) : null;
+  /* rubric 2.1: an unverifiable anonymity-set claim cannot buy credit — cap it at the lowest band */
+  if (bits != null && (!asetSrc || asetConf === 'low')) {
+    bits = Math.min(bits, Math.log(1000) / Math.LN2 / ASET_BITS_FULL);
+  }
 
   var man = gval(d, 'man');      // 0 opt-in | 0.5 default-on | 1 mandatory
   var tl = gval(d, 'tl');        // 0..2
