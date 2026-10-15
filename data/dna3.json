@@ -1,37 +1,198 @@
 {
  "ZEC": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "shielded ซ่อนได้ แต่ยังมี transparent address และเป็นค่าเริ่มต้นของหลายวอลเล็ต/กระดาน"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "เหมือน hs — opt-in ผ่าน shielded pool"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "จำนวนถูกซ่อนเฉพาะใน shielded pool"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://z.cash/technology/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี general smart contract"
+  },
+  "man": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "opt-in — transparent pool ยังเป็นทางเลือกหลัก"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "Orchard/Halo 2 ไม่ต้อง trusted setup (Sprout/Sapling รุ่นก่อนมี)"
+  },
   "big": 0,
   "yr": 2016,
   "setup": "Orchard/Halo 2 — ไม่ต้อง trusted setup (Sprout รุ่นแรกต้อง)",
   "audit": "Halo 2 audit สาธารณะ · พบ Orchard bug มิ.ย. 2026 → แก้ถาวรด้วย Ironwood ก.ค. 2026",
   "gov": "Zcash Foundation + ECC · NU7 ผ่านโหวต ~99%",
   "risk": "EU AMLR 2027 · ETF flows ย้อนกลับได้ · leverage สูง",
-  "nst": 1,
-  "hist": "2016-10 mainnet · 2024-11 halving (reward 1.5625 ZEC) · 2025-10 Naval Ravikant tweet จุดระเบิดรอบใหญ่ · 2026-01 SEC ปิดคดี Zcash Foundation · 2026-05 Multicoin เปิดโพซิชัน · 2026-06 พบ Orchard soundness bug (-60%) · 2026-07-28 Ironwood แก้ถาวร · 2026-08-25 Grayscale ZCSH ETF ตัวแรกของ privacy coin บน NYSE Arca · 2026-09-16 NU7 ผ่านโหวต ~99% (block time 75s→25s) · 2026-09-23/26 แตะจุดสูง $1,609/$1,693 · 2026-10-15 -13% จาก CPI"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://z.cash/technology/",
+   "asof": "2026-10-16",
+   "note": "สกุลเงินล้วน"
+  },
+  "hist": "2016-10 mainnet · 2024-11 halving (reward 1.5625 ZEC) · 2025-10 Naval Ravikant tweet จุดระเบิดรอบใหญ่ · 2026-01 SEC ปิดคดี Zcash Foundation · 2026-05 Multicoin เปิดโพซิชัน · 2026-06 พบ Orchard soundness bug (-60%) · 2026-07-28 Ironwood แก้ถาวร · 2026-08-25 Grayscale ZCSH ETF ตัวแรกของ privacy coin บน NYSE Arca · 2026-09-16 NU7 ผ่านโหวต ~99% (block time 75s→25s) · 2026-09-23/26 แตะจุดสูง $1,609/$1,693 · 2026-10-15 -13% จาก CPI",
+  "hmeta": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "ภายใน pool รูปแบบสม่ำเสมอ แต่ fee และ timing ยังเปิด และ transparent tx รั่วทั้งหมด"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://z.cash/technology/",
+   "asof": "2026-10-16",
+   "note": "รองรับ Tor ในไคลเอนต์ แต่ผู้ใช้ต้องตั้งเอง (opt-in)"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://z.cash/technology/",
+   "asof": "2026-10-16",
+   "note": "mainnet 2016 (>3 ปี) + audit หลายครั้ง"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve (BLS12-381 / Pasta)"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://z.cash/",
+   "asof": "2026-10-16",
+   "note": "Orchard soundness bug มิ.ย. 2026 ถูกเปิดเผยและแก้ถาวรด้วย Ironwood ก.ค. 2026"
+  }
  },
  "XMR": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
+   "asof": "2026-10-16",
+   "note": "ทุกธุรกรรมซ่อนผู้ส่งด้วย ring signature — ไม่มีโหมด transparent"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
+   "asof": "2026-10-16",
+   "note": "stealth address ทุกธุรกรรม"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
+   "asof": "2026-10-16",
+   "note": "RingCT ซ่อนจำนวนทุกธุรกรรม"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer / smart contract"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
+   "asof": "2026-10-16",
+   "note": "privacy บังคับ ไม่มีโหมดเปิดเผย"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://www.getmonero.org/library/Zero-to-Monero-2-0-0.pdf",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup และไม่มีคณะผู้ดูแล"
+  },
   "big": 1,
   "yr": 2014,
   "setup": "ไม่มี trusted setup",
   "audit": "ตรวจทางวิชาการกว้าง · ไม่เคยมีช่องโหว่ระดับโปรโตคอล",
   "gov": "ชุมชน + CCS funding ไม่มีบริษัทกลาง",
   "risk": "ถูกถอดจาก 70+ CEX · ไม่มี ETF · ขัด travel rule",
-  "nst": 1,
-  "hist": "2014-04 mainnet (CryptoNote fork) · 2017 RingCT · 2019 CLSAG (ring 16) · 2024-02 Binance ถอดทั้งโลก · 2024-10 Kraken ถอน EEA · 2025 ทั้งปี ~73 แห่งถอด privacy coin · 2026-01 ATH $797.73 · 2026-06 ราคา ~$310 (ยังสูงกว่าเดิมหลายเท่า)"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "สกุลเงินล้วน ไม่มี state"
+  },
+  "hist": "2014-04 mainnet (CryptoNote fork) · 2017 RingCT · 2019 CLSAG (ring 16) · 2024-02 Binance ถอดทั้งโลก · 2024-10 Kraken ถอน EEA · 2025 ทั้งปี ~73 แห่งถอด privacy coin · 2026-01 ATH $797.73 · 2026-06 ราคา ~$310 (ยังสูงกว่าเดิมหลายเท่า)",
+  "hmeta": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "ขนาด tx ค่อนข้างสม่ำเสมอจาก RingCT แต่ fee ยังผันผวนและยังมี timing leak"
+  },
+  "hnet": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "Dandelion++ ทำงานโดยปริยายในตัวไคลเอนต์มาตรฐาน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "mainnet 2014 (>3 ปี) + งานวิจัย/audit หลายชิ้น"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve (Ed25519/curve25519) ไม่มีแผน PQ ที่ใช้แล้ว"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://github.com/monero-project/research-lab",
+   "asof": "2026-10-16",
+   "note": "ข้อค้นพบเรื่อง traceability ในอดีตถูกแก้แล้ว (decoy sampling 2019)"
+  },
+  "aset": {
+   "v": 4,
+   "conf": "low",
+   "src": "https://github.com/monero-project/research-lab",
+   "asof": "2026-10-16",
+   "note": "effective ไม่เท่า ring size: งานวิจัยด้าน heuristic (Miller et al. 2017; Kumar et al. 2017) ชี้ว่า effective set เล็กกว่ามาก หลังแก้ decoy sampling ยังเป็นที่ถกเถียง — ค่านี้ต้องยืนยันด้วยการวัดจริง"
+  }
  },
  "DASH": {
   "g": "coin",
@@ -425,19 +586,90 @@
  },
  "AZTEC": {
   "g": "proto",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 2,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "private function ซ่อนโดยปริยาย แต่โปรโตคอลยังมี public function/state ให้ใช้"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "เหมือน hs — ขึ้นกับว่า contract ใช้ private หรือ public"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "จำนวนถูกซ่อนใน private execution"
+  },
+  "hst": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "private state ถูกเข้ารหัสและพิสูจน์ฝั่งผู้ใช้ (client-side proving)"
+  },
+  "man": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "ค่าเริ่มต้นขึ้นกับ contract — ถ้าเขียน public function ก็เปิดเผยได้"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://aztec.network/",
+   "asof": "2026-10-16",
+   "note": "PLONK/Honk ไม่ต้อง trusted setup + พิสูจน์ฝั่งผู้ใช้"
+  },
   "big": 0,
   "yr": 2025,
   "setup": "PLONK/Honk — ไม่ต้อง trusted setup",
   "audit": "Cantina bounty 234+ researchers · พบ vuln V5 ก.ค. 2026",
   "gov": "Aztec Foundation + on-chain governance (V5 ผ่านโหวต)",
   "risk": "alpha · V5 vuln · 71% supply ล็อกถึง 2027+",
-  "hist": "2017/2018 ก่อตั้ง · 2019 เผยแพร่ PLONK · 2021-12 Series A $17M (Paradigm, Vitalik ร่วมลงทุน) · 2022-12 Series B $100M (a16z) · 2023-03 ปิด zk.money/Aztec Connect เพื่อรื้อใหม่ · 2025-02-14 ตั้ง Aztec Foundation · 2025-11-20 Ignition mainnet · 2025-12-02..06 public auction (16,741 ที่อยู่, ~19,400 ETH, ราคา $0.0473) · 2026-02-12 TGE · 2026-02-20 Upbit เปิดเทรด +107% · 2026-05 ซื้อ ZKPassport · 2026-07 Alpha V5 + Nyx เปิด · 2026-07-27 พบ vuln ใน V5 proving system"
+  "hist": "2017/2018 ก่อตั้ง · 2019 เผยแพร่ PLONK · 2021-12 Series A $17M (Paradigm, Vitalik ร่วมลงทุน) · 2022-12 Series B $100M (a16z) · 2023-03 ปิด zk.money/Aztec Connect เพื่อรื้อใหม่ · 2025-02-14 ตั้ง Aztec Foundation · 2025-11-20 Ignition mainnet · 2025-12-02..06 public auction (16,741 ที่อยู่, ~19,400 ETH, ราคา $0.0473) · 2026-02-12 TGE · 2026-02-20 Upbit เปิดเทรด +107% · 2026-05 ซื้อ ZKPassport · 2026-07 Alpha V5 + Nyx เปิด · 2026-07-27 พบ vuln ใน V5 proving system",
+  "nst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "มี state layer เต็มรูปแบบ"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "fee/timing ยังเปิด และขนาด proof ไม่คงที่ — ต้องยืนยันด้วยการวัด"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี network privacy ในตัว ผู้ใช้ต้องพึ่งเครื่องมือภายนอก"
+  },
+  "mat": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://aztec.network/",
+   "asof": "2026-10-16",
+   "note": "Ignition mainnet พ.ย. 2025 — ใช้งานจริงไม่ถึง 1 ปี และยังเป็น alpha"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  }
  },
  "RAIL": {
   "g": "proto",
@@ -653,19 +885,97 @@
  },
  "NYM": {
   "g": "net",
-  "hs": 2,
-  "hr": 2,
-  "ha": 0,
-  "hst": 0,
-  "man": 1,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://nymtech.net/",
+   "asof": "2026-10-16",
+   "note": "ซ่อนผู้ส่งที่ระดับ network/metadata ไม่ใช่ผู้ส่งบนเชน"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://nymtech.net/",
+   "asof": "2026-10-16",
+   "note": "เหมือน hs — mixnet ซ่อนปลายทางของการสื่อสาร"
+  },
+  "ha": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ไม่มีการซ่อนจำนวน เพราะไม่ได้เป็นระบบโอนมูลค่า"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี state layer ให้ซ่อน"
+  },
+  "man": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ทราฟฟิกที่ผ่าน mixnet ถูกผสมโดยปริยาย แต่ผู้ใช้ต้องเลือกใช้เครือข่ายนี้"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ต้องเชื่อ mix node ว่าจะไม่ collude — ไม่ trustless เต็มรูปแบบ"
+  },
   "big": 1,
   "yr": 2022,
   "setup": "mixnet — ไม่ต้อง trusted setup แต่ต้องเชื่อ mix nodes",
   "audit": "",
   "gov": "",
   "risk": "ซ่อน metadata ไม่ใช่ยอดโอน",
-  "hist": "2022 mainnet mixnet · 2023-2024 ขยาย node network · จุดขายคือซ่อน metadata ไม่ใช่ยอดโอน"
+  "hist": "2022 mainnet mixnet · 2023-2024 ขยาย node network · จุดขายคือซ่อน metadata ไม่ใช่ยอดโอน",
+  "nst": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ไม่ใช่สกุลเงินที่มี state"
+  },
+  "hmeta": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "Sphinx packet ทำให้ทุกแพ็กเก็ตมีรูปแบบเดียวกันโดยปริยาย"
+  },
+  "hnet": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "mixnet ทำงานโดยปริยายสำหรับทราฟฟิกที่ผ่านเครือข่าย"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://nymtech.net/",
+   "asof": "2026-10-16",
+   "note": "mainnet 2022 (เกิน 3 ปี) — audit ต้องยืนยันรายการ"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://nymtech.net/docs/",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ให้ครบ"
+  }
  },
  "HOPR": {
   "g": "net",
@@ -745,19 +1055,97 @@
  },
  "SCRT": {
   "g": "compute",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 2,
-  "man": 1,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "Secret contract ซ่อนได้ แต่การโอน/ธุรกรรมสาธารณะยังเปิด"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "เหมือน hs"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "ซ่อนได้ใน secret contract (SNIP-20 private)"
+  },
+  "hst": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "contract state ถูกเข้ารหัสใน TEE"
+  },
+  "man": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "public contract ยังเป็นค่าเริ่มต้นของหลายกรณี"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "ต้องเชื่อฮาร์ดแวร์ TEE (SGX) — ความเสี่ยงนี้อยู่ที่ tl เท่านั้น ไม่นับใน aset"
+  },
   "big": 0,
   "yr": 2020,
   "setup": "TEE (Intel SGX) — เชื่อฮาร์ดแวร์",
   "audit": "งานวิจัย SGX side-channel 2023",
   "gov": "on-chain governance",
   "risk": "พึ่ง TEE hardware",
-  "hist": "2020 mainnet (Secret Network) · 2023-2024 งานวิจัย SGX side-channel กระตุ้นให้เร่ง upgrade/rotation"
+  "hist": "2020 mainnet (Secret Network) · 2023-2024 งานวิจัย SGX side-channel กระตุ้นให้เร่ง upgrade/rotation",
+  "nst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "มี state layer"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "fee/timing เปิด — ต้องยืนยันด้วยการวัด"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี network privacy ในตัว"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://scrt.network/",
+   "asof": "2026-10-16",
+   "note": "mainnet 2020 (>3 ปี) + audit หลายครั้ง"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "งานวิจัย SGX side-channel ถูกเปิดเผยและมีการ upgrade/rotation แต่ผลกระทบต่อ privacy ยังถกเถียง"
+  }
  },
  "ROSE": {
   "g": "compute",
@@ -791,18 +1179,96 @@
  },
  "MPC": {
   "g": "compute",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 2,
-  "man": 0,
-  "tl": 0,
+  "hs": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "MPC secret-sharing ซ่อน input ของ contract ที่เลือกใช้ แต่การโอนสาธารณะยังเปิด"
+  },
+  "hr": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "เหมือน hs"
+  },
+  "ha": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "ซ่อนจำนวนได้ใน MPC contract"
+  },
+  "hst": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "state ถูกแบ่งเป็น secret share ระหว่างคณะ MPC"
+  },
+  "man": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "private contract เป็นทางเลือก ไม่ใช่ค่าเริ่มต้นของทั้งเครือข่าย"
+  },
+  "tl": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "เชื่อ honest-majority ของคณะ MPC — ความเสี่ยงนี้อยู่ที่ tl เท่านั้น"
+  },
   "big": 0,
   "yr": 2022,
   "setup": "MPC secret sharing — เชื่อ honest majority",
   "audit": "",
   "gov": "",
-  "risk": ""
+  "risk": "",
+  "nst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "มี state layer"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "fee/timing เปิด — ต้องยืนยันด้วยการวัด"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี network privacy ในตัว"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "mainnet 2022 (เกิน 3 ปี) — ต้องยืนยันรายการ audit ให้ครบ"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://partisiablockchain.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ย้อนหลังให้ครบ"
+  }
  },
  "OCT": {
   "g": "compute",
