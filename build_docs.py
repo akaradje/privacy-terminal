@@ -18,6 +18,7 @@ DOCS = [
     ('pilot/result.md', 'Pilot round — result', 'ผลรอบ pilot 6 เหรียญ: คะแนน, เกณฑ์ที่ไม่ผ่าน, ค่าที่หาแหล่งอ้างอิงไม่ได้'),
     ('pilot/expected.md', 'Pilot — expected ranking (pre-registered)', 'อันดับที่เขียนไว้ก่อนกรอกข้อมูล + เงื่อนไขที่ทำให้รู้ว่า engine ผิด'),
     ('pilot/aset-probes.md', 'aset tier-2 probes (what was tried)', 'ผล probe API สาธารณะสำหรับ aset: อะไรเข้าได้/ไม่ได้ + เหตุผลที่ AZTEC ต้องไม่ถูกตั้งเป็น 0'),
+    ('pilot/batch3-4-result.md', 'Batch 3+4 — complete (51/51)', 'ผล Batch 3 และ 4: ครบ 51 เหรียญ พร้อมการแก้ความไม่สอดคล้อง 2 จุดที่พบระหว่างกรอก'),
     ('pilot/batch2-result.md', 'Batch 2 — Zcash forks / masternode / legacy', 'ผล Batch 2: 11 เหรียญ พร้อมตาราง gene, ที่มา, และสิ่งที่พบ'),
     ('pilot/aset-probes-round2.md', 'aset probes — round 2 (replacement list)', 'ผล probe รอบ 2: 8/10 ตาย, 2 ที่ได้จริงไม่ใช่ anonymity set — ยืนยันว่าต้องใช้ fallback ชั้น 3'),
     ('pilot/result-rubric-2.1.md', 'Pilot round 2 — after rubric 2.1', 'ผลรอบสองหลังแก้ rubric: NYM ตกจากอันดับ 2, อันดับในกลุ่ม value-transfer ตรงกับที่คาดไว้'),

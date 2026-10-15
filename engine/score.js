@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.3.1-preview
+ * scoring_version: 2.3.2-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,23 +33,30 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.3.1-preview';
+var SCORING_VERSION = '2.3.2-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
-/* Conservative baseline imputation — closes the null-rescale loophole.
- * Dropping a missing component out of the denominator assumes its value equals the average of
- * the remaining ones. For `bits` that assumption is systematically WRONG for ring families:
- * ring 16 scores 3/15, i.e. far below the average of the other components — so omitting `aset`
- * used to PAY, and a coin with no anonymity-set evidence outranked one that had published a
- * smaller, proven set. Rubric 2.2 tier-3 already states that an unproven anonymity set cannot
- * buy credit; this makes it binding in the arithmetic instead of only in prose.
- * An imputed component keeps its weight in the denominator at the floor value, is listed in
- * `imputed`, still appears in `missing`, and still widens `band` / lowers `coverage`.
- * A component with NO known floor keeps the null-aware behaviour (weight dropped, uncertainty
- * carried by `coverage`/`band`) — we do not pretend an unknown value is zero either.
- * Scoped to `bits` for now: it is the one component whose missing value is knowably low across
- * a whole family. Extending this table changes scores and needs its own evidence. */
-var IMPUTE = { bits: 0 };
+/* Conservative floor — makes the score strictly monotonic.
+ * Every ACTIVE component keeps its weight in the denominator; a component with no value scores
+ * FLOOR (0) instead of being dropped. Dropping it would assume the missing value equals the
+ * average of the rest, which is false in general and actively perverse for privacy genes: the
+ * worst value of any component is 0, so omitting a bad value would raise the score (measured:
+ * deleting `tl: 0` from a record moved P from 50 to 57). With the floor,
+ *     adding evidence  =>  ΔP >= 0        (P is the PROVEN privacy lower bound)
+ * and a weak value can never be hidden by leaving the field blank.
+ *
+ * This does NOT contradict "unknown is not zero" — that principle lives one layer up:
+ *   data layer  : the value stays null, with an `aset_note`/`note` saying what is missing
+ *   reporting   : the component appears in `missing` AND in `imputed`, `coverage` drops,
+ *                 `band` widens, and `insufficient` blocks it from being ranked at all
+ * So a null and a genuine 0 are still distinguishable to the reader (a sourced `tl: 0` yields a
+ * narrow band; an unknown `tl` yields a wide one) — they are only identical in the *ranking*
+ * number, which by design reports the lower bound of what has been proven.
+ *
+ * The only denominator reduction that remains is STRUCTURAL non-applicability, which the
+ * architecture decides rather than the data: `nst = 1` (a chain with no execution layer) removes
+ * `hst` from the coverage denominator — see `denom` below. */
+var FLOOR = 0;
 
 var W = { cov: 30, bits: 15, man: 12, tl: 12, hmeta: 10, hnet: 8, mat: 8, pq: 5, brkPenalty: 15 };
 var CONF = { high: 1.0, med: 0.6, low: 0.3 };
@@ -118,28 +125,20 @@ function scoreP(d) {
     { k: 'pq', w: W.pq, v: pq == null ? null : pq / 2, conf: pq == null ? null : gconf(d, 'pq') }
   ];
 
-  var total = 0, avail = 0, observed = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {}, imputed = [];
+  var total = 0, observed = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {}, imputed = [];
   var EV_KEYS = { cov: ['hs', 'hr', 'ha', 'hst'], bits: ['aset'], man: ['man'], tl: ['tl'],
                   hmeta: ['hmeta'], hnet: ['hnet'], mat: ['mat'], pq: ['pq'] };
   for (var i = 0; i < comps.length; i++) {
     var c = comps[i];
     total += c.w;
     if (c.v == null) {
-      /* Missing. If a conservative floor is known for this component the weight STAYS in the
-       * denominator (so omitting the data cannot pay); otherwise the weight is dropped and the
-       * uncertainty is carried by coverage/band instead. Never assume the average. */
-      if (Object.prototype.hasOwnProperty.call(IMPUTE, c.k)) {
-        avail += c.w;
-        earned += c.w * IMPUTE[c.k];
-        parts[c.k] = IMPUTE[c.k] * c.w;
-        imputed.push(c.k);
-        confSum += CONF.low; confN++;      // a floored value is the weakest evidence there is
-      } else {
-        parts[c.k] = null;
-      }
+      /* no value: keep the weight, score the floor, and report the uncertainty upward */
+      earned += c.w * FLOOR;
+      parts[c.k] = FLOOR * c.w;
+      imputed.push(c.k);
+      confSum += CONF.low; confN++;      // a floored value is the weakest evidence there is
       continue;
     }
-    avail += c.w;
     observed += c.w;
     earned += c.w * c.v;
     parts[c.k] = +(c.w * c.v).toFixed(1);
@@ -154,14 +153,14 @@ function scoreP(d) {
     if (allSrc) evid += c.w;
   }
   parts.brk = -(W.brkPenalty * brk);
-  if (observed === 0 || avail === 0) return null;   // nothing observed — no basis to score
+  if (observed === 0) return null;      // nothing observed at all — no basis to score
 
-  /* coverage/evCoverage describe OBSERVED data only, so a floored component still shows up as
-   * missing (wide band, `insufficient`) while never dropping out of the score denominator. */
+  /* coverage/evCoverage describe OBSERVED data only: a floored component shows up as missing
+   * (wide band, `insufficient`) even though it never leaves the score denominator. */
   var coverage = observed / total;
   var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
-  var P = Math.max(0, Math.min(100, Math.round((earned / avail) * 100 - W.brkPenalty * brk)));
+  var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - W.brkPenalty * brk)));
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
   var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
 

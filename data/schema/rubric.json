@@ -1,5 +1,5 @@
 {
- "version": "2.3.0-preview",
+ "version": "2.3.2-preview",
  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
  "genes": {
   "hs": {
@@ -8,7 +8,7 @@
    "1": "ซ่อนได้เมื่อผู้ใช้เลือกใช้กลไก (opt-in: shielded pool, mixer, coinjoin)",
    "2": "ซ่อนทุกธุรกรรมโดยปริยาย — ไม่มีโหมดที่เปิดเผยผู้ส่งเลย",
    "src_hint": "protocol spec / whitepaper ของโปรเจกต์",
-   "non_value_transfer_rule": "ถ้า arch != value-transfer → hs = 0 (โทเค็นบนเชนโฮสต์โปร่งใส) ห้ามให้ 1/2 เพราะความลับของ data packet ไม่ใช่ความลับของการโอนโทเค็น"
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
   },
   "hr": {
    "label": "ซ่อนผู้รับ",
@@ -16,7 +16,7 @@
    "1": "ซ่อนได้แบบ opt-in",
    "2": "ซ่อนทุกธุรกรรมโดยปริยาย (stealth address / shielded note)",
    "src_hint": "protocol spec",
-   "non_value_transfer_rule": "เหมือน hs"
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
   },
   "ha": {
    "label": "ซ่อนจำนวน",
@@ -24,7 +24,7 @@
    "1": "ซ่อนได้แบบ opt-in (confidential transactions)",
    "2": "ซ่อนทุกธุรกรรมโดยปริยาย (RingCT / Pedersen commitment บังคับ)",
    "src_hint": "protocol spec",
-   "non_value_transfer_rule": "เหมือน hs"
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
   },
   "hst": {
    "label": "ซ่อน state ของ smart contract",
@@ -69,7 +69,7 @@
    "levels": {
     "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (permissioned validator, single sequencer)",
     "1": "hardware enclave (TEE) หรือ trusted setup ceremony ขนาดใหญ่",
-    "1.5": "threshold/MPC — เชื่อคณิตศาสตร์ + honest majority ไม่พึ่งฮาร์ดแวร์",
+    "1.5": "threshold / MPC / mixnet & onion routing — เชื่อความยากทางคณิตศาสตร์ + honest majority (สำหรับ mixnet: \"มีโหนดซื่อสัตย์อย่างน้อยหนึ่งโหนดในเส้นทาง\") ไม่พึ่งฮาร์ดแวร์",
     "2": "trustless เต็มรูปแบบ"
    }
   },
@@ -149,9 +149,10 @@
   "scoring": "tl/2 × น้ำหนัก 12"
  },
  "imputation": {
-  "note": "component ที่ไม่มีค่า (null) ต้องไม่ถูกตัดออกจากตัวหาร ถ้ามี \"ค่าฐานล่าง\" ที่อ้างได้ — มิฉะนั้นการไม่ส่งข้อมูลจะได้คะแนนดีกว่าการส่งข้อมูลจริง",
-  "rule": "bits (aset): ถ้า aset = null → คิดเป็นค่าฐานล่าง 0 (ไม่พิสูจน์ anonymity set = ไม่ได้เครดิต) โดยน้ำหนัก 15 ยังอยู่ในตัวหาร",
-  "reporting": "component ที่ถูก impute ยังอยู่ใน missing/coverage/band ตามปกติ — ความไม่แน่นอนไม่หายไป",
-  "scope": "เฉพาะ bits ตอนนี้ เพราะเป็น component เดียวที่ \"ค่าที่หายไป\" รู้ได้ว่าต่ำกว่าค่าเฉลี่ยของกลุ่มอย่างเป็นระบบ (ring 16 = 3/15) การขยายตารางนี้เป็นการเปลี่ยนสูตร ต้องมีหลักฐานรองรับ"
+  "note": "component ที่ไม่มีค่า (null) ต้องไม่ถูกตัดออกจากตัวหาร — มิฉะนั้นการไม่ส่งข้อมูลจะได้คะแนนดีกว่าการส่งข้อมูลจริง",
+  "rule": "ทุก component ที่ยังไม่มีค่า ถูก floor เป็น 0 โดยน้ำหนักยังอยู่ในตัวหาร → P คือ \"ขอบล่างของ privacy ที่พิสูจน์แล้ว\"",
+  "monotonicity": "เพิ่มหลักฐานเข้ามาได้ ΔP >= 0 เสมอ — กรอกค่าจริงแล้วคะแนนตกไม่ได้ (ทดสอบ: 510 การลบ component, 0 violation)",
+  "reporting": "ค่าที่ถูก floor อยู่ใน missing + imputed, coverage ลด, band กว้างขึ้น, insufficient บล็อกการจัดอันดับ — ผู้้อ่านยังแยก \"ไม่รู้\" (band กว้าง) จาก \"รู้ว่าเป็น 0\" (band แคบ) ได้",
+  "structural_exception": "การลดตัวหารที่ยังเหลืออยู่คือ structural non-applicability ซึ่งสถาปัตยกรรมกำหนด ไม่ใช่ข้อมูล: nst=1 (ไม่มี execution layer) ตัด hst ออกจากตัวหารของ cov"
  }
 }

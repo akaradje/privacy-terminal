@@ -3,6 +3,30 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.3.2-preview — 2026-10-16
+
+Extends the 2.3.1 floor to every component, making P strictly monotonic.
+
+**Change.** `IMPUTE = {bits: 0}` becomes a single `FLOOR = 0` applied to *any* component with no
+value. The weight always stays in the denominator, so the score no longer stretches when data is
+absent. The only remaining denominator reduction is structural non-applicability decided by the
+architecture, not by the data (`nst = 1` removes `hst` from the coverage denominator).
+
+**Why.** 2.3.1 fixed `aset` but left the general case open: deleting a weak value still raised the
+score. Measured before the change — `{hs:2,hr:2,ha:2,nst:1,man:1,tl:0,hmeta:0,hnet:0,mat:2,pq:0}`
+scored 50, and the same record with `tl` deleted scored 57. A reviewer who discovers that a coin's
+trust assumption is bad would have been rewarded for not writing it down.
+
+**Verification.** 510 deletion cases across all 51 assets, 0 monotonicity violations. The
+leaderboard is unchanged for every currently-filled asset (none of them had a non-`aset` gap), so
+XMR stays rank 1 at 78 ±1 and the rankable set stays at 28.
+
+**Not a contradiction of "unknown is not zero".** That principle is preserved one layer up: the
+value stays null in the data, appears in `missing` and `imputed`, lowers `coverage`, widens `band`
+and trips `insufficient`. A sourced `tl: 0` and an unknown `tl` remain distinguishable to the
+reader (narrow vs wide band) — they are identical only in the ranking number, which by definition
+reports the proven lower bound.
+
 ## 2.3.1-preview — 2026-10-16
 
 Closes the null-rescale loophole that the batch-1 leaderboard exposed.
