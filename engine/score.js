@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.5.0-preview
+ * scoring_version: 2.6.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.5.0-preview';
+var SCORING_VERSION = '2.6.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 /* Conservative floor — makes the score strictly monotonic.
@@ -112,7 +112,12 @@ function scoreP(d) {
   var hnet = gval(d, 'hnet');    // 0..2
   var mat = gval(d, 'mat');      // 0..2
   var pq = gval(d, 'pq');        // 0..2
-  var brk = gval(d, 'brk') ? 1 : 0;
+  /* `brk` is ternary: 0 = none found · 0.5 = a protocol/enclave-level break that was patched
+   * or replaced · 1 = unpatched. P charges only the unpatched case: a patched history is a
+   * real fact but it belongs to pillar S, and charging it here would punish a coin for a
+   * bug it fixed while a coin with an unmeasured leak pays nothing. */
+  var brk = gval(d, 'brk') == null ? null : +gval(d, 'brk');
+  var brkPen = (brk >= 1) ? W.brkPenalty : 0;
 
   var comps = [
     { k: 'cov', w: W.cov, v: cov == null ? null : cov, conf: hasCov ? gconf(d, 'hs') : null },
@@ -152,7 +157,7 @@ function scoreP(d) {
     }
     if (allSrc) evid += c.w;
   }
-  parts.brk = -(W.brkPenalty * brk);
+  parts.brk = -brkPen;
   if (observed === 0) return null;      // nothing observed at all — no basis to score
 
   /* coverage/evCoverage describe OBSERVED data only: a floored component shows up as missing
@@ -160,7 +165,7 @@ function scoreP(d) {
   var coverage = observed / total;
   var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
-  var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - W.brkPenalty * brk)));
+  var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - brkPen)));
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions.
    * Floored at 2: a band of 0 would assert that the score has no uncertainty at all, which no
    * model of this kind can claim — the `aset` definition itself (effective vs protocol-enforced)
@@ -232,12 +237,14 @@ function liqScore(coin) {
 /* P is only usable when the evidence gate passes; D and L are independent of it. */
 function pillarsOf(d, coin, det, asof) {
   var p = scoreP(d);
+  var D = devScore(det, asof);
   return {
     P: (p && !p.insufficient) ? p.P : null,
-    D: devScore(det, asof),
+    D: D,
     L: liqScore(coin),
-    T: maturityScore(d, asof),
+    T: maturityScore(d, asof, D),
     S: securityScore(d),
+    R: regulatoryScore(d),
     Pdetail: p, Ddetail: devDetail(det, asof)
   };
 }
@@ -250,23 +257,19 @@ function hasText(g, key) {
   return !!String(x).trim();
 }
 
-/* --- Pillar T: tech / network maturity ------------------------------------------------------
- * What "battle-tested" actually means here, from fields we already have:
- *   45% age of the mainnet (from `yr`)   35% the `mat` gene (age + public audits)   20% an
- *   `audit` record. Hard-capped at 40 when the mainnet is less than a year old — a pre-mainnet
- *   or freshly launched protocol cannot be battle-tested no matter how good the design is.
- *   This is what stops a young FHE project from riding dev + liquidity into the top 10. */
-function maturityScore(d, asof) {
-  var mat = gval(d, 'mat'), yr = gval(d, 'yr');
-  if (mat == null && yr == null) return null;
+/* --- Pillar T: battle-testedness & liveness (the Lindy effect) ------------------------------
+ * 70% age of the mainnet + 30% dev continuity. Audit is deliberately NOT here — it is pillar S's
+ * job, and keeping it in both was double-counting. `mat` is kept out of T too: it already blends
+ * age and audits, so it would re-introduce the same overlap. The hard cap at 40 for a mainnet
+ * under a year old stays: a fresh protocol cannot be battle-tested however good the design is. */
+function maturityScore(d, asof, devScoreValue) {
+  var yr = gval(d, 'yr');
+  if (yr == null && devScoreValue == null) return null;
   var age = (yr && asof) ? (parseInt(String(asof).slice(0, 4), 10) - yr) : null;
   var ageS = age == null ? null : (age >= 5 ? 100 : age >= 3 ? 80 : age >= 1 ? 50 : 20);
-  var matS = mat == null ? null : (mat / 2) * 100;
-  var auditS = hasText(d, 'audit') ? 100 : 0;
   var parts = [];
-  if (ageS != null) parts.push([0.45, ageS]);
-  if (matS != null) parts.push([0.35, matS]);
-  parts.push([0.20, auditS]);
+  if (ageS != null) parts.push([0.70, ageS]);
+  if (devScoreValue != null) parts.push([0.30, devScoreValue]);
   var tw = 0, acc = 0;
   for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
   var T = tw ? Math.round(acc / tw) : null;
@@ -274,15 +277,51 @@ function maturityScore(d, asof) {
   return T;
 }
 
-/* --- Pillar S: security & audit posture -----------------------------------------------------
- * 50% "is there an unpatched privacy break?" (`brk`) + 50% "is there a public audit record?".
- * S is null when `brk` is unknown: we cannot score the security posture of a coin whose exploit
- * history has not been checked. Note that most `brk = 0` values carry conf=low, so an unaudited
- * coin gets 50 and an audited one gets 100 — the gap is real but the absolute level is soft. */
+/* --- Pillar S: security & cryptographic assurance -------------------------------------------
+ * 40% audit quality (0/1/2 from the `audit` field) + 35% exploit history (`brk`) + 25% the trust
+ * assumption of the primitive (`tl`, which is also 12% of P — S is a roll-up of the security
+ * dimension, so that overlap is intentional and stated).
+ * Audit 0 means "no audit record found in our sources", NOT "never audited".
+ * `brk` 0.5 (patched history) scores 55 rather than 0: a coin that has been broken and fixed is
+ * more fragile than one never attacked, but it is not currently broken.
+ * S is null when `brk` is unknown — the security posture of a coin whose exploit history has not
+ * been checked cannot be scored. */
 function securityScore(d) {
   var brk = gval(d, 'brk');
   if (brk == null) return null;
-  return Math.round(0.5 * (brk ? 0 : 100) + 0.5 * (hasText(d, 'audit') ? 100 : 0));
+  var audit = gval(d, 'audit');
+  var auditS = audit == null ? 0 : (audit / 2) * 100;
+  var brkS = brk >= 1 ? 0 : (brk > 0 ? 55 : 100);
+  var tl = gval(d, 'tl');
+  var tlS = tl == null ? null : (tl <= 0 ? 0 : tl <= 1 ? 50 : tl <= 1.5 ? 75 : 100);
+  var parts = [[0.40, auditS], [0.35, brkS]];
+  if (tlS != null) parts.push([0.25, tlS]);
+  var tw = 0, acc = 0;
+  for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
+  return tw ? Math.round(acc / tw) : null;
+}
+
+/* --- Pillar R: regulatory & censorship resilience --------------------------------------------
+ * 55% protocol censorship resistance (from `tl`: nothing to switch off, no enclave vendor, no
+ * permissioned notary) + 45% compliance capability (`comp`: viewing keys / selective disclosure /
+ * proof of innocence — the affordance that keeps an institutional holder from a blanket ban).
+ * A directly sanctioned protocol is capped at 25 regardless: Tornado Cash scores well on
+ * censorship resistance and terribly on the other two, and the cap is what says so.
+ * Not included for lack of a source: venue breadth / DEX-vs-CEX liquidity, which needs exchange
+ * ticker data we do not collect. That component's weight is left unassigned rather than guessed. */
+function regulatoryScore(d) {
+  var tl = gval(d, 'tl'), comp = gval(d, 'comp');
+  if (tl == null && comp == null) return null;
+  var tlS = tl == null ? null : (tl <= 0 ? 25 : tl <= 1 ? 50 : tl <= 1.5 ? 75 : 100);
+  var compS = comp == null ? null : (comp / 2) * 100;
+  var parts = [];
+  if (tlS != null) parts.push([0.55, tlS]);
+  if (compS != null) parts.push([0.45, compS]);
+  var tw = 0, acc = 0;
+  for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
+  var R = tw ? Math.round(acc / tw) : null;
+  if (R != null && gval(d, 'sanctioned')) R = Math.min(R, 25);
+  return R;
 }
 
 /* composite over whatever pillars exist; `composite()` already skips nulls and renormalises.
@@ -296,7 +335,7 @@ function compositeOf(d, coin, det, asof, preset, riskAdjust) {
   var w = PRESETS[preset || 'investor'];
   var p = pillarsOf(d, coin, det, asof);
   if ((w.P || 0) > 0 && p.P == null) return null;
-  var vals = { P: p.P, D: p.D, L: p.L, T: p.T, S: p.S };
+  var vals = { P: p.P, D: p.D, L: p.L, T: p.T, S: p.S, R: p.R };
   if (riskAdjust && p.P != null && p.Pdetail && p.Pdetail.band) {
     vals.P = Math.max(0, p.P - Math.round(0.5 * p.Pdetail.band));
   }
@@ -319,7 +358,7 @@ var PRESETS = {
    * P/D/L-only version (45/30/25) once T and S existed, and it is risk-adjusted: the P point
    * estimate is replaced by its lower half (P - band/2) so a wide-band coin with strong dev and
    * liquidity cannot climb on momentum alone. Measured on the ZAMA case below. */
-  privacy_investor: { P: 35, D: 20, L: 15, T: 15, S: 15 }
+  privacy_investor: { P: 30, D: 20, L: 15, T: 15, S: 10, R: 10 }
 };
 
 function composite(pillars, w) {

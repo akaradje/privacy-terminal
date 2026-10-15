@@ -3,6 +3,46 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.6.0-preview — 2026-10-16
+
+Three things: T and S stop double-counting, `brk` becomes a real history, and pillar R exists.
+
+**1. T and S de-duplicated.** T was mixing age, `mat` (age + audits) and an audit flag. It is now
+**70% mainnet age + 30% dev continuity** and nothing else — audit is S's job. S moved from a binary
+"has an audit" to **40% audit quality (0/1/2) + 35% exploit history + 25% the primitive's trust
+assumption**. Audit 0 means "no record found in our sources", stated in every note and not the same
+as "never audited".
+
+**2. `brk` is ternary, and only the unpatched case costs P.** 0 = none found · 0.5 = a
+protocol/enclave-level break that was **patched or replaced** · 1 = unpatched. P charges only 1:
+charging a patched history would punish XMR for a bug it fixed while GRIN — which has the
+stem-phase leak Bogatyy measured — pays nothing. The 0.5 value is recorded with a real citation and
+scores 55 in S instead of 0, because a coin that has been broken and fixed is more fragile than one
+never attacked, but it is not currently broken. Only two coins could be sourced this round (ZEC,
+SCRT); XMR/FIRO/GRIN/BEAM stayed at 0 with the missing citation named, because an unsourced 0.5 is
+exactly the fabrication the data contract forbids. AZTEC stays null — the V5 patch status is
+unconfirmed.
+
+**3. Pillar R.** 55% censorship resistance (from `tl`) + 45% compliance capability (a new graded
+`comp` field: viewing keys / selective disclosure / proof of innocence), with a **cap at 25 for a
+directly sanctioned protocol**. Tornado Cash: designated by OFAC 2022-08-08, re-designated
+2022-11-18, overturned by W.D. Texas 2025-01 — the cap reflects that the practical damage
+(frontends, listings) outlived the ruling. `privacy_investor` is now
+**{P 30, D 20, L 15, T 15, S 10, R 10}**.
+*Not included for lack of a source:* venue breadth / DEX-vs-CEX liquidity. Exchange ticker data is
+not collected, so that component's weight is left unassigned rather than guessed.
+
+**4. Compare view (radar + gene table).** Select 2–4 coins with the ⇄ button; the radar shows the
+profile shape over P/D/L/T/S/R and the table underneath is the evidence for every axis, with a
+confidence dot per cell (none = high, · = med, ·· = low).
+
+**5. A third stale repo, found by pillar D.** `AztecProtocol/aztec` is **archived** (GitHub
+confirms `archived: true`, last push 2022-12-13); development continued at
+`AztecProtocol/aztec-packages` (2026-10-15). D 0 → 100, with a curated override recording why.
+
+**Composite top 12:** XMR 83 > BDX 78 > GRIN 77 > ZANO 74 > BEAM 73 > EPIC 72 > ARRR 70 > ZEC 68 >
+FIRO 67 > XTM 67 > AZTEC 66 > PIVX 64. Tornado Cash #45, ZAMA #18.
+
 ## 2.5.0-preview — 2026-10-16
 
 Three corrections from review: the MimbleWimble `hmeta` over-credit, the MWC market cap, and the

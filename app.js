@@ -7,7 +7,7 @@ var STATS = __STATS__;
 /* Snapshot date. Pillar D is a recency measure, so it must be computed against a fixed date —
  * using "now" would make the same data produce a different score tomorrow and break diffing. */
 var ASOF_DATE = (STATS && STATS.snap) ? String(STATS.snap).slice(0, 10) : new Date().toISOString().slice(0, 10);
-var state = { view: 'table', q: '', sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null };
+var state = { view: 'table', q: '', sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null, compare: [] };
 var view = [];
 var TIERMAP = {};
 var IDMAP = {};
@@ -379,6 +379,15 @@ function renderTable() {
     return;
   }
   if (dw) dw.style.display = 'none';
+  if (state.view === 'compare') {
+    if (tw) tw.style.display = 'none';
+    if (mw) mw.style.display = 'none';
+    var cw = $('cmpWrap');
+    if (cw) { cw.style.display = 'block'; renderCompare(); }
+    return;
+  }
+  var cw2 = $('cmpWrap');
+  if (cw2) cw2.style.display = 'none';
   if (state.view === 'matrix') {
     if (tw) tw.style.display = 'none';
     if (mw) mw.style.display = 'block';
@@ -419,13 +428,27 @@ function renderTable() {
       '<td><span class="chip">' + grpOf(c) + '</span> <span class="' + gradeCls(gradeOf(d)) + '">' + (gradeOf(d) == null ? '—' : gradeLetter(gradeOf(d))) + '</span></td>' +
       '<td class="prim">' + famChip(d.fam) + (d.prim ? d.prim : '<span class="dim">— ยังไม่มี DNA profile</span>') + '</td>' +
       '<td>' + badge(k.model) + '</td>' +
+      '<td class="cmpCell"><button class="cmpBtn' + (state.compare.indexOf(c.s) >= 0 ? ' on' : '') + '" data-cmp="' + c.s + '" ' +
+      'title="' + (state.compare.indexOf(c.s) >= 0 ? 'เอาออกจากเครื่องมือเปรียบเทียบ' : 'เพิ่มลงเครื่องมือเปรียบเทียบ (2–4 ตัว)') + '">⇄</button></td>' +
       '</tr>');
     if (state.expanded === c.s) {
-      rows.push('<tr class="exp"><td colspan="13">' + dnaPanel(c) + '</td></tr>');
+      rows.push('<tr class="exp"><td colspan="14">' + dnaPanel(c) + '</td></tr>');
     }
   }
   $('tbody').innerHTML = rows.join('');
   $('count').textContent = view.length + ' / ' + DATA.length + ' assets';
+  var btns = $('tbody').querySelectorAll ? $('tbody').querySelectorAll('.cmpBtn') : [];
+  for (var bi = 0; bi < btns.length; bi++) {
+    btns[bi].onclick = (function (btn) {
+      return function () {
+        var sym = btn.getAttribute('data-cmp');
+        var i = state.compare.indexOf(sym);
+        if (i >= 0) state.compare.splice(i, 1);
+        else if (state.compare.length < 4) state.compare.push(sym);
+        renderViewSwitch(); renderTable();
+      };
+    })(btns[bi]);
+  }
 }
 
 function renderMatrix() {
@@ -572,14 +595,121 @@ function renderDocs() {
   }
 }
 
+/* ---- Compare view: radar over the six pillars + a gene-by-gene table -------------------------
+ * Enabled once 2-4 coins are selected with the ⇄ button. The radar is the "profile shape" — which
+ * pillar carries a coin and which one is missing — and the table underneath is the evidence for
+ * every axis, because a shape alone is not a finding. */
+var CMP_COLORS = ['#4cc2ff', '#2ecc71', '#f5a623', '#b48cff'];
+var CMP_PILLARS = [
+  ['P', 'Privacy'], ['D', 'Developer'], ['L', 'Liquidity'],
+  ['T', 'Maturity'], ['S', 'Security'], ['R', 'Regulatory']
+];
+var CMP_GENES = ['arch', 'hs', 'hr', 'ha', 'hst', 'nst', 'man', 'tl', 'hmeta', 'hnet',
+                 'mat', 'pq', 'brk', 'audit', 'comp', 'sanctioned', 'aset', 'yr'];
+
+function cmpCoins() {
+  return state.compare.map(function (sym) { return DATA.find(function (c) { return c.s === sym; }); })
+                     .filter(function (c) { return !!c; });
+}
+
+function cmpPillars(c) {
+  var pl = null;
+  try { pl = pillarsOf(dna(c), c, det(c), ASOF_DATE); } catch (e) { pl = null; }
+  if (!pl) return null;
+  return [pl.P, pl.D, pl.L, pl.T, pl.S, pl.R];
+}
+
+function radarSvg(series) {
+  var W = 430, H = 400, cx = W / 2, cy = H / 2 + 6, R = 138, n = CMP_PILLARS.length;
+  function pt(i, v) {
+    var a = -Math.PI / 2 + i * 2 * Math.PI / n;
+    var r = (Math.max(0, Math.min(100, v == null ? 0 : v)) / 100) * R;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  }
+  var out = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img">';
+  [25, 50, 75, 100].forEach(function (ring) {
+    var p = [];
+    for (var i = 0; i < n; i++) p.push(pt(i, ring).join(','));
+    out += '<polygon points="' + p.join(' ') + '" fill="none" stroke="#1c2733" stroke-width="1"/>';
+  });
+  for (var i = 0; i < n; i++) {
+    var e = pt(i, 100);
+    out += '<line x1="' + cx + '" y1="' + cy + '" x2="' + e[0].toFixed(1) + '" y2="' + e[1].toFixed(1) + '" stroke="#1c2733"/>';
+    var l = pt(i, 122);
+    out += '<text x="' + l[0].toFixed(1) + '" y="' + l[1].toFixed(1) + '" fill="#8b93a0" font-size="11" ' +
+           'text-anchor="' + (l[0] > cx + 4 ? 'start' : (l[0] < cx - 4 ? 'end' : 'middle')) + '" ' +
+           'dominant-baseline="middle" font-family="monospace">' + CMP_PILLARS[i][0] + '</text>';
+  }
+  series.forEach(function (sr, si) {
+    var pts = [];
+    for (var k = 0; k < n; k++) {
+      var p = pt(k, sr.vals[k]);
+      pts.push(p[0].toFixed(1) + ',' + p[1].toFixed(1));
+      out += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3" fill="' + sr.color + '"/>';
+    }
+    out += '<polygon points="' + pts.join(' ') + '" fill="' + sr.color + '" fill-opacity="0.13" stroke="' + sr.color + '" stroke-width="1.8"/>';
+  });
+  return out + '</svg>';
+}
+
+function geneCell(d, gene) {
+  var x = d ? d[gene] : null;
+  if (x == null) return '<td class="null">—</td>';
+  var v = (typeof x === 'object') ? x.v : x;
+  var conf = (x && typeof x === 'object') ? (x.conf || 'low') : 'low';
+  if (v == null) return '<td class="null">—</td>';
+  var mark = conf === 'high' ? '' : (conf === 'med' ? '·' : '··');
+  var cls = 'v' + (conf === 'high' ? '' : (conf === 'med' ? ' lo' : ' lol'));
+  return '<td class="' + cls + '" title="conf=' + conf + '">' + v + mark + '</td>';
+}
+
+function renderCompare() {
+  var cw = $('cmpWrap');
+  if (!cw) return;
+  var coins = cmpCoins();
+  if (coins.length < 2) {
+    cw.innerHTML = '<div class="cmpEmpty">เลือกเหรียญ 2–4 ตัวจากปุ่ม <b>⇄</b> ในมุมขวาของตารางก่อน ' +
+      '(ตอนนี้เลือกแล้ว ' + coins.length + ')</div>';
+    return;
+  }
+  var series = coins.map(function (c, i) {
+    return { c: c, color: CMP_COLORS[i % CMP_COLORS.length], vals: cmpPillars(c) || [] };
+  });
+  var head = '<div class="cmpHead"><h2>เปรียบเทียบ ' + coins.length + ' โครงการ</h2>' +
+    '<span class="dim">เรดาร์ = รูปร่างของ 6 pillar (ยิ่งออกดูกว้างยิ่งสมดุล) · ตารางล่าง = หลักฐานของทุกแกน ' +
+    '(· = conf med · ·· = conf low · ไม่มีจุด = conf high · — = ไม่มีค่า)</span>' +
+    '<span class="dim" style="margin-left:auto"><button class="cmpBtn" id="cmpClear">ล้างทั้งหมด</button></span></div>';
+  var legend = '<div class="cmpLegend">' + series.map(function (sr) {
+    return '<span><i style="background:' + sr.color + '"></i>' + sr.c.s + ' ' + sr.c.n + '</span>';
+  }).join('') + '</div>';
+  var rowsHtml = '';
+  CMP_PILLARS.forEach(function (pl, i) {
+    rowsHtml += '<tr class="hl"><td class="k">' + pl[1] + ' (' + pl[0] + ')</td>' +
+      series.map(function (sr) { return '<td class="v">' + (sr.vals[i] == null ? '—' : sr.vals[i]) + '</td>'; }).join('') + '</tr>';
+  });
+  CMP_GENES.forEach(function (gene) {
+    rowsHtml += '<tr><td class="k">' + gene + '</td>' +
+      series.map(function (sr) { return geneCell(dna(sr.c), gene); }).join('') + '</tr>';
+  });
+  var table = '<table class="gtbl"><tr><th>gene / pillar</th>' +
+    series.map(function (sr) { return '<th>' + sr.c.s + '</th>'; }).join('') + '</tr>' + rowsHtml + '</table>';
+  cw.innerHTML = head + legend +
+    '<div class="cmpGrid"><div class="cmpRadar">' + radarSvg(series) + '</div>' + table + '</div>';
+  var cl = document.getElementById('cmpClear');
+  if (cl) cl.onclick = function () { state.compare = []; state.view = 'table'; renderViewSwitch(); renderTable(); };
+}
+
 function renderViewSwitch() {
   $('vsw').innerHTML =
     '<button id="vTable" class="' + (state.view === 'table' ? 'on' : '') + '">ตาราง · ' + DATA.length + ' เหรียญ</button>' +
     '<button id="vMatrix" class="' + (state.view === 'matrix' ? 'on' : '') + '">DNA Matrix</button>' +
-    '<button id="vDocs" class="' + (state.view === 'docs' ? 'on' : '') + '">เอกสาร &amp; ข้อมูล</button>';
+    '<button id="vDocs" class="' + (state.view === 'docs' ? 'on' : '') + '">เอกสาร &amp; ข้อมูล</button>' +
+    '<button id="vCmp" class="' + (state.view === 'compare' ? 'on' : '') + '"' +
+    (state.compare.length < 2 ? ' disabled title="เลือกเหรียญ 2–4 ตัวจากปุ่ม ⇄ ในตารางก่อน"' : '') + '>เปรียบเทียบ (' + state.compare.length + ')</button>';
   $('vTable').onclick = function () { state.view = 'table'; renderViewSwitch(); renderTable(); };
   $('vMatrix').onclick = function () { state.view = 'matrix'; renderViewSwitch(); renderTable(); };
   $('vDocs').onclick = function () { state.view = 'docs'; renderViewSwitch(); renderTable(); };
+  $('vCmp').onclick = function () { if (state.compare.length >= 2) { state.view = 'compare'; renderViewSwitch(); renderTable(); } };
 }
 
 function init() {

@@ -146,6 +146,27 @@ table.mx td.wide{white-space:normal;max-width:230px;font-size:10px;color:var(--d
 .fl-HIGH{color:#ff9a5c;border-color:#5c3a1f}
 .fl-MED{color:var(--amber);border-color:#5c4a1f}
 .fl-LOW{color:var(--dim)}
+.cmpCell{width:26px;text-align:center}
+.cmpBtn{background:none;border:1px solid var(--line2);color:var(--dim);font:600 11px var(--mono);border-radius:3px;padding:1px 6px;cursor:pointer}
+.cmpBtn:hover{color:var(--tx);border-color:var(--accent)}
+.cmpBtn.on{color:#0b0f14;background:var(--accent);border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.cmpHead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 18px 4px}
+.cmpHead h2{font-size:14px;color:var(--bright);margin:0}
+.cmpHead .dim{font-size:10.5px}
+.cmpLegend{display:flex;flex-wrap:wrap;gap:10px;padding:6px 18px 10px;font:600 11px var(--mono)}
+.cmpLegend span{display:inline-flex;align-items:center;gap:5px}
+.cmpLegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.cmpGrid{display:flex;flex-wrap:wrap;gap:18px;padding:0 18px 14px;align-items:flex-start}
+.cmpRadar{flex:0 0 auto}
+.gtbl{border-collapse:collapse;flex:1 1 420px;min-width:380px}
+.gtbl th,.gtbl td{border:1px solid var(--line);padding:3px 6px;font-size:10.5px;text-align:center}
+.gtbl th{background:var(--panel);color:var(--dim);font-weight:600}
+.gtbl td.k{text-align:left;color:var(--dim);white-space:nowrap}
+.gtbl td.v{font-weight:600;color:var(--tx)}
+.gtbl td.null{color:#5b6472}
+.gtbl tr.hl td{background:#111a24}
+.cmpEmpty{padding:30px 18px;color:var(--dim);font-size:12px}
 .v3parts .imp{color:#8b93a0;border-style:dashed;border-color:#3a4450}
 .dossier{margin-top:10px;border-top:1px solid #172130;padding:10px 6px 2px}
 .dTitle{font-size:10px;color:var(--accent);letter-spacing:1.2px;font-weight:700;margin-bottom:8px}
@@ -212,12 +233,14 @@ footer .disc{margin-top:10px;color:#8b98a8}
       <th>กลุ่ม · เกรด</th>
       <th>DNA · primitive</th>
       <th>Model</th>
+      <th class="cmpCell" title="เพิ่มลงเครื่องมือเปรียบเทียบ">⇄</th>
     </tr></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 <div class="tablewrap" id="matrixWrap" style="display:none"></div>
 <div id="docsWrap" style="display:none"></div>
+<div id="cmpWrap" class="tablewrap" style="display:none"></div>
 
 <footer>
   <div><b>แหล่งข้อมูล:</b> CoinGecko public API (categories: privacy, privacy-coins, zero-knowledge-zk, privacy-infrastructure, privacy-blockchain) · snapshot __SNAP__ · เกร็ด: อัปเดตล่าสุดจาก API ทุก coin อยู่ในไฟล์ข้อมูล</div>

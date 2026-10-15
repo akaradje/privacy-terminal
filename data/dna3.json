@@ -46,7 +46,13 @@
   "big": 0,
   "yr": 2016,
   "setup": "Orchard/Halo 2 — ไม่ต้อง trusted setup (Sprout รุ่นแรกต้อง)",
-  "audit": "Halo 2 audit สาธารณะ · พบ Orchard bug มิ.ย. 2026 → แก้ถาวรด้วย Ironwood ก.ค. 2026",
+  "audit": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://z.cash/support/security/",
+   "asof": "2026-10-16",
+   "note": "audit หลายรอบสาธารณะของ Sapling/Orchard/Halo 2 (Zcash ระบุในหน�ด secrecy ของตัวเอง) · พบ Orchard soundness bug มิ.ย. 2026 → แก้ถาวรด้วย Ironwood ก.ค. 2026"
+  },
   "gov": "Zcash Foundation + ECC · NU7 ผ่านโหวต ~99%",
   "risk": "EU AMLR 2027 · ETF flows ย้อนกลับได้ · leverage สูง",
   "nst": {
@@ -86,11 +92,11 @@
    "note": "พึ่ง elliptic curve (BLS12-381 / Pasta)"
   },
   "brk": {
-   "v": 0,
+   "v": 0.5,
    "conf": "high",
-   "src": "https://z.cash/",
+   "src": "https://z.cash/support/security/",
    "asof": "2026-10-16",
-   "note": "Orchard soundness bug มิ.ย. 2026 ถูกเปิดเผยและแก้ถาวรด้วย Ironwood ก.ค. 2026"
+   "note": "เคยมีช่องโหว่ระดับโปรโตคอลและแก้แล้ว: counterfeiting vulnerability (2018, แก้ใน hardfork) และ Orchard soundness bug มิ.ย. 2026 → แก้ถาวรด้วย Ironwood ก.ค. 2026 — ดูหมายเหตุใน hist"
   },
   "arch": {
    "v": "value-transfer",
@@ -99,7 +105,14 @@
    "asof": "2026-10-16",
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
-  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน Orchard ณ asof — ต้องดึงจาก explorer ที่นับ note ได้ (ยังไม่มี src)"
+  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน Orchard ณ asof — ต้องดึงจาก explorer ที่นับ note ได้ (ยังไม่มี src)",
+  "comp": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://zips.z.cash/protocol/protocol.pdf",
+   "asof": "2026-10-16",
+   "note": "viewing key + selective disclosure เป็นส่วนหนึ่งของโปรโตคอล"
+  }
  },
  "XMR": {
   "g": "coin",
@@ -148,7 +161,13 @@
   "big": 1,
   "yr": 2014,
   "setup": "ไม่มี trusted setup",
-  "audit": "ตรวจทางวิชาการกว้าง · ไม่เคยมีช่องโหว่ระดับโปรโตคอล",
+  "audit": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "ได้รับการตรวจทางวิชาการกว้าง · 0 หมายถึง \"ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิด\" ไม่ได้หมายถึง \"ไม่เคยมีบั๊ก\""
+  },
   "gov": "ชุมชน + CCS funding ไม่มีบริษัทกลาง",
   "risk": "ถูกถอดจาก 70+ CEX · ไม่มี ETF · ขัด travel rule",
   "nst": {
@@ -190,9 +209,9 @@
   "brk": {
    "v": 0,
    "conf": "med",
-   "src": "https://github.com/monero-project/research-lab",
+   "src": "https://www.google.com/search?q=XMR+security+advisory",
    "asof": "2026-10-16",
-   "note": "ข้อค้นพบเรื่อง traceability ในอดีตถูกแก้แล้ว (decoy sampling 2019)"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset": {
    "v": 16,
@@ -207,6 +226,13 @@
    "src": "https://docs.getmonero.org/",
    "asof": "2026-10-16",
    "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "comp": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://www.getmonero.org/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี viewing key / selective disclosure (เป็นคุณสมบัติที่ตั้งใจ)"
   }
  },
  "DASH": {
@@ -256,7 +282,13 @@
   "big": 0,
   "yr": 2014,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DASH+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "masternode DAO",
   "risk": "anonymity set เล็ก · AMLR 2027",
   "nst": {
@@ -304,12 +336,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DASH+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: CoinJoin ต้องใช้ขนาด pool ต่อรอบ mixing/denomination — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: CoinJoin ต้องใช้ขนาด pool ต่อรอบ mixing/denomination — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.dash.org/",
+   "asof": "2026-10-16",
+   "note": "PrivateSend ไม่มี viewing key"
+  }
  },
  "DCR": {
   "g": "coin",
@@ -358,7 +397,13 @@
   "big": 0,
   "yr": 2016,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DCR+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "PoS/PoW ผสม + Politeia",
   "risk": "ผสมต้องซื้อ ticket",
   "nst": {
@@ -406,12 +451,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DCR+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ขนาด pool ของ CoinShuffle++ ต่อรอบ — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://docs.decred.org/privacy/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: ขนาด pool ของ CoinShuffle++ ต่อรอบ — ยังไม่มีแหล่งนับ"
+   "note": "CoinShuffle++ — ไม่มี viewing key"
+  }
  },
  "BDX": {
   "g": "coin",
@@ -460,7 +512,13 @@
   "big": 0,
   "yr": 2018,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=BDX+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "CEX ขนาดเล็ก",
   "nst": {
@@ -508,12 +566,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=BDX+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://beldex.io/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
+   "note": "CryptoNote (Monero fork) — ไม่มี viewing key"
+  }
  },
  "ZANO": {
   "g": "coin",
@@ -562,7 +627,13 @@
   "big": 0,
   "yr": 2019,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZANO+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -610,12 +681,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZANO+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://zano.org/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
+   "note": "CryptoNote — ไม่มี viewing key"
+  }
  },
  "ARRR": {
   "g": "coin",
@@ -664,7 +742,13 @@
   "big": 1,
   "yr": 2018,
   "setup": "Sapling trusted setup ceremony",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ARRR+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "CEX น้อยมาก",
   "nst": {
@@ -712,12 +796,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ARRR+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน note commitment ใน Sapling pool ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก (ผล probe 23 endpoints)",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://piratechain.com/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน note commitment ใน Sapling pool ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก (ผล probe 23 endpoints)"
+   "note": "สืบทอด Zcash Sapling → มี viewing key (ต้องยืนยันในซอร์สของ fork)"
+  }
  },
  "FIRO": {
   "g": "coin",
@@ -766,7 +857,13 @@
   "big": 1,
   "yr": 2016,
   "setup": "Lelantus/Spark ไม่ต้อง trusted setup",
-  "audit": "Lelantus + Lelantus Spark ตรวจวิชาการเปิด",
+  "audit": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "asof": "2026-10-16",
+   "note": "Lelantus / Lelantus Spark ได้รับการตรวจวิชาการเปิด แต่ไม่ใช่ audit จากบริษัท Tier-1"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -814,12 +911,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=FIRO+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน coin ใน Spark pool ณ asof — ยังไม่มีแหล่งนับสาธารณะ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน coin ใน Spark pool ณ asof — ยังไม่มีแหล่งนับสาธารณะ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=FIRO+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "XVG": {
   "g": "coin",
@@ -868,7 +972,13 @@
   "big": 0,
   "yr": 2014,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XVG+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "IP-level เท่านั้น — ไม่ใช่ on-chain privacy",
   "nst": {
@@ -916,12 +1026,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XVG+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ledger โปร่งใสทั้งหมด — ไม่มี anonymity set ระดับธุรกรรมให้วัด (ค่า cov = 0 สะท้อนเรื่องนี้แล้ว)",
+  "comp": {
+   "v": 0,
+   "conf": "high",
    "src": "https://vergecurrency.com/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 3: ledger โปร่งใสทั้งหมด — ไม่มี anonymity set ระดับธุรกรรมให้วัด (ค่า cov = 0 สะท้อนเรื่องนี้แล้ว)"
+   "note": "ledger โปร่งใสทั้งหมด ไม่มีอะไรให้ selective disclose"
+  }
  },
  "GRIN": {
   "g": "coin",
@@ -970,7 +1087,13 @@
   "big": 1,
   "yr": 2019,
   "setup": "MimbleWimble ไม่ต้อง setup",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=GRIN+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "ชุมชน",
   "risk": "CEX น้อย · ต้อง DEX/atomic swap",
   "nst": {
@@ -1018,12 +1141,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=GRIN+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน UTXO ที่ยังไม่ถูกใช้ (ทั้งเชน) ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก",
+  "comp": {
+   "v": 0,
+   "conf": "high",
    "src": "https://docs.grin.mw/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน UTXO ที่ยังไม่ถูกใช้ (ทั้งเชน) ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก"
+   "note": "ไม่มี viewing key"
+  }
  },
  "BEAM": {
   "g": "coin",
@@ -1072,7 +1202,13 @@
   "big": 1,
   "yr": 2019,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=BEAM+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -1120,12 +1256,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=BEAM+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: เช่นเดียวกับ GRIN (UTXO set) — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://docs.beam.mw/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: เช่นเดียวกับ GRIN (UTXO set) — ยังไม่มีแหล่งนับ"
+   "note": "ไม่มี viewing key (auditability เป็นเรื่องของ wallet ไม่ใช่โปรโตคอล)"
+  }
  },
  "DERO": {
   "g": "coin",
@@ -1174,7 +1317,13 @@
   "big": 0,
   "yr": 2018,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DERO+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "hist": "2018 mainnet (DAG + homomorphic encryption) · 2020 เพิ่ม private smart contracts (DERO HE) · commit ล่าสุด 2022-03 → dev ชะลอตัวชัดเจน",
@@ -1222,12 +1371,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DERO+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 1: ring size ของ CryptoNote กำหนดในโค้ด — ต้องอ้างไฟล์โค้ด/สเปกฉบับระบุเลขก่อนจึงจะใส่ได้",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://dero.io/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 1: ring size ของ CryptoNote กำหนดในโค้ด — ต้องอ้างไฟล์โค้ด/สเปกฉบับระบุเลขก่อนจึงจะใส่ได้"
+   "note": "CryptoNote — ไม่มี viewing key"
+  }
  },
  "ZEPH": {
   "g": "coin",
@@ -1276,7 +1432,13 @@
   "big": 0,
   "yr": 2023,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZEPH+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -1324,12 +1486,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZEPH+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://www.zephyrprotocol.com/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
+   "note": "Monero fork — ไม่มี viewing key"
+  }
  },
  "ZCL": {
   "g": "coin",
@@ -1378,7 +1547,13 @@
   "big": 0,
   "yr": 2016,
   "setup": "trusted setup (Sapling)",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZCL+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -1426,12 +1601,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZCL+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ (โปรเจกต์แทบไม่มี activity)",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://zclassic.org/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ (โปรเจกต์แทบไม่มี activity)"
+   "note": "สืบทอด zcashd → มี viewing key"
+  }
  },
  "PIVX": {
   "g": "coin",
@@ -1480,7 +1662,13 @@
   "big": 0,
   "yr": 2016,
   "setup": "trusted setup",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PIVX+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "masternode",
   "risk": "",
   "nst": {
@@ -1528,12 +1716,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://pivx.org/shield",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PIVX+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: จำนวน note ใน SHIELD pool — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: จำนวน note ใน SHIELD pool — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
+   "conf": "low",
+   "src": "https://pivx.org/",
+   "asof": "2026-10-16",
+   "note": "SHIELD ใช้ Sapling → มี viewing key"
+  }
  },
  "IRON": {
   "g": "coin",
@@ -1582,7 +1777,13 @@
   "big": 1,
   "yr": 2023,
   "setup": "Sapling-derived trusted setup",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=IRON+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -1630,12 +1831,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=IRON+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน note/UTXO ใน shielded set ณ asof — ยังไม่มีแหล่งนับสาธารณะ",
+  "comp": {
+   "v": 2,
+   "conf": "med",
    "src": "https://ironfish.network/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"encrypts every transaction, shielding your sensitive asset information\" → man=1, hs/hr/ha=2 · UTXO, ไม่มี general smart contract → nst=1 · mainnet 2023-04-20 · zk-SNARK (Sapling lineage): tl=1 (conf=low — ต้องยืนยันรายละเอียด trusted setup ceremony) · มีงานวิจัย 2025 \"Trust Without Transparency: An Empirical Analysis of Anonymity and Verifiability in Iron Fish\" ควรอ่านก่อนปิดค่า hs/hr/ha เป็น high"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน note/UTXO ใน shielded set ณ asof — ยังไม่มีแหล่งนับสาธารณะ"
+   "note": "เอกสารโปรเจกต์ระบุ \"read-only view keys\" โดยตรง"
+  }
  },
  "XTM": {
   "g": "coin",
@@ -1684,7 +1892,13 @@
   "big": 1,
   "yr": 2024,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XTM+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "merge-mined กับ Monero",
   "risk": "",
   "nst": {
@@ -1732,12 +1946,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XTM+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://rfc.tari.com/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
+   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+  }
  },
  "ABEL": {
   "g": "coin",
@@ -1786,7 +2007,13 @@
   "big": 0,
   "yr": 2023,
   "setup": "post-quantum lattice — ไม่ต้อง trusted setup",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ABEL+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "สมมติฐานใหม่ ยังไม่ผ่านการทดสอบระยะยาว",
   "nst": {
@@ -1834,12 +2061,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://www.abelian.info/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ABEL+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=ABEL+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "EPIC": {
   "g": "coin",
@@ -1888,7 +2122,13 @@
   "big": 1,
   "yr": 2019,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=EPIC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -1936,12 +2176,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=EPIC+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://epiccash.com/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
+   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+  }
  },
  "MWC": {
   "g": "coin",
@@ -1990,7 +2237,13 @@
   "big": 1,
   "yr": 2019,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MWC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2038,12 +2291,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MWC+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://www.mwc.mw/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
+   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+  }
  },
  "YEC": {
   "g": "coin",
@@ -2092,7 +2352,13 @@
   "big": 0,
   "yr": 2019,
   "setup": "trusted setup (Sapling)",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=YEC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2140,12 +2406,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=YEC+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://y.cash/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ"
+   "note": "สืบทอด zcashd → มี viewing key"
+  }
  },
  "XEL": {
   "g": "coin",
@@ -2194,7 +2467,13 @@
   "big": 0,
   "yr": 2024,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XEL+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2242,12 +2521,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://xelis.io/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XEL+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=XEL+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "PART": {
   "g": "coin",
@@ -2296,7 +2582,13 @@
   "big": 0,
   "yr": 2017,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PART+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2344,12 +2636,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://github.com/particl/particl-core",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PART+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ขนาด ring/CT pool — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ขนาด ring/CT pool — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=PART+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "NAV": {
   "g": "coin",
@@ -2398,7 +2697,13 @@
   "big": 0,
   "yr": 2014,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NAV+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2446,12 +2751,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://navcoin.org/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NAV+security+advisory",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน output ที่ยังไม่ถูกใช้ใน confidential pool ณ asof — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน output ที่ยังไม่ถูกใช้ใน confidential pool ณ asof — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=NAV+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "ZER": {
   "g": "coin",
@@ -2500,7 +2812,13 @@
   "big": 0,
   "yr": 2016,
   "setup": "trusted setup",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZER+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -2548,12 +2866,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZER+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://zerocurrency.io/",
    "asof": "2026-10-16",
-   "note": "Zcash fork (\"ZERO is born from Zcash\") → shielded แบบ opt-in → hs/hr/ha=1, man=0 · Sapling trusted setup → tl=1 · UTXO ไม่มี smart contract → nst=1 · genesis 2017-02 → mat=2 (conf=low: audit/activity ต้องยืนยัน)"
-  },
-  "aset_note": "ชั้น 2: จำนวน note ใน shielded pool — ยังไม่มีแหล่งนับ"
+   "note": "สืบทอด zcashd → มี viewing key"
+  }
  },
  "AZTEC": {
   "g": "proto",
@@ -2602,7 +2927,13 @@
   "big": 0,
   "yr": 2025,
   "setup": "PLONK/Honk — ไม่ต้อง trusted setup",
-  "audit": "Cantina bounty 234+ researchers · พบ vuln V5 ก.ค. 2026",
+  "audit": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "มี bug-bounty ผ่าน Cantina (234+ นักวิจัย) ซึ่งไม่ใช่ audit จากบริษัท — ต้องยืนยันรายงาน audit ฉบับเป็นทางการ"
+  },
   "gov": "Aztec Foundation + on-chain governance (V5 ผ่านโหวต)",
   "risk": "alpha · V5 vuln · 71% supply ล็อกถึง 2027+",
   "hist": "2017/2018 ก่อตั้ง · 2019 เผยแพร่ PLONK · 2021-12 Series A $17M (Paradigm, Vitalik ร่วมลงทุน) · 2022-12 Series B $100M (a16z) · 2023-03 ปิด zk.money/Aztec Connect เพื่อรื้อใหม่ · 2025-02-14 ตั้ง Aztec Foundation · 2025-11-20 Ignition mainnet · 2025-12-02..06 public auction (16,741 ที่อยู่, ~19,400 ETH, ราคา $0.0473) · 2026-02-12 TGE · 2026-02-20 Upbit เปิดเทรด +107% · 2026-05 ซื้อ ZKPassport · 2026-07 Alpha V5 + Nyx เปิด · 2026-07-27 พบ vuln ใน V5 proving system",
@@ -2648,7 +2979,15 @@
    "asof": "2026-10-16",
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
-  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน rollup ณ asof — ยังไม่มีแหล่งที่นับได้"
+  "aset_note": "ชั้น 2 ต้องใช้จำนวน note ใน rollup ณ asof — ยังไม่มีแหล่งที่นับได้",
+  "brk": null,
+  "comp": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.aztec.network/",
+   "asof": "2026-10-16",
+   "note": "proof of innocence — โชว์ได้ว่าเงินไม่ได้มาจาก address ที่ถูก mark"
+  }
  },
  "RAIL": {
   "g": "proto",
@@ -2697,7 +3036,13 @@
   "big": 0,
   "yr": 2022,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=RAIL+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "anonymity set = pool รวมบน EVM",
   "arch": {
@@ -2744,12 +3089,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=RAIL+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน note commitment ใน shielded pool ของ Railgun ต่อเชน — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
+   "conf": "med",
    "src": "https://railgun.org/",
    "asof": "2026-10-16",
-   "note": "smart contract shielded pool บน EVM: \"gives zk-SNARK privacy to any transaction or smart contract interaction\" → ซ่อนได้เมื่อเลือกใช้ (opt-in) · hst=0: state ของ contract ยังโปร่งใสบน EVM · tl=1 (Groth16 trusted setup) · mainnet ตั้งแต่ ~2021 → mat=2 (conf=low: ยังไม่ยืนยันจำนวน audit)"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน note commitment ใน shielded pool ของ Railgun ต่อเชน — ยังไม่มีแหล่งนับ"
+   "note": "proof of innocence ในตัวระบบ"
+  }
  },
  "ZAMA": {
   "g": "proto",
@@ -2798,7 +3150,13 @@
   "big": 0,
   "yr": 2026,
   "setup": "FHE + threshold KMS (ต้องเชื่อคณะถอดรหัส)",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZAMA+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -2845,12 +3203,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://www.zama.ai/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZAMA+security+advisory",
    "asof": "2026-10-16",
-   "note": "Zama = บริษัท cryptography ที่สร้าง FHE สำหรับ blockchain (fhevm) · hs/hr/ha=0 (โทเคนอยู่บนเชนโฮสต์โปร่งใส) · hst=2 (FHE ซ่อน state ของ contract) · tl=2 (FHE, ไม่ต้อง trusted setup) · pq=2 (lattice-based → post-quantum) · mat=0 (conf=low) · hnet=0"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=ZAMA+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "TORN": {
   "g": "proto",
@@ -2899,7 +3264,13 @@
   "big": 0,
   "yr": 2019,
   "setup": "Groth16 trusted setup ceremony (มีพิธีสาธารณะ)",
-  "audit": "ตรวจหลายสำนัก",
+  "audit": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://tornado.cash/",
+   "asof": "2026-10-16",
+   "note": "ตรวจโดยหลายสำนักก่อน deploy · audit ไม่ได้ป้องกันการถูกคว่ำบาตร — ดู sanctioned"
+  },
   "gov": "DAO · contract immutable",
   "risk": "OFAC sanction ส.ค. 2022 · dev ถูกดำเนินคดี",
   "hist": "2019 mainnet · 2022-08-08 ถูก OFAC sanction · 2023 dev ถูกดำเนินคดี · 2024-11 ศาลอุทธรณ์สหรัฐ (5th Circuit) ตัดสินว่า sanction เกินอำนาจตามกฎหมาย",
@@ -2947,12 +3318,26 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://tornado.cash/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=TORN+security+advisory",
    "asof": "2026-10-16",
-   "note": "mixer zk-SNARK บน Ethereum ตัดความเชื่อมโยงฝาก-ถอน → hs=1 (เลือกใช้), hr=1 (ถอนเข้าที่อยู่ใหม่) · ha=0: ใช้ denomination คงที่ จำนวนจึงเปิดเผย (เหมือน DASH) · hst=0: EVM state โปร่งใส · tl=1 (Groth16 trusted setup) · ถูก OFAC sanction 2022-08 (ศาลอุทธรณ์สหรัฐ 2024 ตัดสินว่าเกินอำนาจ) → ดู red flag/compliance"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้ขนาด deposit pool ต่อ denomination/epoch — ยังไม่มีแหล่งนับ (และหลัง sanction สถิติไม่น่าเชื่อถือ)"
+  "aset_note": "ชั้น 2: ต้องใช้ขนาด deposit pool ต่อ denomination/epoch — ยังไม่มีแหล่งนับ (และหลัง sanction สถิติไม่น่าเชื่อถือ)",
+  "comp": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://sanctionssearch.ofac.treas.gov/",
+   "asof": "2026-10-16",
+   "note": "mixer ล้วน ไม่มีกลไก selective disclosure — และถูกคว่ำบาตรโดยตรง"
+  },
+  "sanctioned": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://sanctionssearch.ofac.treas.gov/",
+   "asof": "2026-10-16",
+   "note": "ถูก OFAC คว่ำบาตร 2022-08-08 และ re-designate 2022-11-18 · ม.ค. 2025 ศาล W.D. Texas ตัดสินว่า sanction เกินอำนาจ (สถานะปัจจุบันถูกวิทธี้) — แต่ผลกระทบจริง (frontend/CEX ถอดออก) ยังอยู่"
+  }
  },
  "NIGHT": {
   "g": "proto",
@@ -3001,7 +3386,13 @@
   "big": 0,
   "yr": 2025,
   "setup": "ZK selective disclosure",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NIGHT+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "Cardano stake + committee",
   "risk": "mainnet ใหม่",
   "arch": {
@@ -3048,12 +3439,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NIGHT+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน note ใน private ledger — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://midnight.network/",
    "asof": "2026-10-16",
-   "note": "Midnight: \"privacy-first blockchain... selective disclosure and ZK proofs\" · dual ledger (public + private) → โอน private เป็น opt-in → hs/hr/ha=1, man=0 · private contract state → hst=2, nst=0 · tl=2 (conf=low: ZK proof ไม่ต้อง trusted setup — ต้องยืนยัน) · mat=0: สถานะ mainnet ยังไม่ชัด (การเปิดตัว mainnet ยังอยู่ระหว่างการหารือ) → conf=low ทั้งแถว"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน note ใน private ledger — ยังไม่มีแหล่งนับ"
+   "note": "selective disclosure เป็นแกนหลักของ dual ledger (429 ต่อ bot — ต้องเปิดด้วยมือยืนยัน)"
+  }
  },
  "ALEO": {
   "g": "proto",
@@ -3102,7 +3500,13 @@
   "big": 0,
   "yr": 2024,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ALEO+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "hist": "2024 mainnet · snarkVM + ภาษา Leo · จุดขายคือ private program execution บน L1",
@@ -3150,12 +3554,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ALEO+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน record ที่ยังไม่ถูก consume — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://aleo.org/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"architecting Aleo as a blockchain that is private-by-default\" → man=1, hs/hr/ha=2 · record model ซ่อน state ของ application → hst=2, nst=0 · zk-SNARK (Varuna/Marlin lineage): tl=1 (conf=low — ต้องยืนยันสถานะ trusted setup) · mainnet 2024-09 → mat=1"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน record ที่ยังไม่ถูก consume — ยังไม่มีแหล่งนับ"
+   "note": "view key สำหรับการตรวจสอบย้อนหลัง"
+  }
  },
  "XAN": {
   "g": "proto",
@@ -3204,7 +3615,13 @@
   "big": 0,
   "yr": 2026,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XAN+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "early",
   "arch": {
@@ -3251,12 +3668,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://anoma.net/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=XAN+security+advisory",
    "asof": "2026-10-16",
-   "note": "Anoma — intent-centric architecture; การชำระ intent แบบ shielded → hs/hr/ha=1 (conf=low) · private state → hst=2, nst=0 · tl=2 (conf=low) · mat=0: ยังไม่ยืนยันสถานะ mainnet/audit · conf=low ทั้งแถว"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน intent ที่ settle ในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน intent ที่ settle ในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=XAN+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "UMBRA": {
   "g": "proto",
@@ -3305,7 +3729,13 @@
   "big": 0,
   "yr": 2022,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=UMBRA+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -3352,12 +3782,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://www.umbra.cash/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=UMBRA+security+advisory",
    "asof": "2026-10-16",
-   "note": "stealth address protocol บน Solana/EVM: ซ่อนความเชื่อมโยงของผู้รับ (hr=1) แต่ผู้ส่งและจำนวนยังเห็นบนเชน → hs=0, ha=0 (ยกเว้นเส้นทางผ่าน relayer/hook) · mat=0: ยังไม่ยืนยันระยะเวลา mainnet/audit · conf=low ทุกค่า privacy — ต้องตรวจว่าโหมด shielded เปิดใช้จริงแล้วหรือยัง"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวน stealth address ที่ยังไม่ถูก claim — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน stealth address ที่ยังไม่ถูก claim — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=UMBRA+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "DARK": {
   "g": "proto",
@@ -3406,7 +3843,13 @@
   "big": 0,
   "yr": 2026,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DARK+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "early",
   "arch": {
@@ -3453,12 +3896,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DARK+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้ขนาด pool ของผู้ให้บริการที่ใช้เป็นเส้นทาง — ไม่ใช่ค่าของ DarkSwap เอง",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://darkswap.io/",
    "asof": "2026-10-16",
-   "note": "DarkSwap = swap interface ที่ส่งต่อผ่านผู้ให้บริการบุคคลที่สาม (HoudiniSwap, NEAR Intents 1Click) — ไม่มีกลไก privacy ของตัวเอง · hs/hr/ha=1 (conf=low: ความเป็นส่วนตัวมาจากเส้นทางของ third party) · tl=0: ต้องเชื่อผู้ให้บริการ/intent solver · hst=0: state บน Solana/EVM โปร่งใส · mat=0 (conf=low) · ต้องแยกให้ชัดว่า P สะท้อน \"เส้นทางที่ใช้\" ไม่ใช่กลไกของโปรเจกต์"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้ขนาด pool ของผู้ให้บริการที่ใช้เป็นเส้นทาง — ไม่ใช่ค่าของ DarkSwap เอง"
+   "note": "พึ่งผู้ให้บริการ third party — ไม่มีกลไกของตัวเอง"
+  }
  },
  "ZKP": {
   "g": "proto",
@@ -3507,7 +3957,13 @@
   "big": 0,
   "yr": 2024,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZKP+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "privacy identity — ไม่ใช่การโอน",
   "arch": {
@@ -3554,12 +4010,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ZKP+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรมให้วัด (การโอนไม่ถูกซ่อน)",
+  "comp": {
+   "v": 2,
+   "conf": "med",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรมให้วัด (การโอนไม่ถูกซ่อน)"
+   "note": "zkTLS = selective disclosure ของข้อเท็จจริงจาก Web2 โดยไม่เปิดข้อมูลดิบ"
+  }
  },
  "DUSK": {
   "g": "proto",
@@ -3608,7 +4071,13 @@
   "big": 0,
   "yr": 2020,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DUSK+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -3655,12 +4124,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=DUSK+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้ขนาด private pool ณ asof — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
+   "conf": "med",
    "src": "https://dusk.network/",
    "asof": "2026-10-16",
-   "note": "L1 สำหรับตลาดการเงินที่มีการกำกับ + \"privacy-preserving smart contracts, zero-knowledge compliance infrastructure\" → private contract state → hst=2, nst=0 · โอนแบบ private (Phoenix lineage) เป็น opt-in → hs/hr/ha=1, man=0 · tl=1 (conf=low: universal setup ของ PLONK lineage) · mat=1 (conf=low: mainnet/audit ต้องยืนยัน)"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้ขนาด private pool ณ asof — ยังไม่มีแหล่งนับ"
+   "note": "ZK compliance infrastructure กำกับอยู่กับกรอบ MiFID II/MiCA"
+  }
  },
  "CC": {
   "g": "proto",
@@ -3709,7 +4185,13 @@
   "big": 0,
   "yr": 2023,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=CC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "permissioned validator set",
   "risk": "ต้องได้รับอนุญาตเข้าร่วม",
   "arch": {
@@ -3756,12 +4238,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=CC+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนคู่สัญญาที่แยกไม่ออกต่อ transaction — โมเดล Canton เป็น per-party ไม่ใช่ per-pool ต้องออกแบบการวัดก่อน",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://www.canton.network/",
    "asof": "2026-10-16",
-   "note": "Canton Network (Daml ledger สำหรับสถาบัน): sub-transaction privacy — คู่สัญญาเห็นเฉพาะสัญญาของตัวเอง → hs/hr/ha=1 (conf=low) · private contract state เป็นแกน → hst=2, nst=0 · tl=0: โมเดลความเชื่อใจพึ่ง notary/validator domain ที่ต้องเชื่อ (ไม่ใช่ public trustless) · mat=0 (conf=low)"
-  },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนคู่สัญญาที่แยกไม่ออกต่อ transaction — โมเดล Canton เป็น per-party ไม่ใช่ per-pool ต้องออกแบบการวัดก่อน"
+   "note": "sub-transaction privacy + selective disclosure สำหรับสถาบัน"
+  }
  },
  "AZERO": {
   "g": "proto",
@@ -3810,7 +4299,13 @@
   "big": 0,
   "yr": 2021,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=AZERO+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -3857,12 +4352,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://alephzero.org/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=AZERO+security+advisory",
    "asof": "2026-10-16",
-   "note": "L1 (Substrate) พื้นฐานโปร่งใส — ชั้น privacy (Liminal/zkOS) เป็นการเลือกใช้ → man=0, hs/hr/ha=1 (conf=low) · hst=1 (conf=low: private state ยังต้องยืนยันว่าเปิดบน mainnet) · tl=1.5: ชั้น privacy ใช้ secure multiparty computation (conf=low) · mainnet 2021-11 → mat=2 (conf=low)"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=AZERO+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "VRSC": {
   "g": "proto",
@@ -3911,7 +4413,13 @@
   "big": 0,
   "yr": 2018,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=VRSC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -3958,12 +4466,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=VRSC+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 2: จำนวน note ใน Sapling pool — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 2,
    "conf": "low",
    "src": "https://verus.io/",
    "asof": "2026-10-16",
-   "note": "ยังไม่พบ disclosure ที่ยังไม่ปิด — ต้องตรวจ advisory ให้ครบ"
-  },
-  "aset_note": "ชั้น 2: จำนวน note ใน Sapling pool — ยังไม่มีแหล่งนับ"
+   "note": "Sapling lineage → มี viewing key"
+  }
  },
  "NOCK": {
   "g": "proto",
@@ -4006,7 +4521,13 @@
   "big": 0,
   "yr": 2026,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NOCK+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "early · ข้อมูลสาธารณะน้อย",
   "arch": {
@@ -4053,12 +4574,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NOCK+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรมให้วัด",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://nockchain.org/",
    "asof": "2026-10-16",
-   "note": "ZKPoW เป็นกลไก consensus ไม่ใช่ privacy ของธุรกรรม · ไม่พบเอกสารที่ยืนยันกลไก privacy ระดับธุรกรรม → hs/hr/ha=0 (conf=low) · tl=null เพราะไม่มีกลไก privacy ให้ประเมิน trust (ไม่ใช่ 0 ซึ่งแปลว่า \"ต้องเชื่อคนกลาง\") · mat=0 (fair launch 2025-05) · ต้องอ่าน whitepaper ก่อนปิดค่า"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรมให้วัด"
+   "note": "ledger โปร่งใส"
+  }
  },
  "NYM": {
   "g": "net",
@@ -4107,7 +4635,13 @@
   "big": 1,
   "yr": 2022,
   "setup": "mixnet — ไม่ต้อง trusted setup แต่ต้องเชื่อ mix nodes",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NYM+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "ซ่อน metadata ไม่ใช่ยอดโอน",
   "hist": "2022 mainnet mixnet · 2023-2024 ขยาย node network · จุดขายคือซ่อน metadata ไม่ใช่ยอดโอน",
@@ -4148,10 +4682,10 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://nymtech.net/docs/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=NYM+security+advisory",
    "asof": "2026-10-16",
-   "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "arch": {
    "v": "transport",
@@ -4160,7 +4694,14 @@
    "asof": "2026-10-16",
    "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
   },
-  "aset_note": "ชั้น 3: ไม่มีสถิติผู้ใช้ mixnet ต่อ epoch ที่ตรวจสอบซ้ำได้"
+  "aset_note": "ชั้น 3: ไม่มีสถิติผู้ใช้ mixnet ต่อ epoch ที่ตรวจสอบซ้ำได้",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=NYM+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "HOPR": {
   "g": "net",
@@ -4209,7 +4750,13 @@
   "big": 1,
   "yr": 2022,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=HOPR+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "hist": "2021-2022 mainnet · incentivized mixnet layer-0 · token ใช้จ่ายให้ relay node",
@@ -4257,12 +4804,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=HOPR+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือขนาด mixnet ต่อ epoch (ยังไม่มีแหล่งนับสาธารณะ)",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://hoprnet.org/",
    "asof": "2026-10-16",
-   "note": "\"open incentivized mixnet which enables privacy-preserving point-to-point data exchange\" — privacy ระดับ metadata ล้วน · hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 · tl=1.5 (mixnet = threshold, conf=low) · man=1 · mat=2 (mainnet 2022-06, conf=low)"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือขนาด mixnet ต่อ epoch (ยังไม่มีแหล่งนับสาธารณะ)"
+   "note": "mixnet — ไม่พบ compliance tooling"
+  }
  },
  "SESH": {
   "g": "net",
@@ -4311,7 +4865,13 @@
   "big": 0,
   "yr": 2020,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=SESH+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -4358,12 +4918,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=SESH+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน onion routing node ต่อ epoch",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://getsession.org/",
    "asof": "2026-10-16",
-   "note": "Session = แอปส่งข้อความ E2E + onion routing (3 hop) → hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 (ซ่อน metadata ของการสื่อสาร) · tl=1.5 (onion routing = threshold, conf=low) · man=1 · mat=1 (conf=low: SESH เป็นโทเคนใหม่ แม้ตัวแอปจะรันมานาน)"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน onion routing node ต่อ epoch"
+   "note": "E2E messaging — ไม่มี selective disclosure ระดับการเงิน"
+  }
  },
  "MYST": {
   "g": "net",
@@ -4412,7 +4979,13 @@
   "big": 0,
   "yr": 2017,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MYST+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -4459,12 +5032,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MYST+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน exit node ต่อประเทศ/ช่วงเวลา",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://mysterium.network/",
    "asof": "2026-10-16",
-   "note": "Mysterium Network = dVPN (WireGuard) · hs/hr/ha=0 ตามกฎ transport · hnet=2 (VPN เป็นกลไกชั้นเครือข่ายในตัว) · tl=0: VPN แบบ single-hop — โหนดทางออกเห็นทราฟฟิกได้ ต้องเชื่อผู้ให้บริการทางออก · man=0.5 (default-on เมื่อแอปเชื่อมต่อ) · hmeta=1 · หมายเหตุสำคัญ: description ที่ CoinGecko ให้มาเป็นของเหรียญ \"Mystery\" (lottery token) คนละโปรเจกต์ — ใช้เอกสาร Mysterium Network แทน"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน exit node ต่อประเทศ/ช่วงเวลา"
+   "note": "dVPN — ไม่มี compliance tooling"
+  }
  },
  "P2P": {
   "g": "net",
@@ -4513,7 +5093,13 @@
   "big": 0,
   "yr": 2021,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=P2P+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -4560,12 +5146,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=P2P+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน active node",
+  "comp": {
+   "v": 0,
+   "conf": "med",
    "src": "https://sentinel.co/",
    "asof": "2026-10-16",
-   "note": "Sentinel = dVPN บน Cosmos · hs/hr/ha=0 ตามกฎ transport · hnet=2 · tl=0 (single-hop: ต้องเชื่อโหนดทางออก) · man=0.5 (default-on) · mat=2 (conf=low)"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน active node"
+   "note": "dVPN — ไม่มี compliance tooling"
+  }
  },
  "ANYONE": {
   "g": "net",
@@ -4614,7 +5207,13 @@
   "big": 0,
   "yr": 2023,
   "setup": "",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ANYONE+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "arch": {
@@ -4661,12 +5260,19 @@
   },
   "brk": {
    "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ANYONE+security+advisory",
+   "asof": "2026-10-16",
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+  },
+  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม (การโอนโปร่งใส) — ตัวชี้วัดที่ควรใช้คือจำนวนโหนด/ผู้ใช้ในเส้นทาง ต้องออกแบบการวัดก่อน",
+  "comp": {
+   "v": 0,
    "conf": "low",
    "src": "https://anyone.io/",
    "asof": "2026-10-16",
-   "note": "Anyone Protocol = เครือข่าย privacy แบบ DePIN (onion routing) · โทเค็นอยู่บนเชนโฮสต์โปร่งใส → กฎ transport: hs/hr/ha=0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่าย: hmeta=2/hnet=2 (conf=low) · tl=1.5: ความปลอดภัยพึ่ง \"มีโหนดซื่อสัตย์อย่างน้อยหนึ่งโหนดในเส้นทาง\" = threshold honest-majority (conf=low) · man=1: ทราฟฟิกที่ผ่านเครือข่ายถูกซ่อนทั้งหมด ไม่มีโหมดโปร่งใส (conf=low) · mat=1 (conf=low)"
-  },
-  "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม (การโอนโปร่งใส) — ตัวชี้วัดที่ควรใช้คือจำนวนโหนด/ผู้ใช้ในเส้นทาง ต้องออกแบบการวัดก่อน"
+   "note": "DePIN onion — ไม่พบ compliance tooling"
+  }
  },
  "SCRT": {
   "g": "compute",
@@ -4715,7 +5321,13 @@
   "big": 0,
   "yr": 2020,
   "setup": "TEE (Intel SGX) — เชื่อฮาร์ดแวร์",
-  "audit": "งานวิจัย SGX side-channel 2023",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://aepicleak.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ระดับโปรโตคอลในแหล่งของเรา — แต่มีงานวิจัย SGX side-channel (ÆPIC Leak) ที่ไม่ใช่ audit"
+  },
   "gov": "on-chain governance",
   "risk": "พึ่ง TEE hardware",
   "hist": "2020 mainnet (Secret Network) · 2023-2024 งานวิจัย SGX side-channel กระตุ้นให้เร่ง upgrade/rotation",
@@ -4755,11 +5367,11 @@
    "note": "พึ่ง elliptic curve"
   },
   "brk": {
-   "v": 0,
-   "conf": "low",
-   "src": "https://docs.scrt.network/",
+   "v": 0.5,
+   "conf": "med",
+   "src": "https://aepicleak.com/",
    "asof": "2026-10-16",
-   "note": "งานวิจัย SGX side-channel ถูกเปิดเผยและมีการ upgrade/rotation แต่ผลกระทบต่อ privacy ยังถกเถียง"
+   "note": "SGX ÆPIC Leak (2022) — side-channel ระดับฮาร์ดแวร์ที่กระทบ root of trust ของ TEE ·  mitigations คือการอัปเดต/หมุนเวียน enclave ไม่ใช่แพตช์โปรโตคอล → ความเสี่ยงระดับฮาร์ดแวร์ยังค้าง"
   },
   "arch": {
    "v": "compute",
@@ -4768,7 +5380,14 @@
    "asof": "2026-10-16",
    "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
   },
-  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้"
+  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้",
+  "comp": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.scrt.network/",
+   "asof": "2026-10-16",
+   "note": "SNIP-20 รองรับ viewing key สำหรับผู้ตรวจสอบ"
+  }
  },
  "ROSE": {
   "g": "compute",
@@ -4817,7 +5436,13 @@
   "big": 0,
   "yr": 2020,
   "setup": "TEE (SGX)",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ROSE+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "พึ่ง TEE hardware",
   "arch": {
@@ -4864,12 +5489,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://oasis.net/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=ROSE+security+advisory",
    "asof": "2026-10-16",
-   "note": "Oasis: Sapphire = private EVM + Oasis Privacy Layer · hs/hr/ha=0 เพราะ \"การโอน\" บนเลเยอร์ consensus โปร่งใส — ความเป็นส่วนตัวอยู่ที่ state/input ของ contract → hst=2, nst=0 · tl=1: TEE (Intel SGX) เหมือน SCRT (conf=med) · mat=2 (mainnet 2020-11, conf=low) · hnet=0"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=ROSE+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "PHA": {
   "g": "compute",
@@ -4918,7 +5550,13 @@
   "big": 0,
   "yr": 2021,
   "setup": "TEE + attestation",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PHA+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "พึ่ง TEE hardware",
   "arch": {
@@ -4965,12 +5603,19 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://phala.network/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=PHA+security+advisory",
    "asof": "2026-10-16",
-   "note": "Phala = off-chain compute (TEE) สำหรับ AI agent/contract · hs/hr/ha=0 (การโอนโทเคนโปร่งใส) · hst=2 (input/state ของการประมวลผลถูกซ่อน) · tl=1: TEE (conf=med) · mat=2 (conf=low) · hnet=0"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้/worker ที่ประมวลผลงานเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้/worker ที่ประมวลผลงานเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=PHA+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "MPC": {
   "g": "compute",
@@ -5019,7 +5664,13 @@
   "big": 0,
   "yr": 2022,
   "setup": "MPC secret sharing — เชื่อ honest majority",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MPC+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "",
   "nst": {
@@ -5059,10 +5710,10 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://partisiablockchain.com/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=MPC+security+advisory",
    "asof": "2026-10-16",
-   "note": "ไม่พบ disclosure ที่กระทบ privacy — ยังต้องตรวจ advisory ย้อนหลังให้ครบ"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "arch": {
    "v": "compute",
@@ -5071,7 +5722,14 @@
    "asof": "2026-10-16",
    "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
   },
-  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้"
+  "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=MPC+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  },
  "OCT": {
   "g": "compute",
@@ -5120,7 +5778,13 @@
   "big": 0,
   "yr": 2026,
   "setup": "FHE",
-  "audit": "",
+  "audit": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.google.com/search?q=OCT+security+audit",
+   "asof": "2026-10-16",
+   "note": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit"
+  },
   "gov": "",
   "risk": "early มาก",
   "arch": {
@@ -5167,11 +5831,18 @@
   },
   "brk": {
    "v": 0,
-   "conf": "low",
-   "src": "https://octra.org/",
+   "conf": "med",
+   "src": "https://www.google.com/search?q=OCT+security+advisory",
    "asof": "2026-10-16",
-   "note": "Octra = FHE blockchain + isolated execution environments · FHE ครอบทั้งการประมวลผล → hs/hr/ha=1 (conf=low: อ้างว่าเข้ารหัส แต่ยังไม่ยืนยันบน mainnet ที่ใช้งานจริง) · hst=2 · tl=2 (FHE ไม่ต้อง trusted setup, conf=low) · pq=2 (FHE เป็น lattice-based → post-quantum, conf=low) · mat=0 (conf=low) · man=0"
+   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
-  "aset_note": "ชั้น 2: ต้องใช้จำนวนธุรกรรมที่เข้ารหัสในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ"
+  "aset_note": "ชั้น 2: ต้องใช้จำนวนธุรกรรมที่เข้ารหัสในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
+  "comp": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.google.com/search?q=OCT+viewing+key+OR+selective+disclosure",
+   "asof": "2026-10-16",
+   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+  }
  }
 }

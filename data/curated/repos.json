@@ -17,5 +17,11 @@
   "reason": "CoinGecko ชี้ไประดับ org → enrich ใช้ repo ดาวมากสุด (aleo-education, push 2024-06-18) ซึ่งเป็น repo เอกสารไม่ใช่โค้ด · repo หลักที่ยัง push คือ AleoNet/snarkvm และ AleoNet/snarkOS (push 2026-05-27) · repo AleoNet/aleo ไม่มีอยู่แล้ว (404)",
   "src": "https://api.github.com/orgs/AleoNet/repos?sort=pushed",
   "asof": "2026-10-16"
+ },
+ "aztec": {
+  "repo": "AztecProtocol/aztec-packages",
+  "reason": "AztecProtocol/aztec ถูก archive (GitHub API ยืนยัน archived=true, push ล่าสุด 2022-12-13) — ตัวต่อคือ aztec-packages (push 2026-10-15) · aztec-nr (Noir circuits) ก็ active (2026-10-15)",
+  "src": "https://api.github.com/repos/AztecProtocol/aztec",
+  "asof": "2026-10-16"
  }
 }

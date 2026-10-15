@@ -1,5 +1,5 @@
 {
- "version": "2.5.0-preview",
+ "version": "2.6.0-preview",
  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
  "genes": {
   "hs": {
@@ -90,11 +90,18 @@
    "src_hint": "เอกสารด้าน cryptography ของโปรเจกต์"
   },
   "brk": {
-   "label": "เคยมีช่องโหว่ privacy ที่ยังไม่ปิด",
-   "0": "ไม่เคยมี หรือมีแล้วปิดครบพร้อม disclosure สาธารณะ",
-   "1": "มีช่องโหว่ที่ส่งผลต่อ privacy และยังไม่ปิด หรือปิดไม่ครบ",
+   "label": "ประวัติช่องโหว่ระดับโปรโตคอล/enclave",
+   "0": "ไม่พบ disclosure ที่ยังไม่ปิด — ไม่ได้หมายความว่าไม่เคยมีบั๊ก",
+   "1": "ยังไม่ปิด — P หัก 15 คะแนน และ flag unpatched_break",
    "src_hint": "advisory ของทีม / รายงานความปลอดภัย",
-   "effect": "หัก −15 คะแนนจาก P (ไม่ใช่การรีเซ็ตเป็นศูนย์)"
+   "effect": "หัก −15 คะแนนจาก P (ไม่ใช่การรีเซ็ตเป็นศูนย์)",
+   "values": [
+    0,
+    0.5,
+    1
+   ],
+   "0.5": "เคยมีช่องโหว่ระดับโปรโตคอล/enclave แต่แพตช์หรือเปลี่ยนโปรโตคอลแล้ว — P ไม่หัก แต่ pillar S นับ (55)",
+   "note": "0.5 ต้องมี src เป็น CVE/post-mortem จริง — ห้ามเดา (รอบนี้มีได้แค่ ZEC และ SCRT)"
   },
   "aset": {
    "label": "effective per-transaction anonymity set",
@@ -134,6 +141,39 @@
     "compute"
    ],
    "src_hint": "เอกสารสถาปัตยกรรมของโปรเจกต์ — ต้องระบุว่าตัวโทเค็นอยู่บนเชนใด"
+  },
+  "audit": {
+   "label": "คุณภาพ audit",
+   "values": [
+    0,
+    1,
+    2
+   ],
+   "0": "ไม่มีบันทึก audit ที่พบในแหล่งของเรา — ไม่ได้หมายความว่าไม่เคย audit",
+   "1": "ได้รับการตรวจแต่ไม่ใช่บริษัท Tier-1 (วิชาการ, bug bounty, internal review)",
+   "2": "บริษัท Tier-1 (Trail of Bits / Least Authority / Cure53 / Zellic / Halborn / QuarksLab) หรือ audit หลายรอบสาธารณะ",
+   "src_hint": "รายงาน audit / security page ของโปรเจกต์"
+  },
+  "comp": {
+   "label": "ความสามารถด้าน compliance (selective disclosure / viewing key / proof of innocence)",
+   "values": [
+    0,
+    1,
+    2
+   ],
+   "0": "ไม่มี privacy ให้ selective disclose หรือไม่มี compliance tooling",
+   "1": "ยังไม่ยืนยัน — ไม่ใช่ \"มีบางส่วน\" (14 เหรียญยังอยู่ในสถานะนี้)",
+   "2": "มีกลไกยืนยันในเอกสาร: ZEC/AZTEC/RAIL/ALEO/IRON/NIGHT/CC/DUSK/ZKP + Zcash forks (ARRR/YEC/ZCL/ZER/VRSC/PIVX) + SCRT (SNIP-20 viewing key)",
+   "src_hint": "docs ของโปรเจกต์ — ระบุ viewing key / selective disclosure / proof of innocence"
+  },
+  "sanctioned": {
+   "label": "ถูกคว่ำบาตรโดยตรง (OFAC/sanction)",
+   "values": [
+    0,
+    1
+   ],
+   "note": "cap pillar R ที่ 25 — TORN: คว่ำบาตร 2022-08-08 · re-designate 2022-11-18 · ศาล W.D. Texas ตัดสิน 2025-01 ว่าเกินอำนาจ แต่ผลกระทบจริง (frontend/CEX ถอดออก) ยังอยู่",
+   "src": "https://sanctionssearch.ofac.treas.gov/"
   }
  },
  "arch_roles": {
@@ -161,11 +201,12 @@
   "P": "Privacy strength (DNA v2) — engine/score.js scoreP()",
   "D": "Developer velocity (PROXY): วันที่ push ล่าสุดของ repo · ≤7d 100 · ≤30d 80 · ≤90d 55 · ≤365d 25 · อื่นๆ 0 · archived = 0 · ยังไม่มี commit-level velocity (GitHub GraphQL pass อยู่ใน roadmap) · คำนวณเทียบ ASOF_DATE ไม่ใช่ Date.now()",
   "L": "Liquidity & market health: 0.45×turnover + 0.35×depth + 0.20×float · turnover = vol24h/mcap (10%/วัน = เต็ม) · depth = log10(mcap) อัตรา $1M→$1B · float = cs/ms",
-  "T": "Tech / network maturity: 45% อายุ mainnet (yr) + 35% gene mat (อายุ+audit) + 20% มีบันทึก audit · เพดาน 40 เมื่อ mainnet ไม่ถึง 1 ปี",
-  "S": "Security & audit posture: 50% brk (ไม่มีช่องโหว่ที่ยังไม่ปิด = 100, มี = 0, ไม่ทราบ = null → ไม่คิด S) + 50% มีบันทึก audit"
+  "T": "Battle-testedness & liveness (Lindy): 70% อายุ mainnet (yr) + 30% ความต่อเนื่องของการพัฒนา (D) · เพดาน 40 เมื่อ mainnet < 1 ปี · ไม่มี audit (ตัดออกเพื่อไม่นับซ้ำกับ S)",
+  "S": "Security & cryptographic assurance: 40% คุณภาพ audit (0/1/2) + 35% ประวัติ brk (0→100 · 0.5→55 · 1→0) + 25% tl · null เมื่อ brk ไม่ทราบ · audit 0 = \"ไม่พบบันทึก\" ไม่ใช่ \"ไม่เคย audit\"",
+  "R": "Regulatory & censorship resilience: 55% ความต้านทานการสั่งปิดจาก tl + 45% ความสามารถด้าน compliance (comp) · cap 25 ถ้า sanctioned · ยังไม่มีส่วน \"venue breadth / DEX vs CEX\" เพราะไม่มีข้อมูล ticker ของ exchange — น้ำหนักนั้นเว้นไว้ไม่เดา"
  },
  "composite_presets": {
-  "privacy_investor": "P 35 / D 20 / L 15 / T 15 / S 15 · RISK-ADJUSTED: P แทนด้วยครึ่งล่างของ band (P − band/2) เพราะนักลงทุนไม่ใช้ค่าประมาณจุดเดียว",
+  "privacy_investor": "P 30 / D 20 / L 15 / T 15 / S 10 / R 10 · RISK-ADJUSTED (P − band/2)",
   "note": "preset investor ของ blueprint ไม่ได้แก้ — มันให้ P แค่ 15/50 เมื่อมีแค่ P/D/L ทำให้ DASH/XVG ขึ้น top-15"
  }
 }

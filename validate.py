@@ -145,10 +145,24 @@ def main():
             v = unwrap(g.get(k))
             if v is not None and v not in (0, 1, 2):
                 errs.append('%s: %s=%r must be 0, 1 or 2 (ternary)' % (s, k, v))
-        for k in ('nst', 'brk'):
+        for k in ('nst',):
             v = unwrap(g.get(k))
             if v is not None and v not in (0, 1):
                 errs.append('%s: %s=%r must be 0 or 1 (binary)' % (s, k, v))
+        # brk is ternary since engine 2.6: 0 none found · 0.5 patched history · 1 unpatched
+        bv = unwrap(g.get('brk'))
+        if bv is not None and bv not in (0, 0.5, 1):
+            errs.append('%s: brk=%r must be 0, 0.5 or 1' % (s, bv))
+        for k in ('audit', 'comp'):
+            v = unwrap(g.get(k))
+            if v is not None and v not in (0, 1, 2):
+                errs.append('%s: %s=%r must be 0, 1 or 2' % (s, k, v))
+        sv = unwrap(g.get('sanctioned'))
+        if sv is not None and sv not in (0, 1):
+            errs.append('%s: sanctioned=%r must be 0 or 1' % (s, sv))
+        # audit 0 means "no record found", comp 1 means "not evidenced" — neither may be silent
+        if unwrap(g.get('comp')) is None:
+            errs.append('%s: comp is missing — pillar R cannot be scored' % s)
         mv = unwrap(g.get('man'))
         if mv is not None and mv not in (0, 0.5, 1):
             errs.append('%s: man=%r must be 0, 0.5 or 1' % (s, mv))
