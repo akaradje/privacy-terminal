@@ -245,37 +245,207 @@
  },
  "BDX": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · เน้น privacy ที่ชั้น messenger ด้วย"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · เน้น privacy ที่ชั้น messenger ด้วย"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · เน้น privacy ที่ชั้น messenger ด้วย"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · เน้น privacy ที่ชั้น messenger ด้วย"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2018,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "CEX ขนาดเล็ก",
-  "nst": 1,
-  "hist": "2018 mainnet (CryptoNote fork) · ขยายเป็น ecosystem BChat messenger + Beldex VPN · เน้น privacy ที่ระดับการสื่อสารมากกว่ายอดโอน"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2018 mainnet (CryptoNote fork) · ขยายเป็น ecosystem BChat messenger + Beldex VPN · เน้น privacy ที่ระดับการสื่อสารมากกว่ายอดโอน",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://beldex.io/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
  },
  "ZANO": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · confidential assets · dPoS"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · confidential assets · dPoS"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · confidential assets · dPoS"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · confidential assets · dPoS"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2019,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2019 mainnet (สาย Boolberry) · เพิ่ม confidential assets · เปลี่ยนเป็น dPoS + ระบบ staking"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019 mainnet (สาย Boolberry) · เพิ่ม confidential assets · เปลี่ยนเป็น dPoS + ระบบ staking",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://zano.org/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
  },
  "ARRR": {
   "g": "coin",
@@ -330,70 +500,411 @@
  },
  "GRIN": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Dandelion (stem phase) ให้ hnet=1 · cut-through รวมธุรกรรมก่อนขึ้นบล็อก → hmeta=1"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Dandelion (stem phase) ให้ hnet=1 · cut-through รวมธุรกรรมก่อนขึ้นบล็อก → hmeta=1"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Dandelion (stem phase) ให้ hnet=1 · cut-through รวมธุรกรรมก่อนขึ้นบล็อก → hmeta=1"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Dandelion (stem phase) ให้ hnet=1 · cut-through รวมธุรกรรมก่อนขึ้นบล็อก → hmeta=1"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 1,
   "yr": 2019,
   "setup": "MimbleWimble ไม่ต้อง setup",
   "audit": "",
   "gov": "ชุมชน",
   "risk": "CEX น้อย · ต้อง DEX/atomic swap",
-  "nst": 1,
-  "hist": "2019-01-15 mainnet · MimbleWimble implementation แรกที่ใช้งานจริง · 2020-01 hardfork ปรับ emission"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019-01-15 mainnet · MimbleWimble implementation แรกที่ใช้งานจริง · 2020-01 hardfork ปรับ emission",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.grin.mw/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: ต้องใช้จำนวน UTXO ที่ยังไม่ถูกใช้ (ทั้งเชน) ณ asof — ยังไม่มีแหล่งที่นับได้จากภายนอก"
  },
  "BEAM": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · มี Dandelion · เพิ่ม confidential assets"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · มี Dandelion · เพิ่ม confidential assets"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · มี Dandelion · เพิ่ม confidential assets"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · มี Dandelion · เพิ่ม confidential assets"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 1,
   "yr": 2019,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2019-01 mainnet · เพิ่ม confidential assets + LelantusMW (optional auditability)"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019-01 mainnet · เพิ่ม confidential assets + LelantusMW (optional auditability)",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://docs.beam.mw/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: เช่นเดียวกับ GRIN (UTXO set) — ยังไม่มีแหล่งนับ"
  },
  "DERO": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 2,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · มี private smart contract (homomorphic) → hst=2 และ nst=0"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · มี private smart contract (homomorphic) → hst=2 และ nst=0"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · มี private smart contract (homomorphic) → hst=2 และ nst=0"
+  },
+  "hst": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · มี private smart contract (homomorphic) → hst=2 และ nst=0"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2018,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "hist": "2018 mainnet (DAG + homomorphic encryption) · 2020 เพิ่ม private smart contracts (DERO HE) · commit ล่าสุด 2022-03 → dev ชะลอตัวชัดเจน"
+  "hist": "2018 mainnet (DAG + homomorphic encryption) · 2020 เพิ่ม private smart contracts (DERO HE) · commit ล่าสุด 2022-03 → dev ชะลอตัวชัดเจน",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "nst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "มี state layer"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://dero.io/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size ของ CryptoNote กำหนดในโค้ด — ต้องอ้างไฟล์โค้ด/สเปกฉบับระบุเลขก่อนจึงจะใส่ได้"
  },
  "ZEPH": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 0,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2023 → mat=1 (1–3 ปี)"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2023 → mat=1 (1–3 ปี)"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2023 → mat=1 (1–3 ปี)"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2023 → mat=1 (1–3 ปี)"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2023,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2023 mainnet · โมเดล CryptoNote + ZSD stablecoin แบบ overcollateralized · พยายามแก้โจทย์ privacy stablecoin"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2023 mainnet · โมเดล CryptoNote + ZSD stablecoin แบบ overcollateralized · พยายามแก้โจทย์ privacy stablecoin",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://www.zephyrprotocol.com/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
  },
  "ZCL": {
   "g": "coin",
@@ -448,71 +959,411 @@
  },
  "XTM": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง | digital assets, merge-mined with Monero"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง | digital assets, merge-mined with Monero"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง | digital assets, merge-mined with Monero"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง | digital assets, merge-mined with Monero"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 1,
   "yr": 2024,
   "setup": "",
   "audit": "",
   "gov": "merge-mined กับ Monero",
   "risk": "",
-  "nst": 1,
-  "hist": "Tari mainnet 2024 · MimbleWimble สำหรับ digital assets · merge-mined กับ Monero"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "Tari mainnet 2024 · MimbleWimble สำหรับ digital assets · merge-mined กับ Monero",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://rfc.tari.com/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
  },
  "ABEL": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "post-quantum (lattice-based) → pq=2 · mainnet 2023 → mat=1"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "post-quantum (lattice-based) → pq=2 · mainnet 2023 → mat=1"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "post-quantum (lattice-based) → pq=2 · mainnet 2023 → mat=1"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "post-quantum (lattice-based) → pq=2 · mainnet 2023 → mat=1"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2023,
   "setup": "post-quantum lattice — ไม่ต้อง trusted setup",
   "audit": "",
   "gov": "",
   "risk": "สมมติฐานใหม่ ยังไม่ผ่านการทดสอบระยะยาว",
-  "nst": 1,
-  "hist": "2023 mainnet · post-quantum privacy chain (lattice-based cryptography) · จุดขายคือทนต่อ quantum computer"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2023 mainnet · post-quantum privacy chain (lattice-based cryptography) · จุดขายคือทนต่อ quantum computer",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "post-quantum"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://www.abelian.info/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
  },
  "EPIC": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Epic Pay เป็น UX ไม่ใช่ network privacy → hnet=0"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Epic Pay เป็น UX ไม่ใช่ network privacy → hnet=0"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Epic Pay เป็น UX ไม่ใช่ network privacy → hnet=0"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · Epic Pay เป็น UX ไม่ใช่ network privacy → hnet=0"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 1,
   "yr": 2019,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2019 mainnet · MimbleWimble private cash · ระบบ Epic Pay"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019 mainnet · MimbleWimble private cash · ระบบ Epic Pay",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://epiccash.com/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
  },
  "MWC": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · ไม่มี network privacy ในตัว → hnet=0 (ยังต้องยืนยัน)"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · ไม่มี network privacy ในตัว → hnet=0 (ยังต้องยืนยัน)"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · ไม่มี network privacy ในตัว → hnet=0 (ยังต้องยืนยัน)"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "MimbleWimble: Pedersen commitments + cut-through, ไม่มีที่อยู่บนเชน — ซ่อนผู้ส่ง/ผู้รับ/จำนวนโดยโครงสร้าง · ไม่มี network privacy ในตัว → hnet=0 (ยังต้องยืนยัน)"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 1,
   "yr": 2019,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2019 mainnet · MimbleWimble + atomic swap กับ Bitcoin"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2019 mainnet · MimbleWimble + atomic swap กับ Bitcoin",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://www.mwc.mw/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 2: UTXO set — ยังไม่มีแหล่งนับ"
  },
  "YEC": {
   "g": "coin",
@@ -533,20 +1384,105 @@
  },
  "XEL": {
   "g": "coin",
-  "hs": 2,
-  "hr": 2,
-  "ha": 2,
-  "hst": 0,
-  "man": 1,
-  "tl": 1,
+  "hs": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2024 → mat=0 (<1 ปี)"
+  },
+  "hr": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2024 → mat=0 (<1 ปี)"
+  },
+  "ha": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2024 → mat=0 (<1 ปี)"
+  },
+  "hst": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "CryptoNote/RingCT: ring signature + stealth address + RingCT — ซ่อนโดยโครงสร้าง · mainnet 2024 → mat=0 (<1 ปี)"
+  },
+  "man": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "บังคับใช้ privacy ทุกธุรกรรม ไม่มีโหมดโปร่งใส"
+  },
+  "tl": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "PoW เปิด ไม่มี trusted setup"
+  },
   "big": 0,
   "yr": 2024,
   "setup": "",
   "audit": "",
   "gov": "",
   "risk": "",
-  "nst": 1,
-  "hist": "2024 mainnet · privacy L1 (zk confidential transactions) · dev ยัง active (commit 2026-10)"
+  "nst": {
+   "v": 1,
+   "conf": "high",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "ไม่มี execution layer"
+  },
+  "hist": "2024 mainnet · privacy L1 (zk confidential transactions) · dev ยัง active (commit 2026-10)",
+  "arch": {
+   "v": "value-transfer",
+   "conf": "high",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "โอนมูลค่าบนเชนของตัวเอง"
+  },
+  "hmeta": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "low",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+  },
+  "mat": {
+   "v": 0,
+   "conf": "high",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "นับจากปี mainnet ถึง asof"
+  },
+  "pq": {
+   "v": 0,
+   "conf": "med",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "พึ่ง elliptic curve"
+  },
+  "brk": {
+   "v": 0,
+   "conf": "low",
+   "src": "https://xelis.io/",
+   "asof": "2026-10-16",
+   "note": "ยังไม่พบ disclosure ที่กระทบ privacy — ต้องตรวจ advisory ให้ครบ"
+  },
+  "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน"
  },
  "PART": {
   "g": "coin",

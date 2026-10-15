@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.2.0-preview
+ * scoring_version: 2.3.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.2.0-preview';
+var SCORING_VERSION = '2.3.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 var W = { cov: 30, bits: 15, man: 12, tl: 12, hmeta: 10, hnet: 8, mat: 8, pq: 5, brkPenalty: 15 };
@@ -103,7 +103,9 @@ function scoreP(d) {
     { k: 'pq', w: W.pq, v: pq == null ? null : pq / 2, conf: pq == null ? null : gconf(d, 'pq') }
   ];
 
-  var total = 0, avail = 0, earned = 0, confSum = 0, confN = 0, parts = {};
+  var total = 0, avail = 0, earned = 0, confSum = 0, confN = 0, evid = 0, parts = {};
+  var EV_KEYS = { cov: ['hs', 'hr', 'ha', 'hst'], bits: ['aset'], man: ['man'], tl: ['tl'],
+                  hmeta: ['hmeta'], hnet: ['hnet'], mat: ['mat'], pq: ['pq'] };
   for (var i = 0; i < comps.length; i++) {
     var c = comps[i];
     total += c.w;
@@ -113,19 +115,28 @@ function scoreP(d) {
     parts[c.k] = +(c.w * c.v).toFixed(1);
     confSum += (CONF[c.conf] || CONF.low);
     confN++;
+    /* evidence share: a component only counts as evidenced if its genes carry a src.
+     * Without this, a bare-number coin (no evidence trail) outranks a fully sourced one. */
+    var ks = EV_KEYS[c.k] || [], allSrc = true;
+    for (var j = 0; j < ks.length; j++) {
+      if (gval(d, ks[j]) != null && !gsrc(d, ks[j])) { allSrc = false; break; }
+    }
+    if (allSrc) evid += c.w;
   }
   parts.brk = -(W.brkPenalty * brk);
   if (avail === 0) return null;
 
   var coverage = avail / total;
+  var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
   var P = Math.max(0, Math.min(100, Math.round((earned / avail) * 100 - W.brkPenalty * brk)));
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
   var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
 
   return {
-    P: P, band: band, coverage: +coverage.toFixed(2), conf: +avgConf.toFixed(2),
-    insufficient: coverage < 0.8,
+    P: P, band: band, coverage: +coverage.toFixed(2), evCoverage: +evCoverage.toFixed(2),
+    conf: +avgConf.toFixed(2),
+    insufficient: coverage < 0.8 || evCoverage < 0.8,
     missing: comps.filter(function (c) { return c.v == null; }).map(function (c) { return c.k; }),
     parts: parts, version: SCORING_VERSION,
     v1: scoreV1(d)
