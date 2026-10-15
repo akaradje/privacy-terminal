@@ -82,7 +82,7 @@
 | `c24 / c7 / c30 / c1y` | float\|null | % เปลี่ยนราคา (CoinGecko `price_change_percentage_*`) |
 | `cs / ms` | float\|null | circulating / max supply |
 | `img` | str | ไอคอน (coin-images.coingecko.com) |
-| `tags` | [str] | เก็บจาก category (ตกเก่า จร过) |
+| `tags` | [str] | เก็บจาก category (ตกเก่า ไม่ได้ใช้แล้ว) |
 | `priv` | bool | อยู่ใน parent `privacy` category |
 | `tier` | str | `t1` = pure (ตอนนี้ทุกตัวเป็น t1 เพราะกรองไว้แล้ว) |
 | `dna` | 0\|1 | มี DNA profile |
@@ -135,10 +135,10 @@ score = round(cov*60 + man*15 + tl*15 + big*10); // เต็ม 100
 ผลจริง: XMR/GRIN/EPIC/MWC/XTM = 100 · AZTEC/ALEO/OCT = 90 · ZEC = 75 · DASH/TORN = 45 · MYST = 15
 **หมายเหตุที่ฝังในหน้าเว็บ:** คะแนนวัด "ความแข็งของกลไก" ไม่ได้วัดมูลค่า/การลงทุน/ทีม
 
-### 4.3 ข้อตกลงความซื่อตรงในการ curated (ทำตาม克างไว้)
+### 4.3 ข้อตกลงความซื่อตรงในการ curated (ทำตามสัญญาตลอดมา)
 1. **ไม่เดา** — ไม่มีหลักฐาน → ทิ้งว่าง `—` หรือไม่ใส่ (ตัวอย่าง: 3 เหรียญไม่มี GitHub repo ที่มั่นใจ → ไม่มี dev stats)
 2. **แสดงที่มาของ repo** — ถ้าดึงจากระดับ org การ์ดบอก "repo ดาวมากสุดใน org"
-3. **ระบุถึงกรณีพิเศษ** — XVG (IP-level), TORN (sanctioned), AZTEC (alpha + vuln) ถูก標記ชัดในหน้าที่มี
+3. **ระบุถึงกรณีพิเศษ** — XVG (IP-level), TORN (sanctioned), AZTEC (alpha + vuln) ถูกทำเครื่องหมายชัดเจนในหน้าที่มี
 4. **numeric เกี่ยวกับตลาดทุกตัวมี timestamp + แหลมา** (CoinGecko snapshot ใน stats bar)
 
 ---
@@ -269,7 +269,7 @@ cd site && git add -A && git -c user.name="akaradje" \
 |---|---|---|
 | DERO ไม่มี sparkline | แบ่ง 429 ตอนดึง | `python data/fetch_detail.py` รอบใหม่ หรือปล่อยว่าง |
 | ABEL / CC / DARK ไม่มี GitHub stats | ไม่มั่นใจว่า repo ไหน | ไปดู whitepaper/official site แล้วเติม gh link ใน `data/detail/*.json` |
-| community metrics (X followers, TG users, Reddit subs) | CoinGecko ตัด, Reddit API บล็อก | ดึงผ่านทางอื่นถ้าจำเป็น หรือตัด产品销售 |
+| community metrics (X followers, TG users, Reddit subs) | CoinGecko ตัด, Reddit API บล็อก | ดึงผ่านทางอื่นถ้าจำเป็น หรือตัดออกไปก่อน |
 | OG banner ตัวเลขเป็น illustrative (ZEC 42.17) | AI-generated | ถ้าอยากให้ตรงของจริง → สร้าง SVG logo จากข้อมูล live แล้ว render |
 | c1y บางตัว null (เหรียญTGE น้อยกว่า 1 ปี เช่น AZTEC) | ถูกต้องตามจริง | คอลัมน์โชว์ `n/a` |
 | 251 coin ต้นทางถูกตัดเหลือ 51 | ตัดใจ | `data/tiers.json` เพิ่มกลับได้ (ต้องระวังว่ามี DNA ไหม) |
@@ -325,6 +325,6 @@ cd site && git add -A && git -c user.name="akaradje" \
 4. **CoinGecko 429** — retry + backoff; ปล่อยว่างดีกว่าปลอมตัวเลข
 5. **`.gitattributes` CRLF** — git เตือน LF→CRLF บนไฟล์ text ใหม่ (harmless)
 6. **git identity ไม่ตั้ง** — ส่ง `-c user.name/user.email` ต่อคอมมิต
-7. **ตัวเลข疱疹/ภาษาเกณฑ์** — build/verify ผ่าน grep (เช่น CJK scan ก่อน commit)
+7. **ภาษาเกณฑ์/ตัวเลขเพี้ยน** — build/verify ผ่าน grep (เช่น CJK scan ก่อน commit)
 
 > **Disclaimer** — All data is compiled from public sources (CoinGecko, GitHub) for research and screening only. Nothing here is financial advice or a recommendation to buy or sell. Digital-asset markets are highly volatile; do your own research and verify each project's own documentation before acting.
