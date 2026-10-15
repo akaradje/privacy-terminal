@@ -1,9 +1,21 @@
 {
-  "_note": "CoinGecko บางครั้งชี้ไป repo ที่ archived หรือ repo ย่อย — ที่นี่คือ repo ที่ยังดูแลอยู่จริง คีย์ = CoinGecko id ต้องมี field src + asof ทุกครั้งที่เพิ่ม",
-  "dero": {
-    "repo": "deroproject/derohe",
-    "reason": "CoinGecko ชี้ไป deroproject/derosuite ซึ่ง archived (push ล่าสุด 2022-03-30); derohe ยัง active",
-    "src": "https://api.github.com/repos/deroproject/derohe",
-    "asof": "2026-10-15"
-  }
+ "_note": "CoinGecko บางครั้งชี้ไป repo ที่ archived หรือ repo ย่อย — ที่นี่คือ repo ที่ยังดูแลอยู่จริง คีย์ = CoinGecko id ต้องมี field src + asof ทุกครั้งที่เพิ่ม",
+ "dero": {
+  "repo": "deroproject/derohe",
+  "reason": "CoinGecko ชี้ไป deroproject/derosuite ซึ่ง archived (push ล่าสุด 2022-03-30); derohe ยัง active",
+  "src": "https://api.github.com/repos/deroproject/derohe",
+  "asof": "2026-10-15"
+ },
+ "zcash": {
+  "repo": "ZcashFoundation/zcashd",
+  "reason": "zcash/zcash ถูก archive (GitHub API ยืนยัน archived=true, push ล่าสุด 2026-07-19) — การพัฒนาต่อที่ ZcashFoundation/zcashd (push 2026-09-08) · zebra (Rust node) ก็ active (push 2026-10-15) แต่เป็น implementation อื่นไม่ใช่ตัวต่อจาก zcash/zcash",
+  "src": "https://api.github.com/repos/zcash/zcash",
+  "asof": "2026-10-16"
+ },
+ "aleo": {
+  "repo": "AleoNet/snarkvm",
+  "reason": "CoinGecko ชี้ไประดับ org → enrich ใช้ repo ดาวมากสุด (aleo-education, push 2024-06-18) ซึ่งเป็น repo เอกสารไม่ใช่โค้ด · repo หลักที่ยัง push คือ AleoNet/snarkvm และ AleoNet/snarkOS (push 2026-05-27) · repo AleoNet/aleo ไม่มีอยู่แล้ว (404)",
+  "src": "https://api.github.com/orgs/AleoNet/repos?sort=pushed",
+  "asof": "2026-10-16"
+ }
 }

@@ -1,0 +1,159 @@
+{
+ "version": "2.4.0-preview",
+ "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
+ "genes": {
+  "hs": {
+   "label": "ซ่อนผู้ส่ง",
+   "0": "ผู้ส่งเปิดเผยบนเชน (transparent address / public sender)",
+   "1": "ซ่อนได้เมื่อผู้ใช้เลือกใช้กลไก (opt-in: shielded pool, mixer, coinjoin)",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย — ไม่มีโหมดที่เปิดเผยผู้ส่งเลย",
+   "src_hint": "protocol spec / whitepaper ของโปรเจกต์",
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
+  },
+  "hr": {
+   "label": "ซ่อนผู้รับ",
+   "0": "ที่อยู่ผู้รับปรากฏบนเชน",
+   "1": "ซ่อนได้แบบ opt-in",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย (stealth address / shielded note)",
+   "src_hint": "protocol spec",
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
+  },
+  "ha": {
+   "label": "ซ่อนจำนวน",
+   "0": "จำนวนธุรกรรมเปิดเผย",
+   "1": "ซ่อนได้แบบ opt-in (confidential transactions)",
+   "2": "ซ่อนทุกธุรกรรมโดยปริยาย (RingCT / Pedersen commitment บังคับ)",
+   "src_hint": "protocol spec",
+   "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
+  },
+  "hst": {
+   "label": "ซ่อน state (on-chain contract state หรือ off-chain private computation)",
+   "0": "state โปร่งใสทั้งหมด",
+   "1": "ซ่อนได้บางส่วน/เฉพาะบาง field",
+   "2": "state หรือการประมวลผลถูกซ่อนโดยกลไกหลัก",
+   "src_hint": "docs ของ execution layer · โปรโตคอลที่ไม่มี state ให้ใช้ 0 และตั้ง nst=1 · นับรวม off-chain/client-side private computation และ zkTLS attestation ด้วย (การประมวลผลข้อมูลความลับนอกเชนแล้วส่งเฉพาะ proof ขึ้นเชน = private state ที่ไม่ต้องเก็บข้อมูลดิบบน L1)"
+  },
+  "hmeta": {
+   "label": "ต้านทาน metadata (fee / timing / ขนาด tx)",
+   "0": "เปิดเผยกราฟความเชื่อมโยงชัดเจน (transparent addresses, gas/timing/size ครบ)",
+   "1": "ซ่อนเนื้อหาธรรมเนียม แต่ยังเห็นจังหวะการเรียกใช้ contract, ค่า gas, หรือขนาด input/output ในโครงสร้าง tx",
+   "2": "ซ่อนทั้งกราฟและมีกลไกกัน timing/size correlation (fixed-size packet ใน mixnet, cut-through + kernel aggregation ใน Mimblewimble, shielded pool ที่ไม่มี linkage)",
+   "src_hint": "เอกสารโปรโตคอล/รูปแบบธุรกรรม + งานวิจัย transaction graph"
+  },
+  "hnet": {
+   "label": "privacy ชั้นเครือข่าย",
+   "0": "P2P gossip / RPC broadcast มาตรฐาน — โหนดเห็น IP ต้นทางถ้าผู้ใช้ไม่ต่อ VPN/Tor เอง",
+   "1": "มีออปชัน Tor/I2P ใน official client/node config แต่ไม่ได้เปิดเป็นค่าเริ่มต้นของชั้น P2P",
+   "2": "บังคับใช้หรือเปิดเป็นค่าเริ่มต้นที่ระดับโปรโตคอล (mixnet, onion routing, Dandelion++ built-in, Tor/I2P ฝังใน core client)",
+   "src_hint": "node/protocol spec หรือเอกสารของ official client (ระบุว่าฝังในโปรโตคอล ไม่ใช่แค่แนะนำให้ใช้ VPN)",
+   "conf_rule": "ยึดฟีเจอร์ที่มีอยู่จริงในระดับ node/protocol → ระบุ src ได้เกือบทุกเหรียญ; ถ้าเป็น \"สืบทอดมาจาก fork\" ให้ใช้ conf=low"
+  },
+  "man": {
+   "label": "บังคับใช้ privacy",
+   "0": "opt-in — ผู้ใช้ต้องเลือกเปิดเอง (ค่าเริ่มต้นเปิดเผย)",
+   "0.5": "default-on — เปิดให้โดยปริยาย แต่ผู้ใช้ปิดได้",
+   "1": "บังคับ — ทุกธุรกรรมเป็น private ไม่มีทางเลือกอื่น",
+   "src_hint": "protocol spec (ดูว่าโหมด transparent ยังมีอยู่ไหม)"
+  },
+  "tl": {
+   "label": "trust assumption",
+   "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (trusted setup ที่ยังมีผล, single sequencer, permissioned validator)",
+   "1": "เชื่อคณะที่กระจายตัวแต่ยังมีสมมติฐาน (honest-majority MPC, TEE hardware, threshold KMS, committee)",
+   "2": "trustless เต็มรูปแบบ (ไม่มี trusted setup, พิสูจน์ได้บนเชน, PoW/PoS เปิด)",
+   "src_hint": "งานวิจัย setup / docs สถาปัตยกรรม — ห้ามนับ trust ของ operator ซ้ำใน aset",
+   "values": [
+    0,
+    1,
+    1.5,
+    2
+   ],
+   "levels": {
+    "0": "ต้องเชื่อคนกลาง/คณะที่ควบคุมระบบ (permissioned validator, single sequencer)",
+    "1": "hardware enclave (TEE) หรือ trusted setup ceremony ขนาดใหญ่",
+    "1.5": "threshold / MPC / mixnet & onion routing — เชื่อความยากทางคณิตศาสตร์ + honest majority (สำหรับ mixnet: \"มีโหนดซื่อสัตย์อย่างน้อยหนึ่งโหนดในเส้นทาง\") ไม่พึ่งฮาร์ดแวร์",
+    "2": "trustless เต็มรูปแบบ"
+   }
+  },
+  "mat": {
+   "label": "ความพร้อมใช้งานจริง",
+   "0": "ใช้งานจริงไม่ถึง 1 ปี หรือยังไม่มี audit สาธารณะ",
+   "1": "ใช้งานจริง 1–3 ปี และมี audit อย่างน้อย 1 ครั้ง",
+   "2": "ใช้งานจริงเกิน 3 ปี และมี audit หลายครั้ง",
+   "src_hint": "genesis/mainnet date + หน้ารวม audit ของโปรเจกต์"
+  },
+  "pq": {
+   "label": "ทนต่อ quantum computer",
+   "0": "พึ่ง elliptic-curve/Discrete-log ล้วน (ไม่มีการเตรียม post-quantum)",
+   "1": "มีแผน/roadmap หรือ hybrid ที่เริ่มใช้ lattice-based signature บางส่วน",
+   "2": "ใช้ post-quantum cryptography เป็นแกนของกลไก privacy แล้ว",
+   "src_hint": "เอกสารด้าน cryptography ของโปรเจกต์"
+  },
+  "brk": {
+   "label": "เคยมีช่องโหว่ privacy ที่ยังไม่ปิด",
+   "0": "ไม่เคยมี หรือมีแล้วปิดครบพร้อม disclosure สาธารณะ",
+   "1": "มีช่องโหว่ที่ส่งผลต่อ privacy และยังไม่ปิด หรือปิดไม่ครบ",
+   "src_hint": "advisory ของทีม / รายงานความปลอดภัย",
+   "effect": "หัก −15 คะแนนจาก P (ไม่ใช่การรีเซ็ตเป็นศูนย์)"
+  },
+  "aset": {
+   "label": "effective per-transaction anonymity set",
+   "definition": "จำนวนคู่สนทนาที่เป็นไปได้ซึ่งผู้สังเกตต้องพิจารณาสำหรับ \"หนึ่งธุรกรรม\" ณ เวลาที่ทำ — ไม่ใช่ขนาดสะสมของ pool ทั้งก้อน และไม่ใช่จำนวนผู้ถือ",
+   "precedence": [
+    "ชั้น 1 — protocol-enforced per-tx set: ถ้าโปรโตคอลบังคับวงไว้ที่ระดับ consensus (เช่น ring size ของ Monero = 16) ให้ใช้ตัวเลขที่บังคับนั้นเป็นค่าตั้งต้น (conf=high, src = protocol spec) และบันทึกผลของ heuristic ไว้ใน note",
+    "ชั้น 2 — active pool depth: ระบบแบบ pool (Zcash Orchard/Sapling, Railgun, Aztec, mixer) ต้องวัดจากจำนวน note/UTXO ที่มีอยู่จริง ณ วัน asof (หรือ % ของ circulating supply ที่อยู่ใน pool) ห้ามใช้ค่าทางทฤษฎี",
+    "ชั้น 3 — fallback: ถ้าอ้างว่ามี anonymity set ใหญ่แต่ตรวจสอบซ้ำไม่ได้ (ไม่มี explorer/สถิติ) ให้ใช้ค่าต่ำสุดของกลุ่มจนกว่าจะมี src ยืนยัน"
+   ],
+   "thresholds": {
+    "note": "ใช้กับชั้น 2 และการตีความค่าที่วัดได้",
+    "lt_1000": "เล็กมาก — bits เกือบศูนย์",
+    "1000_to_100k": "กลาง",
+    "gt_100k": "ใหญ่"
+   },
+   "scoring": "bits = min(log2(aset) / 20, 1) × น้ำหนัก 15",
+   "unverifiable_cap": "ถ้า aset ไม่มี src หรือมี conf=low → bits ถูกจำกัดที่ค่าของกลุ่มต่ำสุด (aset ถือเป็น < 1,000) จนกว่าจะมีหลักฐาน",
+   "src_hint": "งานวิจัย anonymity-set analysis / explorer ที่นับ note ได้ / protocol spec ที่ระบุวงบังคับ"
+  },
+  "nst": {
+   "label": "ไม่มี state ให้ซ่อน",
+   "0": "โปรโตคอลมี state/smart contract",
+   "1": "สกุลเงินล้วน ไม่มี state (ตัด hst ออกจากตัวหารของ coverage)",
+   "src_hint": "ดูว่ามี execution layer ไหม"
+  },
+  "big": {
+   "label": "anonymity set ระดับเครือข่าย (legacy v1)",
+   "0": "pool/กลุ่มย่อยเท่านั้น",
+   "1": "ทั้งเครือข่าย",
+   "src_hint": "ใช้กับคะแนน v1 เท่านั้น — v2 ใช้ aset แทน"
+  },
+  "arch": {
+   "label": "architecture role",
+   "values": [
+    "value-transfer",
+    "transport",
+    "compute"
+   ],
+   "src_hint": "เอกสารสถาปัตยกรรมของโปรเจกต์ — ต้องระบุว่าตัวโทเค็นอยู่บนเชนใด"
+  }
+ },
+ "arch_roles": {
+  "note": "Architecture role decides WHICH layer the token is judged on. A token that lives as a transparent ERC-20/Cosmos asset is judged as transparent, no matter how private the data packets its network carries.",
+  "value-transfer": "เหรียญ/เชนที่โอนมูลค่าเอง (Privacy Coins, L1, L2 rollup) — ประเมิน hs/hr/ha จากกลไกของตัวเชน",
+  "transport": "โครงข่ายพา metadata (mixnet, dVPN, messenger) — โทเค็นอาศัยเชนโฮสต์แบบโปร่งใส → hs/hr/ha = 0 และถูกตัดสินด้วย hmeta/hnet เป็นหลัก",
+  "compute": "ชั้นประมวลผล/จัดเก็บ (TEE, MPC, FHE, storage) — ประเมิน hs/hr/ha จากเลเยอร์ที่โทเค็นอยู่; hst/ความลับของ state ประเมินจากกลไกของมันเอง"
+ },
+ "trust_tiers": {
+  "note": "tl แยกตาม \"สมมติฐานที่ต้องเชื่อ\" — TEE กับ MPC ต้องไม่เท่ากัน เพราะ TEE พึ่งผู้ผลิตฮาร์ดแวร์ (single vendor root of trust) ส่วน MPC พึ่งคณิตศาสตร์ + การไม่ฮั้วกัน",
+  "tier1_hardware": "tl = 1 — hardware enclave (Intel SGX / AMD SEV): พึ่ง vendor + มีประวัติ side-channel ระดับฮาร์ดแวร์",
+  "tier2_math": "tl = 1.5 — threshold/MPC: พึ่งความยากทางคณิตศาสตร์และการไม่ฮั้วกันของคณะ ไม่มี single point of hardware failure",
+  "tier2_ceremony": "tl = 1 — ZK ที่ยังต้องพึ่ง multi-party trusted setup ceremony ขนาดใหญ่",
+  "tier3_trustless": "tl = 2 — ไม่ต้องเชื่อใคร: ไม่มี trusted setup, ไม่พึ่งฮาร์ดแวร์, พิสูจน์บนเชนได้",
+  "scoring": "tl/2 × น้ำหนัก 12"
+ },
+ "imputation": {
+  "note": "component ที่ไม่มีค่า (null) ต้องไม่ถูกตัดออกจากตัวหาร — มิฉะนั้นการไม่ส่งข้อมูลจะได้คะแนนดีกว่าการส่งข้อมูลจริง",
+  "rule": "ทุก component ที่ยังไม่มีค่า ถูก floor เป็น 0 โดยน้ำหนักยังอยู่ในตัวหาร → P คือ \"ขอบล่างของ privacy ที่พิสูจน์แล้ว\"",
+  "monotonicity": "เพิ่มหลักฐานเข้ามาได้ ΔP >= 0 เสมอ — กรอกค่าจริงแล้วคะแนนตกไม่ได้ (ทดสอบ: 510 การลบ component, 0 violation)",
+  "reporting": "ค่าที่ถูก floor อยู่ใน missing + imputed, coverage ลด, band กว้างขึ้น, insufficient บล็อกการจัดอันดับ — ผู้้อ่านยังแยก \"ไม่รู้\" (band กว้าง) จาก \"รู้ว่าเป็น 0\" (band แคบ) ได้",
+  "structural_exception": "การลดตัวหารที่ยังเหลืออยู่คือ structural non-applicability ซึ่งสถาปัตยกรรมกำหนด ไม่ใช่ข้อมูล: nst=1 (ไม่มี execution layer) ตัด hst ออกจากตัวหารของ cov"
+ }
+}

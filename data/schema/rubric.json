@@ -1,5 +1,5 @@
 {
- "version": "2.3.2-preview",
+ "version": "2.4.0-preview",
  "note": "เกณฑ์กลางสำหรับทุก gene — ใช้ตัดสินค่า 0/1/2 ให้ตรงกันทุกเหรียญ ทุกค่าที่กรอกต้องมี src + asof ถ้าหาหลักฐานไม่ได้ ให้เว้นเป็น null ห้ามเดาเป็น 0",
  "genes": {
   "hs": {
@@ -27,25 +27,26 @@
    "non_value_transfer_rule": "ถ้าการโอนของตัวสินทรัพย์เอง \"โปร่งใสบนเชน\" → hs = 0 (ใช้ rationale ไม่ใช่ค่า arch แบบกลไก): ครอบคลุม (ก) เครือข่าย transport ที่โทเคนอยู่บนเชนโฮสต์โปร่งใส และ (ข) เหรียญ value-transfer ที่ ledger โปร่งใส (เช่น XVG, NOCK). ข้อที่ยังเปิดอยู่: เชนกลุ่ม compute ที่ state ถูกซ่อนแต่การโอนโทเคน native โปร่งใส — ปัจจุบันใส่ 0,0,0 (SCRT/MPC/ROSE/PHA/ZAMA/OCT) โดยให้ hst รับหน้าที่วัดความเป็นส่วนตัวของ contract"
   },
   "hst": {
-   "label": "ซ่อน state ของ smart contract",
-   "0": "state เปิดทั้งหมด หรือโปรโตคอลไม่มี state ให้ซ่อน",
-   "1": "ซ่อน state ได้แบบ opt-in (private contract ที่เลือกใช้)",
-   "2": "state ถูกเข้ารหัสโดยปริยาย (private-by-default execution)",
-   "src_hint": "docs ของ execution layer · โปรโตคอลที่ไม่มี smart contract ให้ใช้ 0 และตั้ง nst=1"
+   "label": "ซ่อน state (on-chain contract state หรือ off-chain private computation)",
+   "0": "state โปร่งใสทั้งหมด",
+   "1": "ซ่อนได้บางส่วน/เฉพาะบาง field",
+   "2": "state หรือการประมวลผลถูกซ่อนโดยกลไกหลัก",
+   "src_hint": "docs ของ execution layer · โปรโตคอลที่ไม่มี state ให้ใช้ 0 และตั้ง nst=1 · นับรวม off-chain/client-side private computation และ zkTLS attestation ด้วย (การประมวลผลข้อมูลความลับนอกเชนแล้วส่งเฉพาะ proof ขึ้นเชน = private state ที่ไม่ต้องเก็บข้อมูลดิบบน L1)"
   },
   "hmeta": {
    "label": "ต้านทาน metadata (fee / timing / ขนาด tx)",
-   "0": "fee, timing และขนาด tx เปิดเผยทั้งหมด",
-   "1": "แก้ได้บางส่วน เช่น fee แบบ fixed tier หรือมี Dandelion แบบ opt-in",
-   "2": "ทุกธุรกรรมมีรูปแบบเหมือนกัน (uniform fee/size, timing ที่เบลอโดยปริยาย)",
-   "src_hint": "งานวิจัยด้าน transaction graph / fee analysis"
+   "0": "เปิดเผยกราฟความเชื่อมโยงชัดเจน (transparent addresses, gas/timing/size ครบ)",
+   "1": "ซ่อนเนื้อหาธรรมเนียม แต่ยังเห็นจังหวะการเรียกใช้ contract, ค่า gas, หรือขนาด input/output ในโครงสร้าง tx",
+   "2": "ซ่อนทั้งกราฟและมีกลไกกัน timing/size correlation (fixed-size packet ใน mixnet, cut-through + kernel aggregation ใน Mimblewimble, shielded pool ที่ไม่มี linkage)",
+   "src_hint": "เอกสารโปรโตคอล/รูปแบบธุรกรรม + งานวิจัย transaction graph"
   },
   "hnet": {
    "label": "privacy ชั้นเครือข่าย",
-   "0": "ไม่มีการป้องกัน IP เลย",
-   "1": "รองรับ Tor/I2P แบบ opt-in (ผู้ใช้ต้องตั้งเอง)",
-   "2": "มีในตัว เช่น Dandelion++ หรือ mixnet ที่ทำงานโดยปริยาย",
-   "src_hint": "protocol spec / whitepaper ของ network layer"
+   "0": "P2P gossip / RPC broadcast มาตรฐาน — โหนดเห็น IP ต้นทางถ้าผู้ใช้ไม่ต่อ VPN/Tor เอง",
+   "1": "มีออปชัน Tor/I2P ใน official client/node config แต่ไม่ได้เปิดเป็นค่าเริ่มต้นของชั้น P2P",
+   "2": "บังคับใช้หรือเปิดเป็นค่าเริ่มต้นที่ระดับโปรโตคอล (mixnet, onion routing, Dandelion++ built-in, Tor/I2P ฝังใน core client)",
+   "src_hint": "node/protocol spec หรือเอกสารของ official client (ระบุว่าฝังในโปรโตคอล ไม่ใช่แค่แนะนำให้ใช้ VPN)",
+   "conf_rule": "ยึดฟีเจอร์ที่มีอยู่จริงในระดับ node/protocol → ระบุ src ได้เกือบทุกเหรียญ; ถ้าเป็น \"สืบทอดมาจาก fork\" ให้ใช้ conf=low"
   },
   "man": {
    "label": "บังคับใช้ privacy",

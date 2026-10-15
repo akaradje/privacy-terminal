@@ -4,6 +4,9 @@ var DNA = __DNA__;
 var DETAIL = __DETAIL__;
 var DOCSPAY = (function () { try { var el = document.getElementById('docsData'); return JSON.parse((el && el.textContent) || '{"docs":[],"idx":[]}'); } catch (e) { return { docs: [], idx: [] }; } })();
 var STATS = __STATS__;
+/* Snapshot date. Pillar D is a recency measure, so it must be computed against a fixed date —
+ * using "now" would make the same data produce a different score tomorrow and break diffing. */
+var ASOF_DATE = (STATS && STATS.snap) ? String(STATS.snap).slice(0, 10) : new Date().toISOString().slice(0, 10);
 var state = { view: 'table', q: '', sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null };
 var view = [];
 var TIERMAP = {};
@@ -306,7 +309,64 @@ function v3Block(c) {
   }
   if (det_ && det_.repo_note) out += '<div class="dim" style="font-size:10px">! ' + det_.repo_note + '</div>';
   out += '</div>';
+
+  /* --- pillars D / L + composite: the part that turns "strong mechanism" into "worth looking at" */
+  var pl = null;
+  try { pl = pillarsOf(d, c, det_, ASOF_DATE); } catch (e) { pl = null; }
+  if (pl) {
+    var pos = [];
+    try { pos = evaluatePositives(metricsFor(c, det_, d)); } catch (e) { pos = []; }
+    var dd = pl.Ddetail;
+    out += '<div class="v3"><div class="v3t">PILLAR D / L <span class="dim">(developer · liquidity)</span></div><div class="v3parts">' +
+      plChip('D', pl.D) + plChip('L', pl.L) + plChip('P', pl.P) +
+      '</div>';
+    if (dd) {
+      out += '<div class="dim" style="font-size:10px">' + (dd.repo || 'repo ไม่ระบุ') + ' · push ล่าสุด ' + dd.pushed +
+        ' (' + dd.days + ' วันที่แล้ว)' + (dd.archived ? ' · <span class="chip fl-CRITICAL">archived</span>' : '') +
+        (dd.stars ? ' · ★ ' + dd.stars : '') + '</div>';
+    } else {
+      out += '<div class="dim" style="font-size:10px">ไม่มี repo ที่ยืนยันได้ — pillar D ประเมินไม่ได้ (D เป็นตัวแทนของความเคลื่อนไหวจากวันที่ push และสถานะ archive เพราะ GitHub GraphQL pass ยังอยู่ใน roadmap)</div>';
+    }
+    var cr = compositeRank(c), cb = compositeRank(c, 'investor');
+    if (cr) {
+      out += '<div class="dim" style="font-size:10px">composite = <b>' + cr.v + '</b> / 100 → อันดับ <b>' + cr.r + '/' + cr.n +
+        '</b> <span class="dim">(preset privacy-investor: P 45 / D 30 / L 25 · preset investor ของ blueprint: ' +
+        (cb ? cb.v + ' → #' + cb.r : 'n/a') + ')</span></div>';
+    }
+    if (pos.length) {
+      out += '<div class="v3flags">' + pos.map(function (f) { return '<span class="chip b-sel">+ ' + f.id + '</span> '; }).join('') + '</div>' +
+        '<div class="dim" style="font-size:10px">' + pos.map(function (f) { return f.msg; }).join(' · ') + '</div>';
+    }
+    out += '</div>';
+  }
   return out;
+}
+
+/* D/L/P chip: >=55 shown as a strength colour, null shown as unavailable (never as 0) */
+function plChip(k, v) {
+  if (v == null) return '<span class="chip" title="ประเมินไม่ได้ — ข้อมูลไม่พอ">' + k + ' ?</span>';
+  return '<span class="chip' + (v >= 55 ? ' b-sel' : '') + '">' + k + ' ' + v + '</span>';
+}
+
+var _compCache = null;
+function compositeRank(c, preset) {
+  var key = preset || 'privacy_investor';
+  if (!_compCache) _compCache = {};
+  if (!_compCache[key]) {
+    var cache = { bySym: {}, n: 0 };
+    var list = [];
+    for (var i = 0; i < DATA.length; i++) {
+      var x = DATA[i], s = null;
+      try { s = compositeOf(dna(x), x, det(x), ASOF_DATE, key); } catch (e) { s = null; }
+      if (s != null) list.push([x.s, s]);
+    }
+    list.sort(function (a, b) { return b[1] - a[1]; });
+    cache.n = list.length;
+    for (var j = 0; j < list.length; j++) cache.bySym[list[j][0]] = { v: list[j][1], r: j + 1 };
+    _compCache[key] = cache;
+  }
+  var e = _compCache[key].bySym[c.s];
+  return e ? { v: e.v, r: e.r, n: _compCache[key].n } : null;
 }
 
 function renderTable() {

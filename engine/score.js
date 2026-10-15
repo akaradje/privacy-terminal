@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.3.2-preview
+ * scoring_version: 2.4.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.3.2-preview';
+var SCORING_VERSION = '2.4.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 /* Conservative floor — makes the score strictly monotonic.
@@ -161,8 +161,14 @@ function scoreP(d) {
   var evCoverage = evid / total;
   var avgConf = confN ? confSum / confN : CONF.low;
   var P = Math.max(0, Math.min(100, Math.round((earned / total) * 100 - W.brkPenalty * brk)));
-  /* band: evidence weakness + missing weight, capped so it stays usable for decisions */
-  var band = Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40));
+  /* band: evidence weakness + missing weight, capped so it stays usable for decisions.
+   * Floored at 2: a band of 0 would assert that the score has no uncertainty at all, which no
+   * model of this kind can claim — the `aset` definition itself (effective vs protocol-enforced)
+   * is contested in the literature, and `hmeta`/`hnet` are read off feature lists, not measured.
+   * NOTE (known weakness): avgConf averages the component confidences, so one contested value
+   * among eight barely moves the band. A worst-case term is the principled fix; flagged, not
+   * applied unilaterally. */
+  var band = Math.max(2, Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40)));
 
   return {
     P: P, band: band, coverage: +coverage.toFixed(2), evCoverage: +evCoverage.toFixed(2),
@@ -174,12 +180,88 @@ function scoreP(d) {
   };
 }
 
+/* ---------------------------------------------------------------------------------------------
+ * Pillars D (developer velocity) and L (liquidity & market health) — v3 blueprint §3.2/§3.3
+ * ---------------------------------------------------------------------------------------------
+ * D is a PROXY and the file says so: CoinGecko's free tier no longer returns `developer_data`
+ * and the GitHub GraphQL pass (commit history, contributor counts, Dependabot filtering) is
+ * still on the roadmap. What we do have — the last push date and the archive flag — is exactly
+ * the signal that separates a live project from a legacy fork, so D is built from that and the
+ * raw fields are reported next to the number so a reader can see where it came from.
+ * L is computable from data we already collect: daily turnover, market depth and float.
+ */
+var DEV_RECENCY = [[7, 100], [30, 80], [90, 55], [365, 25]];
+
+function daysSince(dateStr, asof) {
+  if (!dateStr) return null;
+  var a = Date.parse(dateStr.length <= 10 ? dateStr + 'T00:00:00Z' : dateStr);
+  if (isNaN(a)) return null;
+  var b = asof ? Date.parse(asof.length <= 10 ? asof + 'T00:00:00Z' : asof) : NaN;
+  if (isNaN(b)) b = Date.now();
+  return Math.round((b - a) / 86400000);
+}
+
+function devScore(det, asof) {
+  if (!det || !det.gh_pushed) return null;
+  var d = daysSince(det.gh_pushed, asof);
+  if (d == null) return null;
+  var s = 0;
+  for (var i = 0; i < DEV_RECENCY.length; i++) {
+    if (d <= DEV_RECENCY[i][0]) { s = DEV_RECENCY[i][1]; break; }
+  }
+  if (det.gh_archived) s = 0;
+  return s;
+}
+
+function devDetail(det, asof) {
+  if (!det || !det.gh_pushed) return null;
+  var repo = det.gh_repo_used || (det.gh || '').replace(/^https?:\/\/github\.com\//, '');
+  return { repo: repo, pushed: det.gh_pushed, days: daysSince(det.gh_pushed, asof),
+           archived: !!det.gh_archived, stars: det.stars || null };
+}
+
+function liqScore(coin) {
+  if (!coin || !coin.m || !coin.v) return null;
+  var turnover = coin.v / coin.m;
+  var turn = Math.min(turnover / 0.10, 1);                                  // 10%/day = full marks
+  var depth = Math.max(0, Math.min(1, (Math.log(coin.m) / Math.LN10 - 6) / 3)); // $1M -> 0, $1B -> 1
+  var float = (coin.cs && coin.ms) ? Math.min(coin.cs / coin.ms, 1) : 1;    // pending unlock overhang
+  return Math.round((0.45 * turn + 0.35 * depth + 0.20 * float) * 100);
+}
+
+/* P is only usable when the evidence gate passes; D and L are independent of it. */
+function pillarsOf(d, coin, det, asof) {
+  var p = scoreP(d);
+  return {
+    P: (p && !p.insufficient) ? p.P : null,
+    D: devScore(det, asof),
+    L: liqScore(coin),
+    Pdetail: p, Ddetail: devDetail(det, asof)
+  };
+}
+
+/* composite over whatever pillars exist; `composite()` already skips nulls and renormalises.
+ * One guard: if the preset gives P any weight and P is unavailable, there is no composite — a coin
+ * whose mechanism has not been evidenced must not be ranked on dev/liquidity alone. */
+function compositeOf(d, coin, det, asof, preset) {
+  var w = PRESETS[preset || 'investor'];
+  var p = pillarsOf(d, coin, det, asof);
+  if ((w.P || 0) > 0 && p.P == null) return null;
+  return composite(p, w);
+}
+
 /* composite presets (§4.1) — defaults, meant to be tuned in the Weight Lab */
 var PRESETS = {
   purist: { P: 45, S: 20, D: 15, T: 5, L: 0, R: 5, U: 10 },
   investor: { P: 15, S: 15, D: 15, T: 20, L: 20, R: 10, U: 5 },
   builder: { P: 20, S: 15, D: 35, T: 5, L: 5, R: 5, U: 15 },
-  survivor: { P: 20, S: 15, D: 10, T: 5, L: 15, R: 30, U: 5 }
+  survivor: { P: 20, S: 15, D: 10, T: 5, L: 15, R: 30, U: 5 },
+  /* The blueprint's `investor` preset was written for a general-purpose terminal. When only
+   * P/D/L exist it gives P just 15 of the 50 available weight — so a liquid, actively developed
+   * coin with a weak mechanism outranks a strong one (measured: DASH and XVG both land in the
+   * top 15 of it). This terminal exists to find privacy assets, so P carries the weight here.
+   * Added, not replaced — both are shown in the panel so the difference is visible. */
+  privacy_investor: { P: 45, D: 30, L: 25 }
 };
 
 function composite(pillars, w) {

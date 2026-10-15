@@ -3,6 +3,35 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.4.0-preview — 2026-10-16
+
+Closes the P core: the `hst` definition now covers off-chain private computation, `hnet`/`hmeta`
+have protocol-feature criteria instead of vibes, and the band has a floor.
+
+**`hst` extended.** Was "hides smart-contract state". Now also counts **off-chain / client-side
+private computation and zkTLS attestation** — a protocol that processes sensitive data off-chain
+and puts only a proof on-chain is protecting private state, just not on L1. This is the correct
+home for zkPass (ZKP) rather than a 13th gene: `hst 0 → 2`, `nst 1 → 0` (there *is* state being
+protected), `man 0 → 1` (no transparent mode for the attested data), `tl 1 → 1.5` (3P-TLS needs a
+proxy in the TLS session → threshold), `mat 0 → 1`. ZKP 6 → 38, landing beside the other compute
+assets instead of at the bottom of the table.
+
+**`hnet`/`hmeta` re-valued from protocol features.** Both genes now have explicit 0/1/2 criteria
+(readable off a node/client/protocol document). All 51 assets were re-read against them:
+confidence moved from **low 100/102 → high 9 / med 25 / low 68**. `conf` is raised only where a
+project document states the feature; where it is *inherited from a fork* (BDX/ZEPH from Monero's
+Dandelion++, MWC/EPIC/XTM from Grin's cut-through) it stays low on purpose.
+
+**Band floored at ±2.** XMR scored `±0`, i.e. "no uncertainty whatsoever" — not a claim this model
+can make. Known weakness left in place: `avgConf` averages, so one contested value among eight
+barely moves the band; a worst-case term is the fix and is flagged, not applied.
+
+**Consequence to review:** the MimbleWimble family now leads at 80 (GRIN/BEAM/XTM/EPIC/MWC) with
+XMR at 78. That follows directly from the approved `hmeta` criterion ("cut-through + kernel
+aggregation" = 2 while XMR's RingCT exposes input/output counts = 1), and from XMR spending its
+proven 3/15 on `bits` where the MW coins are floored at 0. It is the criteria working as written,
+not a weight change — but it is a visible reordering and is flagged for confirmation.
+
 ## 2.3.2-preview — 2026-10-16
 
 Extends the 2.3.1 floor to every component, making P strictly monotonic.

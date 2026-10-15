@@ -14,6 +14,11 @@ var FLAG_RULES = [
   { id: 'wash_suspicion', lv: 'HIGH', test: function (x) { return x.turnover > 1.0; }, msg: 'turnover > 1.0 — volume สูงผิดปกติเมื่อเทียบ mcap' },
   { id: 'centralized_consensus', lv: 'HIGH', test: function (x) { return x.nakamoto != null && x.nakamoto <= 2; }, msg: 'Nakamoto coefficient ≤ 2' },
   { id: 'recent_delist', lv: 'HIGH', test: function (x) { return x.delist_recent === 1; }, msg: 'ถูกถอดจากกระดานเทรดภายใน 12 เดือน' },
+  { id: 'ghost_chain', lv: 'HIGH', test: function (x) { return x.days_since_push > 60 && x.c30 != null && x.c30 > 50; }, msg: 'ราคา +50% ใน 30 วัน แต่ไม่มีการ push โค้ดเกิน 60 วัน — ราคาวิ่งโดยไม่มีงานพัฒนา' },
+  { id: 'illiquid', lv: 'HIGH', test: function (x) { return x.turnover != null && x.turnover < 0.002; }, msg: 'turnover ต่อวันต่ำกว่า 0.2% ของ mcap — ออกของไม่ได้โดยไม่กดราคา' },
+  { id: 'dev_stalled', lv: 'MED', test: function (x) { return x.days_since_push > 90 && x.days_since_push <= 365; }, msg: 'ไม่มีการ push โค้ดเกิน 90 วัน' },
+  { id: 'micro_cap', lv: 'MED', test: function (x) { return x.mcap != null && x.mcap < 5000000; }, msg: 'mcap ต่ำกว่า $5M — ความเสี่ยงสภาพคล่องและการเพิกถอน' },
+  { id: 'no_dev_data', lv: 'LOW', test: function (x) { return x.days_since_push == null; }, msg: 'ไม่มีข้อมูล repo ที่ยืนยันได้ — ประเมิน pillar D ไม่ได้' },
   { id: 'high_inflation', lv: 'MED', test: function (x) { return x.inflation > 10; }, msg: 'เงินเฟ้อปีละเกิน 10%' },
   { id: 'fdv_overhang', lv: 'MED', test: function (x) { return x.fdv_mcap > 3; }, msg: 'FDV สูงกว่า mcap เกิน 3 เท่า' },
   { id: 'optin_theatre', lv: 'MED', test: function (x) { return x.man === 0 && x.shielded_pct != null && x.shielded_pct < 5; }, msg: 'privacy แบบ opt-in ที่มีคนใช้ต่ำกว่า 5% (privacy theatre)' },
@@ -21,6 +26,29 @@ var FLAG_RULES = [
   { id: 'stale_data', lv: 'LOW', test: function (x) { return x.data_age_days > 180; }, msg: 'ข้อมูลเก่ากว่า 180 วัน' },
   { id: 'no_recent_audit', lv: 'LOW', test: function (x) { return x.audits_24m === 0; }, msg: 'ไม่มี audit ใน 24 เดือน' }
 ];
+
+/* Opportunity signals — the same engine, read for what is GOOD (v3 blueprint §3.3 "🟢").
+ * These are not scored; they are candidates to look at, and every one of them is only meaningful
+ * next to a P that is also high — a liquid, actively developed token with a weak mechanism is
+ * still a weak privacy asset. */
+var POSITIVE_RULES = [
+  { id: 'dev_active', test: function (x) { return x.days_since_push != null && x.days_since_push <= 14; }, msg: 'โค้ดเคลื่อนไหวภายใน 14 วัน' },
+  { id: 'dev_surge', test: function (x) { return x.stars != null && x.stars >= 5000 && x.days_since_push != null && x.days_since_push <= 30; }, msg: 'repo มีผู้สนับสนุนจำนวนมากและยัง active' },
+  { id: 'deep_liquidity', test: function (x) { return x.turnover != null && x.turnover >= 0.02 && x.mcap >= 5e7; }, msg: 'สภาพคล่องหนา (turnover ≥2% ต่อวัน, mcap ≥$50M)' },
+  { id: 'low_fdv', test: function (x) { return x.fdv_mcap != null && x.fdv_mcap <= 1.1; }, msg: 'FDV ใกล้ mcap — ไม่มี unlock overhang' },
+  { id: 'managed_float', test: function (x) { return x.cs != null && x.ms != null && x.cs / x.ms >= 0.9; }, msg: 'เหรียญหมุนเวียนแล้วเกิน 90%' },
+  { id: 'repricing_from_low', test: function (x) { return x.c1y != null && x.c1y > 100 && x.mcap >= 1e7; }, msg: 'ขึ้นเกิน 100% ในรอบปีจากฐานต่ำ — ราคาตอบรับการเรียนรู้ของตลาดแล้ว' }
+];
+
+function evaluatePositives(x) {
+  x = x || {};
+  var out = [];
+  for (var i = 0; i < POSITIVE_RULES.length; i++) {
+    var r = POSITIVE_RULES[i];
+    try { if (r.test(x)) out.push({ id: r.id, msg: r.msg }); } catch (e) { /* missing metric */ }
+  }
+  return out;
+}
 
 function evaluateFlags(x) {
   x = x || {};
@@ -50,8 +78,13 @@ function metricsFor(coin, detail, dna) {
     if (detail.ex_count) out.ex_count = detail.ex_count;
   }
   if (coin) {
-    if (coin.m && coin.v) out.turnover = +(coin.v / coin.m).toFixed(2);
+    if (coin.m && coin.v) out.turnover = +(coin.v / coin.m).toFixed(4);
     if (coin.ms && coin.cs) out.fdv_mcap = +((coin.m / coin.cs * coin.ms) / coin.m).toFixed(2);
+    if (coin.m != null) out.mcap = coin.m;
+    if (coin.cs != null) out.cs = coin.cs;
+    if (coin.ms != null) out.ms = coin.ms;
+    if (coin.c30 != null) out.c30 = coin.c30;
+    if (coin.c1y != null) out.c1y = coin.c1y;
   }
   if (dna) {
     var man = (dna.man && typeof dna.man === 'object') ? dna.man.v : dna.man;

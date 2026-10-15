@@ -125,7 +125,7 @@ snap = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC
 
 STATS = {
     'n': len(recs),
-    'scoring_version': '2.3.2-preview',
+    'scoring_version': '2.4.0-preview',
     'scoring_v1': 'dna-v1 (primary)',
     'sector_mcap': sector_mcap,
     'median_1y': median_1y,
@@ -184,7 +184,7 @@ html = html.replace('__DOCS__', json.dumps(DOCSPAY, ensure_ascii=False, separato
 
 out = os.path.join(D, 'privacy-terminal.html')
 open(out, 'w', encoding='utf-8').write(html)
-print('scoring: v2.3.2-preview (preview) | v1 primary')
+print('scoring: v2.4.0-preview (preview) | v1 primary')
 print('coins:', len(recs), '| t1 pure:', STATS['n_t1'], '| DNA profiles:', len(DNA), '| dossiers:', len(DETAIL))
 print('sector_mcap: %.1fB | median 1y: %.0f%%' % (sector_mcap/1e9, median_1y or 0))
 print('wrote', out)

@@ -58,18 +58,18 @@
   },
   "hist": "2016-10 mainnet · 2024-11 halving (reward 1.5625 ZEC) · 2025-10 Naval Ravikant tweet จุดระเบิดรอบใหญ่ · 2026-01 SEC ปิดคดี Zcash Foundation · 2026-05 Multicoin เปิดโพซิชัน · 2026-06 พบ Orchard soundness bug (-60%) · 2026-07-28 Ironwood แก้ถาวร · 2026-08-25 Grayscale ZCSH ETF ตัวแรกของ privacy coin บน NYSE Arca · 2026-09-16 NU7 ผ่านโหวต ~99% (block time 75s→25s) · 2026-09-23/26 แตะจุดสูง $1,609/$1,693 · 2026-10-15 -13% จาก CPI",
   "hmeta": {
-   "v": 1,
+   "v": 2,
    "conf": "med",
    "src": "https://zips.z.cash/protocol/protocol.pdf",
    "asof": "2026-10-16",
-   "note": "ภายใน pool รูปแบบสม่ำเสมอ แต่ fee และ timing ยังเปิด และ transparent tx รั่วทั้งหมด"
+   "note": "Orchard shielded pool: note commitment ไม่มี linkage กับที่อยู่ และไม่เปิดกราฟ"
   },
   "hnet": {
    "v": 1,
    "conf": "med",
-   "src": "https://z.cash/technology/",
+   "src": "https://zcash.github.io/zcash/",
    "asof": "2026-10-16",
-   "note": "รองรับ Tor ในไคลเอนต์ แต่ผู้ใช้ต้องตั้งเอง (opt-in)"
+   "note": "zcashd รองรับ Tor แบบเลือกใช้ (ไม่ใช่ค่าเริ่มต้นของชั้น P2P)"
   },
   "mat": {
    "v": 2,
@@ -161,17 +161,17 @@
   "hist": "2014-04 mainnet (CryptoNote fork) · 2017 RingCT · 2019 CLSAG (ring 16) · 2024-02 Binance ถอดทั้งโลก · 2024-10 Kraken ถอน EEA · 2025 ทั้งปี ~73 แห่งถอด privacy coin · 2026-01 ATH $797.73 · 2026-06 ราคา ~$310 (ยังสูงกว่าเดิมหลายเท่า)",
   "hmeta": {
    "v": 1,
-   "conf": "med",
+   "conf": "high",
    "src": "https://docs.getmonero.org/",
    "asof": "2026-10-16",
-   "note": "ขนาด tx ค่อนข้างสม่ำเสมอจาก RingCT แต่ fee ยังผันผวนและยังมี timing leak"
+   "note": "RingCT ซ่อนจำนวน/ที่อยู่ แต่จำนวน input-output และขนาด tx ยังแปรผันตามโครงสร้าง"
   },
   "hnet": {
    "v": 2,
    "conf": "high",
    "src": "https://docs.getmonero.org/",
    "asof": "2026-10-16",
-   "note": "Dandelion++ ทำงานโดยปริยายในตัวไคลเอนต์มาตรฐาน"
+   "note": "Dandelion++ ฝังในโปรโตคอลและเป็นค่าเริ่มต้น (stem phase) — node spec ระบุ"
   },
   "mat": {
    "v": 2,
@@ -276,17 +276,17 @@
   },
   "hmeta": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "PrivateSend ใช้ denomination คงที่บนที่อยู่โปร่งใส — กราฟยังตามได้"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
-   "src": "https://docs.dash.org/en/stable/docs/user/private-send.html",
+   "src": "https://docs.dash.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Dash Core รองรับ Tor แบบเลือกใช้"
   },
   "mat": {
    "v": 2,
@@ -377,18 +377,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 0,
-   "conf": "low",
-   "src": "https://docs.decred.org/privacy/",
-   "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
-  },
-  "hnet": {
    "v": 1,
    "conf": "low",
    "src": "https://docs.decred.org/privacy/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "CoinShuffle++ ซ่อนเนื้อหา แต่จำนวน/จังหวะของ CoinJoin ยังเห็น"
+  },
+  "hnet": {
+   "v": 1,
+   "conf": "med",
+   "src": "https://docs.decred.org/privacy/",
+   "asof": "2026-10-16",
+   "note": "CoinShuffle++ วิ่งบน mixnet แต่เฉพาะธุรกรรมที่ผู้ใช้เลือก mix"
   },
   "mat": {
    "v": 2,
@@ -483,14 +483,14 @@
    "conf": "low",
    "src": "https://beldex.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "RingCT lineage"
   },
   "hnet": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://beldex.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Beldex เป็น Monero fork → น่าจะสืบทอด Dandelion++ แต่ยังไม่ยืนยัน"
   },
   "mat": {
    "v": 2,
@@ -585,14 +585,14 @@
    "conf": "low",
    "src": "https://zano.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "RingCT lineage"
   },
   "hnet": {
-   "v": 1,
+   "v": 0,
    "conf": "low",
    "src": "https://zano.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "codebase ของตัวเอง — ไม่พบ network-layer privacy"
   },
   "mat": {
    "v": 2,
@@ -687,14 +687,14 @@
    "conf": "low",
    "src": "https://piratechain.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "shielded ทั้งหมด แต่ค่า fee/จังหวะยังสังเกตได้"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://piratechain.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 2,
@@ -787,16 +787,16 @@
   "hmeta": {
    "v": 1,
    "conf": "low",
-   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "src": "https://firo.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "Lelantus Spark ซ่อนเนื้อหา แต่ค่า fee/จังหวะยังเห็น"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
-   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "src": "https://firo.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Firo client รองรับ Tor แบบเลือกใช้"
   },
   "mat": {
    "v": 2,
@@ -888,17 +888,17 @@
   },
   "hmeta": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://vergecurrency.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "ledger โปร่งใสทั้งหมด — กราฟเปิด"
   },
   "hnet": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://vergecurrency.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Tor/I2P ฝังใน core QT wallet (เอกสารโปรเจกต์) — เป็นระดับ wallet ไม่ใช่ consensus"
   },
   "mat": {
    "v": 2,
@@ -989,18 +989,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 1,
-   "conf": "low",
+   "v": 2,
+   "conf": "med",
    "src": "https://docs.grin.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "cut-through + kernel aggregation: ธุรกรรมกลางทางไม่ขึ้นเชน และ kernel ไม่ผูกกับ output"
   },
   "hnet": {
-   "v": 1,
-   "conf": "low",
+   "v": 2,
+   "conf": "high",
    "src": "https://docs.grin.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Dandelion (stem phase) เป็นส่วนของโปรโตคอล — docs ระบุ"
   },
   "mat": {
    "v": 2,
@@ -1091,18 +1091,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 1,
-   "conf": "low",
+   "v": 2,
+   "conf": "med",
    "src": "https://docs.beam.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "cut-through + kernel aggregation"
   },
   "hnet": {
-   "v": 1,
-   "conf": "low",
+   "v": 2,
+   "conf": "med",
    "src": "https://docs.beam.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Dandelion อยู่ในโปรโตคอล"
   },
   "mat": {
    "v": 2,
@@ -1197,14 +1197,14 @@
    "conf": "low",
    "src": "https://dero.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "homomorphic — ซ่อนเนื้อหา แต่ขนาด/จังหวะยังเห็น"
   },
   "hnet": {
-   "v": 1,
+   "v": 0,
    "conf": "low",
    "src": "https://dero.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "CryptoNote fork (ไม่ใช่ Monero) — ไม่พบ Dandelion ในซอร์ส"
   },
   "mat": {
    "v": 2,
@@ -1299,14 +1299,14 @@
    "conf": "low",
    "src": "https://www.zephyrprotocol.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "RingCT lineage"
   },
   "hnet": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://www.zephyrprotocol.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Zephyr เป็น Monero fork → น่าจะสืบทอด Dandelion++ แต่ยังไม่ยืนยัน"
   },
   "mat": {
    "v": 1,
@@ -1401,14 +1401,14 @@
    "conf": "low",
    "src": "https://zclassic.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "shielded แบบ opt-in"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://zclassic.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "สืบทอด zcashd"
   },
   "mat": {
    "v": 2,
@@ -1501,16 +1501,16 @@
   "hmeta": {
    "v": 1,
    "conf": "low",
-   "src": "https://pivx.org/shield",
+   "src": "https://pivx.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "SHIELD ซ่อนเนื้อหา แต่จังหวะยังเห็น"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
-   "src": "https://pivx.org/shield",
+   "src": "https://pivx.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "PIVX wallet รองรับ Tor แบบเลือกใช้"
   },
   "mat": {
    "v": 2,
@@ -1605,14 +1605,14 @@
    "conf": "low",
    "src": "https://ironfish.network/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"encrypts every transaction, shielding your sensitive asset information\" → man=1, hs/hr/ha=2 · UTXO, ไม่มี general smart contract → nst=1 · mainnet 2023-04-20 · zk-SNARK (Sapling lineage): tl=1 (conf=low — ต้องยืนยันรายละเอียด trusted setup ceremony) · มีงานวิจัย 2025 \"Trust Without Transparency: An Empirical Analysis of Anonymity and Verifiability in Iron Fish\" ควรอ่านก่อนปิดค่า hs/hr/ha เป็น high"
+   "note": "encrypted UTXO — ซ่อนเนื้อหา แต่จำนวน input/output ยังเห็น"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://ironfish.network/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"encrypts every transaction, shielding your sensitive asset information\" → man=1, hs/hr/ha=2 · UTXO, ไม่มี general smart contract → nst=1 · mainnet 2023-04-20 · zk-SNARK (Sapling lineage): tl=1 (conf=low — ต้องยืนยันรายละเอียด trusted setup ceremony) · มีงานวิจัย 2025 \"Trust Without Transparency: An Empirical Analysis of Anonymity and Verifiability in Iron Fish\" ควรอ่านก่อนปิดค่า hs/hr/ha เป็น high"
+   "note": "Iron Fish CLI รองรับ Tor — ต้องยืนยันว่าเปิดเป็นค่าเริ่มต้นหรือไม่"
   },
   "mat": {
    "v": 1,
@@ -1703,18 +1703,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://rfc.tari.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "MimbleWimble cut-through"
   },
   "hnet": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://rfc.tari.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "MimbleWimble chain — ต้องยืนยัน Dandelion ในซอร์ส"
   },
   "mat": {
    "v": 2,
@@ -1809,14 +1809,14 @@
    "conf": "low",
    "src": "https://www.abelian.info/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "post-quantum ring — ซ่อนเนื้อหา แต่โครงสร้าง tx ยังเห็น"
   },
   "hnet": {
-   "v": 1,
+   "v": 0,
    "conf": "low",
    "src": "https://www.abelian.info/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "codebase ของตัวเอง — ไม่พบ network-layer privacy"
   },
   "mat": {
    "v": 1,
@@ -1907,18 +1907,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://epiccash.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "สืบทอด MimbleWimble cut-through"
   },
   "hnet": {
-   "v": 0,
+   "v": 2,
    "conf": "low",
    "src": "https://epiccash.com/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "สืบทอดจาก Grin — ยังไม่ยืนยันในซอร์สของโปรเจกต์เอง"
   },
   "mat": {
    "v": 2,
@@ -2009,18 +2009,18 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "hmeta": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://www.mwc.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "สืบทอด MimbleWimble cut-through จาก Grin"
   },
   "hnet": {
-   "v": 0,
+   "v": 2,
    "conf": "low",
    "src": "https://www.mwc.mw/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "สืบทอด Dandelion จาก Grin (MWC เป็น Grin fork) — ยังไม่ยืนยันในซอร์สของโปรเจกต์เอง"
   },
   "mat": {
    "v": 2,
@@ -2115,14 +2115,14 @@
    "conf": "low",
    "src": "https://y.cash/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "shielded แบบ opt-in — กราฟของ transparent tx ยังเปิด"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://y.cash/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "สืบทอด zcashd"
   },
   "mat": {
    "v": 2,
@@ -2217,14 +2217,14 @@
    "conf": "low",
    "src": "https://xelis.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "ซ่อนเนื้อหา แต่ขนาด/จังหวะยังเห็น"
   },
   "hnet": {
-   "v": 1,
+   "v": 0,
    "conf": "low",
    "src": "https://xelis.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "codebase ของตัวเอง (Rust) — ไม่พบ network-layer privacy"
   },
   "mat": {
    "v": 0,
@@ -2322,11 +2322,11 @@
    "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
-   "src": "https://github.com/particl/particl-core",
+   "src": "https://particl.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Particl wallet รองรับ Tor แบบเลือกใช้"
   },
   "mat": {
    "v": 2,
@@ -2421,14 +2421,14 @@
    "conf": "low",
    "src": "https://navcoin.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "blsCT ซ่อนเนื้อหา แต่จังหวะ/ขนาดยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://navcoin.org/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 2,
@@ -2523,14 +2523,14 @@
    "conf": "low",
    "src": "https://zerocurrency.io/",
    "asof": "2026-10-16",
-   "note": "Zcash fork (\"ZERO is born from Zcash\") → shielded แบบ opt-in → hs/hr/ha=1, man=0 · Sapling trusted setup → tl=1 · UTXO ไม่มี smart contract → nst=1 · genesis 2017-02 → mat=2 (conf=low: audit/activity ต้องยืนยัน)"
+   "note": "shielded แบบ opt-in"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://zerocurrency.io/",
    "asof": "2026-10-16",
-   "note": "Zcash fork (\"ZERO is born from Zcash\") → shielded แบบ opt-in → hs/hr/ha=1, man=0 · Sapling trusted setup → tl=1 · UTXO ไม่มี smart contract → nst=1 · genesis 2017-02 → mat=2 (conf=low: audit/activity ต้องยืนยัน)"
+   "note": "สืบทอด zcashd"
   },
   "mat": {
    "v": 2,
@@ -2615,17 +2615,17 @@
   },
   "hmeta": {
    "v": 1,
-   "conf": "low",
+   "conf": "med",
    "src": "https://docs.aztec.network/",
    "asof": "2026-10-16",
-   "note": "fee/timing ยังเปิด และขนาด proof ไม่คงที่ — ต้องยืนยันด้วยการวัด"
+   "note": "ซ่อนเนื้อหาใน rollup แต่การส่ง batch ขึ้น L1 และ gas ยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "med",
    "src": "https://docs.aztec.network/",
    "asof": "2026-10-16",
-   "note": "ไม่มี network privacy ในตัว ผู้ใช้ต้องพึ่งเครื่องมือภายนอก"
+   "note": "rollup บน Ethereum — IP ของ sequencer/prover เปิดเผยตามมาตรฐาน EVM"
   },
   "mat": {
    "v": 0,
@@ -2715,18 +2715,18 @@
    "note": "smart contract shielded pool บน EVM: \"gives zk-SNARK privacy to any transaction or smart contract interaction\" → ซ่อนได้เมื่อเลือกใช้ (opt-in) · hst=0: state ของ contract ยังโปร่งใสบน EVM · tl=1 (Groth16 trusted setup) · mainnet ตั้งแต่ ~2021 → mat=2 (conf=low: ยังไม่ยืนยันจำนวน audit)"
   },
   "hmeta": {
-   "v": 0,
-   "conf": "low",
+   "v": 1,
+   "conf": "med",
    "src": "https://railgun.org/",
    "asof": "2026-10-16",
-   "note": "smart contract shielded pool บน EVM: \"gives zk-SNARK privacy to any transaction or smart contract interaction\" → ซ่อนได้เมื่อเลือกใช้ (opt-in) · hst=0: state ของ contract ยังโปร่งใสบน EVM · tl=1 (Groth16 trusted setup) · mainnet ตั้งแต่ ~2021 → mat=2 (conf=low: ยังไม่ยืนยันจำนวน audit)"
+   "note": "ซ่อนเนื้อหาภายใน pool แต่ gas/จังหวะการเรียก contract ยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://railgun.org/",
    "asof": "2026-10-16",
-   "note": "smart contract shielded pool บน EVM: \"gives zk-SNARK privacy to any transaction or smart contract interaction\" → ซ่อนได้เมื่อเลือกใช้ (opt-in) · hst=0: state ของ contract ยังโปร่งใสบน EVM · tl=1 (Groth16 trusted setup) · mainnet ตั้งแต่ ~2021 → mat=2 (conf=low: ยังไม่ยืนยันจำนวน audit)"
+   "note": "EVM smart contract — RPC/gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -2816,18 +2816,18 @@
    "note": "Zama = บริษัท cryptography ที่สร้าง FHE สำหรับ blockchain (fhevm) · hs/hr/ha=0 (โทเคนอยู่บนเชนโฮสต์โปร่งใส) · hst=2 (FHE ซ่อน state ของ contract) · tl=2 (FHE, ไม่ต้อง trusted setup) · pq=2 (lattice-based → post-quantum) · mat=0 (conf=low) · hnet=0"
   },
   "hmeta": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://www.zama.ai/",
    "asof": "2026-10-16",
-   "note": "Zama = บริษัท cryptography ที่สร้าง FHE สำหรับ blockchain (fhevm) · hs/hr/ha=0 (โทเคนอยู่บนเชนโฮสต์โปร่งใส) · hst=2 (FHE ซ่อน state ของ contract) · tl=2 (FHE, ไม่ต้อง trusted setup) · pq=2 (lattice-based → post-quantum) · mat=0 (conf=low) · hnet=0"
+   "note": "FHE ซ่อน state แต่จังหวะการเรียกยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://www.zama.ai/",
    "asof": "2026-10-16",
-   "note": "Zama = บริษัท cryptography ที่สร้าง FHE สำหรับ blockchain (fhevm) · hs/hr/ha=0 (โทเคนอยู่บนเชนโฮสต์โปร่งใส) · hst=2 (FHE ซ่อน state ของ contract) · tl=2 (FHE, ไม่ต้อง trusted setup) · pq=2 (lattice-based → post-quantum) · mat=0 (conf=low) · hnet=0"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -2918,18 +2918,18 @@
    "note": "mixer zk-SNARK บน Ethereum ตัดความเชื่อมโยงฝาก-ถอน → hs=1 (เลือกใช้), hr=1 (ถอนเข้าที่อยู่ใหม่) · ha=0: ใช้ denomination คงที่ จำนวนจึงเปิดเผย (เหมือน DASH) · hst=0: EVM state โปร่งใส · tl=1 (Groth16 trusted setup) · ถูก OFAC sanction 2022-08 (ศาลอุทธรณ์สหรัฐ 2024 ตัดสินว่าเกินอำนาจ) → ดู red flag/compliance"
   },
   "hmeta": {
-   "v": 0,
-   "conf": "low",
+   "v": 1,
+   "conf": "med",
    "src": "https://tornado.cash/",
    "asof": "2026-10-16",
-   "note": "mixer zk-SNARK บน Ethereum ตัดความเชื่อมโยงฝาก-ถอน → hs=1 (เลือกใช้), hr=1 (ถอนเข้าที่อยู่ใหม่) · ha=0: ใช้ denomination คงที่ จำนวนจึงเปิดเผย (เหมือน DASH) · hst=0: EVM state โปร่งใส · tl=1 (Groth16 trusted setup) · ถูก OFAC sanction 2022-08 (ศาลอุทธรณ์สหรัฐ 2024 ตัดสินว่าเกินอำนาจ) → ดู red flag/compliance"
+   "note": "ซ่อนเนื้อหา แต่จังหวะฝาก/ถอนและ denomination ยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://tornado.cash/",
    "asof": "2026-10-16",
-   "note": "mixer zk-SNARK บน Ethereum ตัดความเชื่อมโยงฝาก-ถอน → hs=1 (เลือกใช้), hr=1 (ถอนเข้าที่อยู่ใหม่) · ha=0: ใช้ denomination คงที่ จำนวนจึงเปิดเผย (เหมือน DASH) · hst=0: EVM state โปร่งใส · tl=1 (Groth16 trusted setup) · ถูก OFAC sanction 2022-08 (ศาลอุทธรณ์สหรัฐ 2024 ตัดสินว่าเกินอำนาจ) → ดู red flag/compliance"
+   "note": "EVM smart contract — RPC/gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -3023,14 +3023,14 @@
    "conf": "low",
    "src": "https://midnight.network/",
    "asof": "2026-10-16",
-   "note": "Midnight: \"privacy-first blockchain... selective disclosure and ZK proofs\" · dual ledger (public + private) → โอน private เป็น opt-in → hs/hr/ha=1, man=0 · private contract state → hst=2, nst=0 · tl=2 (conf=low: ZK proof ไม่ต้อง trusted setup — ต้องยืนยัน) · mat=0: สถานะ mainnet ยังไม่ชัด (การเปิดตัว mainnet ยังอยู่ระหว่างการหารือ) → conf=low ทั้งแถว"
+   "note": "dual ledger — ฝั่ง public ยังเปิดกราฟ"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://midnight.network/",
    "asof": "2026-10-16",
-   "note": "Midnight: \"privacy-first blockchain... selective disclosure and ZK proofs\" · dual ledger (public + private) → โอน private เป็น opt-in → hs/hr/ha=1, man=0 · private contract state → hst=2, nst=0 · tl=2 (conf=low: ZK proof ไม่ต้อง trusted setup — ต้องยืนยัน) · mat=0: สถานะ mainnet ยังไม่ชัด (การเปิดตัว mainnet ยังอยู่ระหว่างการหารือ) → conf=low ทั้งแถว"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -3125,14 +3125,14 @@
    "conf": "low",
    "src": "https://aleo.org/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"architecting Aleo as a blockchain that is private-by-default\" → man=1, hs/hr/ha=2 · record model ซ่อน state ของ application → hst=2, nst=0 · zk-SNARK (Varuna/Marlin lineage): tl=1 (conf=low — ต้องยืนยันสถานะ trusted setup) · mainnet 2024-09 → mat=1"
+   "note": "record model ซ่อนเนื้อหา แต่จำนวน record/gas ยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://aleo.org/",
    "asof": "2026-10-16",
-   "note": "เอกสารโปรเจกต์: \"architecting Aleo as a blockchain that is private-by-default\" → man=1, hs/hr/ha=2 · record model ซ่อน state ของ application → hst=2, nst=0 · zk-SNARK (Varuna/Marlin lineage): tl=1 (conf=low — ต้องยืนยันสถานะ trusted setup) · mainnet 2024-09 → mat=1"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 1,
@@ -3226,14 +3226,14 @@
    "conf": "low",
    "src": "https://anoma.net/",
    "asof": "2026-10-16",
-   "note": "Anoma — intent-centric architecture; การชำระ intent แบบ shielded → hs/hr/ha=1 (conf=low) · private state → hst=2, nst=0 · tl=2 (conf=low) · mat=0: ยังไม่ยืนยันสถานะ mainnet/audit · conf=low ทั้งแถว"
+   "note": "intent settlement แบบ shielded — จังหวะยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://anoma.net/",
    "asof": "2026-10-16",
-   "note": "Anoma — intent-centric architecture; การชำระ intent แบบ shielded → hs/hr/ha=1 (conf=low) · private state → hst=2, nst=0 · tl=2 (conf=low) · mat=0: ยังไม่ยืนยันสถานะ mainnet/audit · conf=low ทั้งแถว"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -3323,18 +3323,18 @@
    "note": "stealth address protocol บน Solana/EVM: ซ่อนความเชื่อมโยงของผู้รับ (hr=1) แต่ผู้ส่งและจำนวนยังเห็นบนเชน → hs=0, ha=0 (ยกเว้นเส้นทางผ่าน relayer/hook) · mat=0: ยังไม่ยืนยันระยะเวลา mainnet/audit · conf=low ทุกค่า privacy — ต้องตรวจว่าโหมด shielded เปิดใช้จริงแล้วหรือยัง"
   },
   "hmeta": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://www.umbra.cash/",
    "asof": "2026-10-16",
-   "note": "stealth address protocol บน Solana/EVM: ซ่อนความเชื่อมโยงของผู้รับ (hr=1) แต่ผู้ส่งและจำนวนยังเห็นบนเชน → hs=0, ha=0 (ยกเว้นเส้นทางผ่าน relayer/hook) · mat=0: ยังไม่ยืนยันระยะเวลา mainnet/audit · conf=low ทุกค่า privacy — ต้องตรวจว่าโหมด shielded เปิดใช้จริงแล้วหรือยัง"
+   "note": "stealth address ซ่อนผู้รับ แต่กราฟของ tx ที่ให้ทุนยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://www.umbra.cash/",
    "asof": "2026-10-16",
-   "note": "stealth address protocol บน Solana/EVM: ซ่อนความเชื่อมโยงของผู้รับ (hr=1) แต่ผู้ส่งและจำนวนยังเห็นบนเชน → hs=0, ha=0 (ยกเว้นเส้นทางผ่าน relayer/hook) · mat=0: ยังไม่ยืนยันระยะเวลา mainnet/audit · conf=low ทุกค่า privacy — ต้องตรวจว่าโหมด shielded เปิดใช้จริงแล้วหรือยัง"
+   "note": "Solana/EVM — RPC มาตรฐาน"
   },
   "mat": {
    "v": 0,
@@ -3428,14 +3428,14 @@
    "conf": "low",
    "src": "https://darkswap.io/",
    "asof": "2026-10-16",
-   "note": "DarkSwap = swap interface ที่ส่งต่อผ่านผู้ให้บริการบุคคลที่สาม (HoudiniSwap, NEAR Intents 1Click) — ไม่มีกลไก privacy ของตัวเอง · hs/hr/ha=1 (conf=low: ความเป็นส่วนตัวมาจากเส้นทางของ third party) · tl=0: ต้องเชื่อผู้ให้บริการ/intent solver · hst=0: state บน Solana/EVM โปร่งใส · mat=0 (conf=low) · ต้องแยกให้ชัดว่า P สะท้อน \"เส้นทางที่ใช้\" ไม่ใช่กลไกของโปรเจกต์"
+   "note": "พึ่งผู้ให้บริการ third party — ไม่มีกลไก metadata ของตัวเอง"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://darkswap.io/",
    "asof": "2026-10-16",
-   "note": "DarkSwap = swap interface ที่ส่งต่อผ่านผู้ให้บริการบุคคลที่สาม (HoudiniSwap, NEAR Intents 1Click) — ไม่มีกลไก privacy ของตัวเอง · hs/hr/ha=1 (conf=low: ความเป็นส่วนตัวมาจากเส้นทางของ third party) · tl=0: ต้องเชื่อผู้ให้บริการ/intent solver · hst=0: state บน Solana/EVM โปร่งใส · mat=0 (conf=low) · ต้องแยกให้ชัดว่า P สะท้อน \"เส้นทางที่ใช้\" ไม่ใช่กลไกของโปรเจกต์"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -3484,25 +3484,25 @@
    "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
   },
   "hst": {
-   "v": 0,
+   "v": 2,
    "conf": "med",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "ข้อมูลต้นทางไม่เคยออกจากฝั่งผู้ใช้ — มีเพียง proof ขึ้นเชน (zkTLS) → นับเป็น private state ตามนิยาม hst ที่ขยายแล้ว"
   },
   "man": {
-   "v": 0,
-   "conf": "low",
-   "src": "https://zkpass.org/",
-   "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
-  },
-  "tl": {
    "v": 1,
    "conf": "low",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "ไม่มีโหมดเปิดเผยข้อมูลต้นทางเลย — การใช้โปรโตคอลคือการใช้ privacy โดยโครงสร้าง"
+  },
+  "tl": {
+   "v": 1.5,
+   "conf": "med",
+   "src": "https://zkpass.org/",
+   "asof": "2026-10-16",
+   "note": "3P-TLS ต้องมี proxy ในรอบ TLS + hybrid-ZK → สมมติฐานแบบ threshold ไม่ใช่ trustless เต็มรูปแบบ"
   },
   "big": 0,
   "yr": 2024,
@@ -3518,32 +3518,32 @@
    "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
   },
   "nst": {
-   "v": 1,
+   "v": 0,
    "conf": "med",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "มี state ที่ต้องปกป้อง (ข้อมูลต้นทาง + ผลการพิสูจน์) — ไม่ใช่เชนที่ไม่มี state"
   },
   "hmeta": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "ข้อมูลต้นทางถูกซ่อน แต่การยื่น proof ขึ้นเชนมีจังหวะ/ค่า gas ที่เห็นได้"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://zkpass.org/",
    "asof": "2026-10-16",
-   "note": "zkPass = zkTLS oracle: พิสูจน์ข้อเท็จจริงจากเว็บ HTTPS โดยไม่เปิดข้อมูลดิบ — ไม่ใช่เชนโอนมูลค่า → arch=compute, กฎ non-value-transfer: hs/hr/ha=0 · ไม่มี execution layer ให้ซ่อน state → nst=1, hst=0 · tl=1 (conf=low: 3P-TLS ต้องมี proxy ที่เชื่อถือในรอบ session) · mat=0 (conf=low) · หมายเหตุ: คะแนน P ต่ำเพราะ rubric วัด privacy ของ \"การโอน/state\" ไม่ได้วัด \"การไม่เปิดเผยข้อมูลต้นทาง\""
+   "note": "ใช้งานจริง 1-3 ปี — ต้องยืนยันจำนวน audit สาธารณะ"
   },
   "pq": {
    "v": 0,
@@ -3630,14 +3630,14 @@
    "conf": "low",
    "src": "https://dusk.network/",
    "asof": "2026-10-16",
-   "note": "L1 สำหรับตลาดการเงินที่มีการกำกับ + \"privacy-preserving smart contracts, zero-knowledge compliance infrastructure\" → private contract state → hst=2, nst=0 · โอนแบบ private (Phoenix lineage) เป็น opt-in → hs/hr/ha=1, man=0 · tl=1 (conf=low: universal setup ของ PLONK lineage) · mat=1 (conf=low: mainnet/audit ต้องยืนยัน)"
+   "note": "private contract — gas/จังหวะยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://dusk.network/",
    "asof": "2026-10-16",
-   "note": "L1 สำหรับตลาดการเงินที่มีการกำกับ + \"privacy-preserving smart contracts, zero-knowledge compliance infrastructure\" → private contract state → hst=2, nst=0 · โอนแบบ private (Phoenix lineage) เป็น opt-in → hs/hr/ha=1, man=0 · tl=1 (conf=low: universal setup ของ PLONK lineage) · mat=1 (conf=low: mainnet/audit ต้องยืนยัน)"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 1,
@@ -3727,18 +3727,18 @@
    "note": "Canton Network (Daml ledger สำหรับสถาบัน): sub-transaction privacy — คู่สัญญาเห็นเฉพาะสัญญาของตัวเอง → hs/hr/ha=1 (conf=low) · private contract state เป็นแกน → hst=2, nst=0 · tl=0: โมเดลความเชื่อใจพึ่ง notary/validator domain ที่ต้องเชื่อ (ไม่ใช่ public trustless) · mat=0 (conf=low)"
   },
   "hmeta": {
-   "v": 1,
+   "v": 2,
    "conf": "low",
    "src": "https://www.canton.network/",
    "asof": "2026-10-16",
-   "note": "Canton Network (Daml ledger สำหรับสถาบัน): sub-transaction privacy — คู่สัญญาเห็นเฉพาะสัญญาของตัวเอง → hs/hr/ha=1 (conf=low) · private contract state เป็นแกน → hst=2, nst=0 · tl=0: โมเดลความเชื่อใจพึ่ง notary/validator domain ที่ต้องเชื่อ (ไม่ใช่ public trustless) · mat=0 (conf=low)"
+   "note": "sub-transaction privacy — คู่สัญญาที่ไม่เกี่ยวข้องไม่เห็นกราฟธุรกรรมนั้นเลย"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://www.canton.network/",
    "asof": "2026-10-16",
-   "note": "Canton Network (Daml ledger สำหรับสถาบัน): sub-transaction privacy — คู่สัญญาเห็นเฉพาะสัญญาของตัวเอง → hs/hr/ha=1 (conf=low) · private contract state เป็นแกน → hst=2, nst=0 · tl=0: โมเดลความเชื่อใจพึ่ง notary/validator domain ที่ต้องเชื่อ (ไม่ใช่ public trustless) · mat=0 (conf=low)"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -3828,18 +3828,18 @@
    "note": "L1 (Substrate) พื้นฐานโปร่งใส — ชั้น privacy (Liminal/zkOS) เป็นการเลือกใช้ → man=0, hs/hr/ha=1 (conf=low) · hst=1 (conf=low: private state ยังต้องยืนยันว่าเปิดบน mainnet) · tl=1.5: ชั้น privacy ใช้ secure multiparty computation (conf=low) · mainnet 2021-11 → mat=2 (conf=low)"
   },
   "hmeta": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://alephzero.org/",
    "asof": "2026-10-16",
-   "note": "L1 (Substrate) พื้นฐานโปร่งใส — ชั้น privacy (Liminal/zkOS) เป็นการเลือกใช้ → man=0, hs/hr/ha=1 (conf=low) · hst=1 (conf=low: private state ยังต้องยืนยันว่าเปิดบน mainnet) · tl=1.5: ชั้น privacy ใช้ secure multiparty computation (conf=low) · mainnet 2021-11 → mat=2 (conf=low)"
+   "note": "ชั้น privacy เป็น opt-in — จังหวะการเรียกยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://alephzero.org/",
    "asof": "2026-10-16",
-   "note": "L1 (Substrate) พื้นฐานโปร่งใส — ชั้น privacy (Liminal/zkOS) เป็นการเลือกใช้ → man=0, hs/hr/ha=1 (conf=low) · hst=1 (conf=low: private state ยังต้องยืนยันว่าเปิดบน mainnet) · tl=1.5: ชั้น privacy ใช้ secure multiparty computation (conf=low) · mainnet 2021-11 → mat=2 (conf=low)"
+   "note": "Substrate P2P gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -3933,14 +3933,14 @@
    "conf": "low",
    "src": "https://verus.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากสถาปัตยกรรม ยังต้องยืนยันด้วยงานวิจัย metadata"
+   "note": "shielded แบบ opt-in"
   },
   "hnet": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://verus.io/",
    "asof": "2026-10-16",
-   "note": "ประเมินจากเอกสารโปรเจกต์ ยังต้องยืนยัน"
+   "note": "Verus client รองรับ Tor แบบเลือกใช้"
   },
   "mat": {
    "v": 2,
@@ -4028,14 +4028,14 @@
    "conf": "low",
    "src": "https://nockchain.org/",
    "asof": "2026-10-16",
-   "note": "ZKPoW เป็นกลไก consensus ไม่ใช่ privacy ของธุรกรรม · ไม่พบเอกสารที่ยืนยันกลไก privacy ระดับธุรกรรม → hs/hr/ha=0 (conf=low) · tl=null เพราะไม่มีกลไก privacy ให้ประเมิน trust (ไม่ใช่ 0 ซึ่งแปลว่า \"ต้องเชื่อคนกลาง\") · mat=0 (fair launch 2025-05) · ต้องอ่าน whitepaper ก่อนปิดค่า"
+   "note": "ZKPoW เป็นกลไก consensus — ไม่พบการป้องกัน metadata ระดับธุรกรรม"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://nockchain.org/",
    "asof": "2026-10-16",
-   "note": "ZKPoW เป็นกลไก consensus ไม่ใช่ privacy ของธุรกรรม · ไม่พบเอกสารที่ยืนยันกลไก privacy ระดับธุรกรรม → hs/hr/ha=0 (conf=low) · tl=null เพราะไม่มีกลไก privacy ให้ประเมิน trust (ไม่ใช่ 0 ซึ่งแปลว่า \"ต้องเชื่อคนกลาง\") · mat=0 (fair launch 2025-05) · ต้องอ่าน whitepaper ก่อนปิดค่า"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,
@@ -4123,14 +4123,14 @@
    "conf": "high",
    "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "Sphinx packet ทำให้ทุกแพ็กเก็ตมีรูปแบบเดียวกันโดยปริยาย"
+   "note": "Sphinx packet ขนาดคงที่ — ไม่มี linkage และขนาดไม่เปิดเผย"
   },
   "hnet": {
    "v": 2,
    "conf": "high",
    "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "mixnet ทำงานโดยปริยายสำหรับทราฟฟิกที่ผ่านเครือข่าย"
+   "note": "mixnet — Sphinx packet ขนาดคงที่ทั้งเครือข่าย เป็นตัวโปรโตคอลเอง"
   },
   "mat": {
    "v": 2,
@@ -4229,17 +4229,17 @@
   },
   "hmeta": {
    "v": 2,
-   "conf": "low",
+   "conf": "high",
    "src": "https://hoprnet.org/",
    "asof": "2026-10-16",
-   "note": "\"open incentivized mixnet which enables privacy-preserving point-to-point data exchange\" — privacy ระดับ metadata ล้วน · hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 · tl=1.5 (mixnet = threshold, conf=low) · man=1 · mat=2 (mainnet 2022-06, conf=low)"
+   "note": "mixnet packet ขนาดคงที่"
   },
   "hnet": {
    "v": 2,
-   "conf": "low",
+   "conf": "high",
    "src": "https://hoprnet.org/",
    "asof": "2026-10-16",
-   "note": "\"open incentivized mixnet which enables privacy-preserving point-to-point data exchange\" — privacy ระดับ metadata ล้วน · hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 · tl=1.5 (mixnet = threshold, conf=low) · man=1 · mat=2 (mainnet 2022-06, conf=low)"
+   "note": "incentivized mixnet — network-layer privacy คือผลิตภัณฑ์"
   },
   "mat": {
    "v": 2,
@@ -4330,17 +4330,17 @@
   },
   "hmeta": {
    "v": 2,
-   "conf": "low",
+   "conf": "high",
    "src": "https://getsession.org/",
    "asof": "2026-10-16",
-   "note": "Session = แอปส่งข้อความ E2E + onion routing (3 hop) → hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 (ซ่อน metadata ของการสื่อสาร) · tl=1.5 (onion routing = threshold, conf=low) · man=1 · mat=1 (conf=low: SESH เป็นโทเคนใหม่ แม้ตัวแอปจะรันมานาน)"
+   "note": "onion routing + sealed sender — ไม่มีโหมดเปิดกราฟ"
   },
   "hnet": {
    "v": 2,
-   "conf": "low",
+   "conf": "high",
    "src": "https://getsession.org/",
    "asof": "2026-10-16",
-   "note": "Session = แอปส่งข้อความ E2E + onion routing (3 hop) → hs/hr/ha=0 ตามกฎ transport · hmeta=2/hnet=2 (ซ่อน metadata ของการสื่อสาร) · tl=1.5 (onion routing = threshold, conf=low) · man=1 · mat=1 (conf=low: SESH เป็นโทเคนใหม่ แม้ตัวแอปจะรันมานาน)"
+   "note": "onion routing 3 hop ในตัวแอป — ไม่มีโหมดส่งตรง"
   },
   "mat": {
    "v": 1,
@@ -4434,14 +4434,14 @@
    "conf": "low",
    "src": "https://mysterium.network/",
    "asof": "2026-10-16",
-   "note": "Mysterium Network = dVPN (WireGuard) · hs/hr/ha=0 ตามกฎ transport · hnet=2 (VPN เป็นกลไกชั้นเครือข่ายในตัว) · tl=0: VPN แบบ single-hop — โหนดทางออกเห็นทราฟฟิกได้ ต้องเชื่อผู้ให้บริการทางออก · man=0.5 (default-on เมื่อแอปเชื่อมต่อ) · hmeta=1 · หมายเหตุสำคัญ: description ที่ CoinGecko ให้มาเป็นของเหรียญ \"Mystery\" (lottery token) คนละโปรเจกต์ — ใช้เอกสาร Mysterium Network แทน"
+   "note": "traffic อยู่ใน tunnel แต่ขนาด/จังหวะยังสัมพันธ์กับทราฟฟิกจริง"
   },
   "hnet": {
    "v": 2,
-   "conf": "low",
+   "conf": "med",
    "src": "https://mysterium.network/",
    "asof": "2026-10-16",
-   "note": "Mysterium Network = dVPN (WireGuard) · hs/hr/ha=0 ตามกฎ transport · hnet=2 (VPN เป็นกลไกชั้นเครือข่ายในตัว) · tl=0: VPN แบบ single-hop — โหนดทางออกเห็นทราฟฟิกได้ ต้องเชื่อผู้ให้บริการทางออก · man=0.5 (default-on เมื่อแอปเชื่อมต่อ) · hmeta=1 · หมายเหตุสำคัญ: description ที่ CoinGecko ให้มาเป็นของเหรียญ \"Mystery\" (lottery token) คนละโปรเจกต์ — ใช้เอกสาร Mysterium Network แทน"
+   "note": "dVPN — ทราฟฟิกทั้งหมดวิ่งผ่าน tunnel เมื่อเชื่อมต่อ"
   },
   "mat": {
    "v": 2,
@@ -4535,14 +4535,14 @@
    "conf": "low",
    "src": "https://sentinel.co/",
    "asof": "2026-10-16",
-   "note": "Sentinel = dVPN บน Cosmos · hs/hr/ha=0 ตามกฎ transport · hnet=2 · tl=0 (single-hop: ต้องเชื่อโหนดทางออก) · man=0.5 (default-on) · mat=2 (conf=low)"
+   "note": "เช่นเดียวกับ dVPN อื่น"
   },
   "hnet": {
    "v": 2,
-   "conf": "low",
+   "conf": "med",
    "src": "https://sentinel.co/",
    "asof": "2026-10-16",
-   "note": "Sentinel = dVPN บน Cosmos · hs/hr/ha=0 ตามกฎ transport · hnet=2 · tl=0 (single-hop: ต้องเชื่อโหนดทางออก) · man=0.5 (default-on) · mat=2 (conf=low)"
+   "note": "dVPN"
   },
   "mat": {
    "v": 2,
@@ -4633,17 +4633,17 @@
   },
   "hmeta": {
    "v": 2,
-   "conf": "low",
+   "conf": "med",
    "src": "https://anyone.io/",
    "asof": "2026-10-16",
-   "note": "Anyone Protocol = เครือข่าย privacy แบบ DePIN (onion routing) · โทเค็นอยู่บนเชนโฮสต์โปร่งใส → กฎ transport: hs/hr/ha=0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่าย: hmeta=2/hnet=2 (conf=low) · tl=1.5: ความปลอดภัยพึ่ง \"มีโหนดซื่อสัตย์อย่างน้อยหนึ่งโหนดในเส้นทาง\" = threshold honest-majority (conf=low) · man=1: ทราฟฟิกที่ผ่านเครือข่ายถูกซ่อนทั้งหมด ไม่มีโหมดโปร่งใส (conf=low) · mat=1 (conf=low)"
+   "note": "onion routing — ขนาด packet คงที่ตามเส้นทาง"
   },
   "hnet": {
    "v": 2,
-   "conf": "low",
+   "conf": "med",
    "src": "https://anyone.io/",
    "asof": "2026-10-16",
-   "note": "Anyone Protocol = เครือข่าย privacy แบบ DePIN (onion routing) · โทเค็นอยู่บนเชนโฮสต์โปร่งใส → กฎ transport: hs/hr/ha=0 · ความเป็นส่วนตัวอยู่ที่ชั้นเครือข่าย: hmeta=2/hnet=2 (conf=low) · tl=1.5: ความปลอดภัยพึ่ง \"มีโหนดซื่อสัตย์อย่างน้อยหนึ่งโหนดในเส้นทาง\" = threshold honest-majority (conf=low) · man=1: ทราฟฟิกที่ผ่านเครือข่ายถูกซ่อนทั้งหมด ไม่มีโหมดโปร่งใส (conf=low) · mat=1 (conf=low)"
+   "note": "onion routing แบบ DePIN"
   },
   "mat": {
    "v": 1,
@@ -4728,17 +4728,17 @@
   },
   "hmeta": {
    "v": 1,
-   "conf": "low",
+   "conf": "med",
    "src": "https://docs.scrt.network/",
    "asof": "2026-10-16",
-   "note": "fee/timing เปิด — ต้องยืนยันด้วยการวัด"
+   "note": "contract input/state ถูกซ่อน แต่ gas และจังหวะการเรียกยังเห็น"
   },
   "hnet": {
    "v": 0,
    "conf": "med",
    "src": "https://docs.scrt.network/",
    "asof": "2026-10-16",
-   "note": "ไม่มี network privacy ในตัว"
+   "note": "Cosmos SDK P2P gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -4839,14 +4839,14 @@
    "conf": "low",
    "src": "https://oasis.net/",
    "asof": "2026-10-16",
-   "note": "Oasis: Sapphire = private EVM + Oasis Privacy Layer · hs/hr/ha=0 เพราะ \"การโอน\" บนเลเยอร์ consensus โปร่งใส — ความเป็นส่วนตัวอยู่ที่ state/input ของ contract → hst=2, nst=0 · tl=1: TEE (Intel SGX) เหมือน SCRT (conf=med) · mat=2 (mainnet 2020-11, conf=low) · hnet=0"
+   "note": "Sapphire ซ่อน input แต่ gas/จังหวะยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://oasis.net/",
    "asof": "2026-10-16",
-   "note": "Oasis: Sapphire = private EVM + Oasis Privacy Layer · hs/hr/ha=0 เพราะ \"การโอน\" บนเลเยอร์ consensus โปร่งใส — ความเป็นส่วนตัวอยู่ที่ state/input ของ contract → hst=2, nst=0 · tl=1: TEE (Intel SGX) เหมือน SCRT (conf=med) · mat=2 (mainnet 2020-11, conf=low) · hnet=0"
+   "note": "P2P gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -4940,14 +4940,14 @@
    "conf": "low",
    "src": "https://phala.network/",
    "asof": "2026-10-16",
-   "note": "Phala = off-chain compute (TEE) สำหรับ AI agent/contract · hs/hr/ha=0 (การโอนโทเคนโปร่งใส) · hst=2 (input/state ของการประมวลผลถูกซ่อน) · tl=1: TEE (conf=med) · mat=2 (conf=low) · hnet=0"
+   "note": "งานประมวลผลซ่อน แต่การเรียก contract ยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://phala.network/",
    "asof": "2026-10-16",
-   "note": "Phala = off-chain compute (TEE) สำหรับ AI agent/contract · hs/hr/ha=0 (การโอนโทเคนโปร่งใส) · hst=2 (input/state ของการประมวลผลถูกซ่อน) · tl=1: TEE (conf=med) · mat=2 (conf=low) · hnet=0"
+   "note": "P2P gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -5034,14 +5034,14 @@
    "conf": "low",
    "src": "https://partisiablockchain.com/",
    "asof": "2026-10-16",
-   "note": "fee/timing เปิด — ต้องยืนยันด้วยการวัด"
+   "note": "contract state ซ่อน แต่ gas/จังหวะยังเห็น"
   },
   "hnet": {
    "v": 0,
-   "conf": "low",
+   "conf": "med",
    "src": "https://partisiablockchain.com/",
    "asof": "2026-10-16",
-   "note": "ไม่มี network privacy ในตัว"
+   "note": "P2P gossip มาตรฐาน"
   },
   "mat": {
    "v": 2,
@@ -5142,14 +5142,14 @@
    "conf": "low",
    "src": "https://octra.org/",
    "asof": "2026-10-16",
-   "note": "Octra = FHE blockchain + isolated execution environments · FHE ครอบทั้งการประมวลผล → hs/hr/ha=1 (conf=low: อ้างว่าเข้ารหัส แต่ยังไม่ยืนยันบน mainnet ที่ใช้งานจริง) · hst=2 · tl=2 (FHE ไม่ต้อง trusted setup, conf=low) · pq=2 (FHE เป็น lattice-based → post-quantum, conf=low) · mat=0 (conf=low) · man=0"
+   "note": "FHE — ยังไม่ยืนยันรูปแบบ metadata"
   },
   "hnet": {
    "v": 0,
    "conf": "low",
    "src": "https://octra.org/",
    "asof": "2026-10-16",
-   "note": "Octra = FHE blockchain + isolated execution environments · FHE ครอบทั้งการประมวลผล → hs/hr/ha=1 (conf=low: อ้างว่าเข้ารหัส แต่ยังไม่ยืนยันบน mainnet ที่ใช้งานจริง) · hst=2 · tl=2 (FHE ไม่ต้อง trusted setup, conf=low) · pq=2 (FHE เป็น lattice-based → post-quantum, conf=low) · mat=0 (conf=low) · man=0"
+   "note": "ไม่พบ network-layer privacy ในตัว"
   },
   "mat": {
    "v": 0,

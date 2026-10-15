@@ -7,6 +7,7 @@ nst/hst rule and the DNA score band (0-100). Exit code 0 = all good.
 
 Usage:  python validate.py
 """
+import gzip
 import json
 import pathlib
 import shutil
@@ -14,6 +15,7 @@ import subprocess
 import sys
 
 D = pathlib.Path(__file__).parent / 'data'
+ROOT = pathlib.Path(__file__).parent
 ID_LOCK = {'ZKP': 'zkpass'}  # symbols shared by two coins -> DNA belongs to this id only
 
 
@@ -29,6 +31,60 @@ def load(name, default=None):
     if not p.exists():
         return default
     return json.loads(p.read_text(encoding='utf-8'))
+
+
+ANOMALY_THRESHOLD = 0.9   # a >90% day-over-day move in cap or volume needs a human look
+
+
+def anomaly_check(syms, ids):
+    """Compare today's market snapshot against the newest history/*.json.gz.
+
+    Flags (as warnings, not errors — a genuine 100% move is possible):
+      * a value that became 0/None while it was non-zero yesterday (feed failure, delisting)
+      * a day-over-day change larger than ANOMALY_THRESHOLD in market cap or volume
+    Returns a list of human-readable strings. Empty list when there is no snapshot to compare to.
+    """
+    hist_files = sorted((ROOT / 'history').glob('*.json.gz'))
+    if not hist_files:
+        return []
+    try:
+        with gzip.open(hist_files[-1], 'rt', encoding='utf-8') as fh:
+            prev = json.load(fh)
+    except Exception as exc:                                  # unreadable snapshot -> say so, don't crash
+        return ['history: could not read %s (%s)' % (hist_files[-1].name, exc)]
+    prev_assets = prev.get('assets') or {}
+
+    today = {}
+    for f in sorted(D.glob('cat_*_p*.json')):
+        try:
+            rows = json.loads(f.read_text(encoding='utf-8'))
+        except Exception:
+            continue
+        for c in rows:
+            today[str(c.get('symbol', '')).upper()] = c
+
+    out = []
+    for s in syms:
+        s = str(s).upper()
+        cur, old = today.get(s), prev_assets.get(s)
+        if not cur or not old:
+            continue
+        for field, label in (('m', 'market cap'), ('v', '24h volume')):
+            nv, ov = cur.get('market_cap' if field == 'm' else 'total_volume'), old.get(field)
+            if ov is None:
+                continue
+            if nv is None or nv == 0:
+                if ov and ov > 0:
+                    out.append('%s: %s became 0 (was %s yesterday) — feed failure or delisting' %
+                               (s, label, ov))
+                else:
+                    out.append('%s: %s reports 0 — no market data for this asset (check the CoinGecko id or a delisting)' %
+                               (s, label))
+                continue
+            if ov > 0 and abs(nv - ov) / ov > ANOMALY_THRESHOLD:
+                out.append('%s: %s moved %.0f%% in one day (%s -> %s) — verify before trusting the build' %
+                           (s, label, 100.0 * (nv - ov) / ov, ov, nv))
+    return out
 
 
 def main():
@@ -63,6 +119,19 @@ def main():
             continue
         if not (D / 'detail' / ('%s.json' % cid)).exists():
             errs.append('%s: missing data/detail/%s.json' % (s, cid))
+
+        # an archived repo forces pillar D to 0 — worth naming, because the link itself may be
+        # stale rather than the project dead (Zcash and Dero were both this case)
+        _dp = D / 'detail' / ('%s.json' % cid)
+        if _dp.exists():
+            try:
+                _det = json.loads(_dp.read_text(encoding='utf-8'))
+            except Exception:
+                _det = {}
+            if _det.get('gh_archived'):
+                warns.append('%s: repo %s ถูก archive → pillar D = 0 (ตรวจว่าเป็น repo ที่ยังดูแลอยู่ — '
+                             'ถ้าไม่ใช่ ให้เพิ่ม override ใน data/curated/repos.json)' %
+                             (s, _det.get('gh_repo_used') or _det.get('gh')))
 
         g = dna3.get(s)
         if not g:
@@ -162,6 +231,16 @@ def main():
             errs.append('%s: engine returned no v2 score' % s_)
         elif not 0 <= sc['v2'] <= 100:
             errs.append('%s: v2 score %s outside 0-100' % (s_, sc['v2']))
+
+    # ---- statistical anomaly detection vs the most recent history snapshot (v3 blueprint §4.4)
+    # A feed that silently returns 0, a delisted coin that keeps its old cap, or a price that
+    # moves an impossible amount in one day would poison P/D/L without failing any schema check.
+    # These are warnings, never errors: a real 100% move is possible, it just needs a look.
+    anomalies = anomaly_check(syms, ids)
+    for a in anomalies:
+        warns.append(a)
+    if anomalies:
+        print('anomaly check: %d value(s) flagged vs the last snapshot' % len(anomalies))
 
     print('checked %d pure-privacy assets' % len(syms))
     v1s = [x['v1'] for x in v2_scores.values() if x.get('v1') is not None]
