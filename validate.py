@@ -83,8 +83,9 @@ def main():
         if mv is not None and mv not in (0, 0.5, 1):
             errs.append('%s: man=%r must be 0, 0.5 or 1' % (s, mv))
         tv = unwrap(g.get('tl'))
-        if tv is not None and tv not in (0, 1, 2):
-            errs.append('%s: tl=%r must be 0, 1 or 2' % (s, tv))
+        # rubric 2.2: 1 = hardware enclave / large trusted-setup ceremony, 1.5 = threshold-MPC
+        if tv is not None and tv not in (0, 1, 1.5, 2):
+            errs.append('%s: tl=%r must be 0, 1, 1.5 or 2' % (s, tv))
         av = unwrap(g.get('aset'))
         if av is not None and (not isinstance(av, (int, float)) or av < 0):
             errs.append('%s: aset=%r must be a non-negative number' % (s, av))
