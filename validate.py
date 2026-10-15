@@ -17,6 +17,13 @@ D = pathlib.Path(__file__).parent / 'data'
 ID_LOCK = {'ZKP': 'zkpass'}  # symbols shared by two coins -> DNA belongs to this id only
 
 
+def unwrap(v):
+    """A gene is either a bare number (v1) or an evidence object {v, conf, src, asof} (v2)."""
+    if isinstance(v, dict):
+        return v.get('v')
+    return v
+
+
 def load(name, default=None):
     p = D / name
     if not p.exists():
@@ -64,15 +71,24 @@ def main():
         if s not in curation:
             warns.append('%s: no entry in curation.json' % s)
 
-        for k in ('hs', 'hr', 'ha', 'hst'):
-            v = g.get(k, 0)
-            if v not in (0, 1, 2):
+        for k in ('hs', 'hr', 'ha', 'hst', 'hmeta', 'hnet', 'mat', 'pq'):
+            v = unwrap(g.get(k))
+            if v is not None and v not in (0, 1, 2):
                 errs.append('%s: %s=%r must be 0, 1 or 2 (ternary)' % (s, k, v))
-        for k in ('man', 'tl', 'big', 'nst'):
-            v = g.get(k, 0)
-            if v not in (0, 1):
+        for k in ('nst', 'brk'):
+            v = unwrap(g.get(k))
+            if v is not None and v not in (0, 1):
                 errs.append('%s: %s=%r must be 0 or 1 (binary)' % (s, k, v))
-        if g.get('nst') and g.get('hst'):
+        mv = unwrap(g.get('man'))
+        if mv is not None and mv not in (0, 0.5, 1):
+            errs.append('%s: man=%r must be 0, 0.5 or 1' % (s, mv))
+        tv = unwrap(g.get('tl'))
+        if tv is not None and tv not in (0, 1, 2):
+            errs.append('%s: tl=%r must be 0, 1 or 2' % (s, tv))
+        av = unwrap(g.get('aset'))
+        if av is not None and (not isinstance(av, (int, float)) or av < 0):
+            errs.append('%s: aset=%r must be a non-negative number' % (s, av))
+        if unwrap(g.get('nst')) and unwrap(g.get('hst')):
             errs.append('%s: nst=1 but hst=%r (state gene must be off)' % (s, g.get('hst')))
         if g.get('g') not in ('coin', 'proto', 'net', 'compute'):
             errs.append('%s: group %r not in coin|proto|net|compute' % (s, g.get('g')))
@@ -81,12 +97,7 @@ def main():
         if not g.get('hist') and g.get('g') == 'coin':
             warns.append('%s: pure currency coin without an event timeline (hist)' % s)
 
-        denom = 8 - (2 if g.get('nst') else 0)
-        cov = min((g.get('hs', 0) + g.get('hr', 0) + g.get('ha', 0) + g.get('hst', 0)) / float(denom), 1.0)
-        score = round(cov * 60 + g.get('man', 0) * 15 + g.get('tl', 0) * 15 + g.get('big', 0) * 10)
-        scores[s] = score
-        if not 0 <= score <= 100:
-            errs.append('%s: DNA score %s outside 0-100' % (s, score))
+        # scores come from engine/score.js only (never re-implemented here)
 
     # reverse check: DNA entries that are not in the pure list
     for s in dna3:
@@ -152,13 +163,13 @@ def main():
             errs.append('%s: v2 score %s outside 0-100' % (s_, sc['v2']))
 
     print('checked %d pure-privacy assets' % len(syms))
-    if scores:
-        ranked = sorted(scores.items(), key=lambda kv: -kv[1])
-        print('score band: %d..%d  |  A+ (>=85): %d  |  median: %d' % (
-            min(scores.values()), max(scores.values()),
-            sum(1 for v in scores.values() if v >= 85),
-            sorted(scores.values())[len(scores) // 2]))
-        print('top 5: ' + ', '.join('%s=%d' % kv for kv in ranked[:5]))
+    v1s = [x['v1'] for x in v2_scores.values() if x.get('v1') is not None]
+    if v1s:
+        ranked = sorted([(k, v['v1']) for k, v in v2_scores.items() if v.get('v1') is not None],
+                        key=lambda kv: -kv[1])
+        print('v1 score range: %d..%d  |  A+ (>=85): %d  |  median: %d' % (
+            min(v1s), max(v1s), sum(1 for v in v1s if v >= 85), sorted(v1s)[len(v1s) // 2]))
+        print('top 5 (v1, the ranking score): ' + ', '.join('%s=%d' % kv for kv in ranked[:5]))
     for w in warns:
         print('  ! %s' % w)
     for e in errs:
