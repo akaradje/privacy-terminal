@@ -86,17 +86,19 @@ function evalCoin(c) {
   if (!c) return {};
   if (_evalCache[c.s]) return _evalCache[c.s];
   var d = dna(c), dt = det(c);
-  var pl = null, asy = null, fl = [], pos = [], m = {};
+  var pl = null, asy = null, sf = null, fl = [], pos = [], m = {};
   try { pl = pillarsOf(d, c, dt, ASOF_DATE); } catch (e) { pl = null; }
   try { asy = asymmetryOf(d, c, dt, ASOF_DATE); } catch (e) { asy = null; }
+  try { sf = supplyForensicsOf(c, d); } catch (e) { sf = null; }
   try {
     m = metricsFor(c, dt, d, ASOF_DATE);
     fl = evaluateFlags(m);
     pos = evaluatePositives(m);
   } catch (e) { fl = []; pos = []; }
   var posIds = pos.map(function (p) { return p.id; });
+  var flagIds = fl.map(function (f) { return f.id; });
   var hasCrit = fl.some(function (f) { return f.lv === 'CRITICAL'; });
-  var res = { pl: pl, asy: asy, fl: fl, pos: pos, posIds: posIds, hasCrit: hasCrit, m: m };
+  var res = { pl: pl, asy: asy, sf: sf, fl: fl, flagIds: flagIds, pos: pos, posIds: posIds, hasCrit: hasCrit, m: m };
   _evalCache[c.s] = res;
   return res;
 }
@@ -118,7 +120,7 @@ function archetypeBadge(arch) {
 
 /* Clear investment verdict badge for quick decision making */
 function verdictOf(c) {
-  var d = dna(c), ev = evalCoin(c), asy = ev.asy, pids = ev.posIds || [];
+  var d = dna(c), ev = evalCoin(c), asy = ev.asy, sf = ev.sf, pids = ev.posIds || [];
   if (gval(d, 'sanctioned')) {
     return { cls: 'vb-risk', lbl: '🚨 ถูกคว่ำบาตร (Sanctioned)', desc: 'มีความเสี่ยงทางกฎหมายและถูกถอดจากกระดานหลัก' };
   }
@@ -128,14 +130,17 @@ function verdictOf(c) {
   if (!asy || !ev.pl || ev.pl.P == null) {
     return { cls: 'vb-watch', lbl: '⏳ รอเติมหลักฐาน P', desc: 'ข้อมูลความลับยังไม่ครบ 80% จึงยังไม่จัดอันดับ Bull Run' };
   }
-  if (ev.m && ev.m.fdv_mcap > 2.5) {
-    return { cls: 'vb-warn', lbl: '⚠️ ระวังเหรียญล็อก (FDV สูง)', desc: 'พื้นฐานดีแต่มีเหรียญล็อกรอปลดปล่อยสูง อาจกดดันราคาในระยะยาว' };
+  if (sf && sf.tier === 'CRITICAL_LOCK') {
+    return { cls: 'vb-risk', lbl: '🚨 ระวังปลดล็อกหนัก (FDV ' + sf.fdvMcap + 'x)', desc: 'มีเหรียญเสกล็อกอยู่ ' + sf.lockedPct + '% ของอุปทาน — ห้ามไล่ราคา ต้องรอจังหวะย่อ/ปลดล็อก' };
   }
-  if (asy.archetype === 'ZEC-ARCHETYPE' && asy.score >= 72) {
-    return { cls: 'vb-top', lbl: '🟢 ตัวเต็งพิมพ์เขียว ZEC', desc: 'มี Viewing Key (comp=2) + ความลับแข็ง + โค้ด Active + Mcap มีรูมวิ่ง' };
+  if (sf && sf.tier === 'HEAVY_LOCK') {
+    return { cls: 'vb-warn', lbl: '⚠️ เหรียญล็อกสูง (' + sf.lockedPct + '% Locked)', desc: 'มีเหรียญเสกรอปลดล็อกเกินครึ่งของตลาด ต้องหักส่วนลด Dilution เวลาตั้งเป้ากำไร' };
   }
-  if (pids.indexOf('asymmetric_gem') >= 0 || asy.score >= 74) {
-    return { cls: 'vb-gem', lbl: '💎 เพชรซ่อนมูลค่า (Gem)', desc: 'คะแนนพื้นฐานระดับแถวหน้า แต่ Market Cap ยังอยู่ในโซนสะสม ($5M–$600M)' };
+  if (asy.archetype === 'ZEC-ARCHETYPE' && asy.score >= 70 && (!sf || sf.lockedPct <= 25)) {
+    return { cls: 'vb-top', lbl: '🟢 ตัวเต็งพิมพ์เขียว ZEC', desc: 'มี Viewing Key (comp=2) + ความลับแข็ง + โค้ด Active + โครงสร้างเหรียญสะอาด' };
+  }
+  if (pids.indexOf('asymmetric_gem') >= 0 || (asy.score >= 72 && (!sf || sf.lockedPct <= 22))) {
+    return { cls: 'vb-gem', lbl: '💎 เพชรเม็ดงาม (Clean Gem)', desc: 'พื้นฐานแถวหน้า + Market Cap โซนสะสม + ไร้ระเบิดเวลา VC Unlock' };
   }
   if (asy.archetype === 'SOVEREIGN-PRIV' && asy.score >= 65) {
     return { cls: 'vb-sov', lbl: '🛡️ เหรียญหลักสายแข็ง', desc: 'กลไกความลับระดับสูงสุด (Default/Mandatory) ผ่านการพิสูจน์ตามกาลเวลา' };
@@ -158,7 +163,7 @@ function calcTarget(c, targetMcap) {
   var mult = targetMcap / c.m;
   var targetPrice = c.p * mult;
   var fdvMult = mult;
-  var maxS = c.ms || c.ts;
+  var maxS = Math.max(c.ms || 0, c.ts || 0);
   if (maxS && c.cs && maxS > c.cs && c.cs > 0) {
     fdvMult = targetMcap / (c.p * maxS);
   }
@@ -224,13 +229,14 @@ function gradeCls(s) {
 
 function matchBullMode(c, mode) {
   if (!mode || mode === 'all') return true;
-  var ev = evalCoin(c);
+  var ev = evalCoin(c), sf = ev.sf;
   var pids = ev.posIds || [];
   if (mode === 'zec') return pids.indexOf('zec_archetype') >= 0 || (ev.asy && ev.asy.archetype === 'ZEC-ARCHETYPE');
-  if (mode === 'gem') return pids.indexOf('asymmetric_gem') >= 0;
+  if (mode === 'gem') return pids.indexOf('asymmetric_gem') >= 0 || (ev.asy && ev.asy.score >= 70 && (c.m || 0) >= 4e6 && (c.m || 0) <= 6.5e8 && (!sf || sf.lockedPct <= 22) && !ev.hasCrit);
   if (mode === 'sov') return !!(ev.asy && ev.asy.archetype === 'SOVEREIGN-PRIV');
   if (mode === 'accum') return pids.indexOf('early_accumulation') >= 0;
-  if (mode === 'safe') return !ev.hasCrit && !gval(dna(c), 'sanctioned');
+  if (mode === 'overhang') return !!(sf && (sf.fdvMcap > 1.75 || sf.lockedPct >= 30));
+  if (mode === 'safe') return !ev.hasCrit && !gval(dna(c), 'sanctioned') && (!sf || sf.tier !== 'CRITICAL_LOCK');
   return true;
 }
 
@@ -239,11 +245,12 @@ function renderPillBar() {
   if (!pb) return;
   var modes = [
     ['all', 'ทั้งหมด'],
+    ['gem', '💎 เพชรเม็ดงามไร้ล็อก (Clean Gems · โซนสะสม)'],
     ['zec', '🟢 พิมพ์เขียว ZEC (comp=2 · โค้ด Active)'],
-    ['gem', '💎 เพชรซ่อนมูลค่า (Score ≥64 · Mcap <$600M)'],
-    ['sov', '🛡️ Sovereign Privacy (P ≥65 · Default/Mandatory)'],
-    ['accum', '🚀 สัญญาณสะสมต้นรอบ (Volume + Momentum)'],
-    ['safe', '✅ ปลอดภัย (ไร้ CRITICAL Flag)']
+    ['sov', '🛡️ Sovereign Privacy (P ≥65 · Default)'],
+    ['accum', '🚀 สัญญาณสะสมต้นรอบ (Vol + Momentum)'],
+    ['overhang', '🚨 สแกนเหรียญติดล็อก FDV Overhang (>1.75x)'],
+    ['safe', '✅ ปลอดภัย (ไร้ CRITICAL & ไร้ VC Dump)']
   ];
   var html = '<span class="pLbl">กรองด่วนเพื่อลงทุน:</span>';
   for (var i = 0; i < modes.length; i++) {
@@ -410,14 +417,100 @@ var GENE_LABELS = [
   ['comp', '14. เครื่องมือรองรับกฎหมาย (Compliance / Viewing Key)', function (v) { return v === 2 ? 'มี Viewing Keys / Selective Disclosure / Proof of Innocence (2/2)' : (v === 1 ? 'เปิดเผยได้เฉพาะรายธุรกรรมพื้นฐาน หรือซ่อนเฉพาะ IP (1/2)' : 'ไม่มีเครื่องมือเปิดเผยข้อมูลย้อนหลัง (0/2)'); }]
 ];
 
+function flagForensicHtml(f, c, ev) {
+  var sf = ev.sf || {}, m = ev.m || {}, dt = det(c);
+  if (f.id === 'fdv_overhang' || f.id === 'locked_overhang') {
+    var isPow = (sf.lockedPct < 10 && sf.unminedPct >= 20);
+    var detail = isPow
+      ? '<b>🔍 เจาะลึกโครงสร้างจริง (ไม่ใช่ VC ล็อก):</b> แม้ FDV จะเป็น <b>' + sf.fdvMcap + 'x</b> ของ Mcap แต่เหรียญที่เสกออกมาแล้วหมุนเวียนอยู่ในตลาดถึง <b>' + sf.circPct + '%</b> (ล็อกจริง <b>' + sf.lockedPct + '%</b>) ส่วนที่เหลืออีก <b>' + fmtNum(sf.unminedTokens) + ' ' + c.s + ' (' + sf.unminedPct + '%)</b> คือเหรียญที่ยังไม่ถูกสร้าง (รอขุดตามบล็อกในอนาคตหลายปี) จึง<b>ไม่มีก้อนเหรียญ VC รอเทขายทันที</b>'
+      : '<b>🔍 ผ่าตัวเลขแรงเทขายจากเหรียญที่ล็อกอยู่จริง:</b><br>' +
+        '• <b>เหรียญหมุนเวียนในตลาด (Circulating):</b> ' + fmtNum(sf.cs) + ' ' + c.s + ' (<b>' + sf.circPct + '%</b> ของอุปทานสูงสุด) · มูลค่าตลาด <b>$' + fmtCompact(c.m) + '</b><br>' +
+        '• <b>เหรียญที่เสกออกมาแล้วแต่ยังล็อกอยู่ (Pre-Minted Locked):</b> <span class="down"><b>' + fmtNum(sf.lockedTokens) + ' ' + c.s + ' (' + sf.lockedPct + '%)</b></span> คิดเป็นมูลค่ารอปลดล็อกสูงถึง <b class="down">' + fmtUsd(sf.lockedUsd) + '</b> ณ ราคาปัจจุบัน!<br>' +
+        (sf.unminedTokens > 0 ? '• <b>เหรียญที่ยังไม่ถูกสร้าง/รอขุดตามโปรโตคอล (Unmined):</b> ' + fmtNum(sf.unminedTokens) + ' ' + c.s + ' (' + sf.unminedPct + '%)<br>' : '') +
+        '• <b>ทดสอบความเสี่ยงสภาพคล่อง (Liquidity Stress-Test):</b> วอลุ่มเทรด 24 ชม. ทั้งตลาด ($' + fmtCompact(c.v) + '/วัน) ต้องใช้เวลาถึง <b>' + (sf.daysToAbsorbLocked || '—') + ' วันเต็ม</b> เพื่อรับซื้อเหรียญที่ล็อกอยู่ทั้งหมด และหากมีการปลดล็อกออกมาเพียง <b>5% ของก้อนที่ล็อก</b> จะคิดเป็น <b>' + (sf.shock5PctOfVol || '—') + '% ของวอลุ่มเทรดรายวัน</b><br>' +
+        '• <b>ผลกระทบต่อราคาและกำไรของคุณ:</b> อัตราส่วน FDV/Mcap = <b>' + sf.fdvMcap + 'x</b> แปลว่าต้องมีเม็ดเงินใหม่ไหลเข้าซื้อสุทธิอีก <b>' + fmtUsd(sf.newCashNeeded) + '</b> เพื่อประคองราคาเดิมไม่ให้ร่วงเมื่อเหรียญปลดล็อกครบ (หาก Market Cap โต 10x ราคาเหรียญจริงจะขึ้นได้เพียง <b>' + (10 / sf.fdvMcap).toFixed(2) + 'x</b>)';
+    return '<div class="flgSub">' + detail +
+      '<div><a class="flgJump" href="#tokCard_' + c.s + '" onclick="var el=document.getElementById(\'tokCard_' + c.s + '\');if(el){el.scrollIntoView({behavior:\'smooth\',block:\'center\'});el.style.boxShadow=\'0 0 0 2px #f5a623\';}return false;">🔬 ดูตารางชำแหละ Tokenomics &amp; แรงเทขายเหรียญล็อกแบบละเอียดยิบด้านล่าง ↓</a></div></div>';
+  }
+  if (f.id === 'dead_repo' || f.id === 'dev_stalled') {
+    return '<div class="flgSub"><b>🔍 ข้อมูลจริงจาก GitHub:</b> Repo <code>' + (dt.gh_repo_used || '—') + '</code> มีการ Push โค้ดล่าสุดเมื่อ <b>' + (dt.gh_pushed || 'ไม่ทราบ') + ' (' + (m.days_since_push || '—') + ' วันที่แล้ว)</b> · <i>แนวทางรับมือ: ระวังการถือยาวหากทีมพัฒนาไม่ออกอัปเดตหลัก</i></div>';
+  }
+  if (f.id === 'illiquid') {
+    return '<div class="flgSub"><b>🔍 ข้อมูลสภาพคล่องจริง:</b> วอลุ่มเทรด 24 ชม. อยู่ที่ <b>$' + fmtCompact(c.v) + '</b> เทียบกับ Mcap <b>$' + fmtCompact(c.m) + '</b> (Turnover เพียง <b>' + ((m.turnover || 0) * 100).toFixed(2) + '%/วัน</b>) · <i>แนวทางรับมือ: ห้ามลงเงินก้อนใหญ่ในไม้เดียว เพราะเวลาขายออกจะเกิด Slippage กดราคาตัวเอง</i></div>';
+  }
+  if (f.id === 'wash_suspicion') {
+    return '<div class="flgSub"><b>🔍 ข้อมูลสภาพคล่องจริง:</b> วอลุ่มเทรด 24 ชม. (<b>$' + fmtCompact(c.v) + '</b>) สูงกว่ามูลค่าตลาดรวม (<b>$' + fmtCompact(c.m) + '</b>) คิดเป็น Turnover <b>' + ((m.turnover || 0) * 100).toFixed(0) + '%/วัน</b> · <i>แนวทางรับมือ: ระวังความผันผวนระยะสั้นหรือการปั่นวอลุ่มของ Market Maker</i></div>';
+  }
+  if (f.id === 'micro_cap') {
+    return '<div class="flgSub"><b>🔍 ข้อมูลขนาดตลาด:</b> Market Cap ปัจจุบันอยู่ที่ <b>$' + fmtCompact(c.m) + '</b> (ลิสต์อยู่ <b>' + (dt.ex_count || '—') + ' กระดาน</b>) · <i>แนวทางรับมือ: มีโอกาสเติบโตหลายเด้งแต่ความเสี่ยงสูง ควรจำกัดสัดส่วนไม่เกิน 2%–5% ของพอร์ต</i></div>';
+  }
+  return '';
+}
+
+function tokForensicCard(c, ev) {
+  var sf = ev.sf;
+  if (!sf) return '';
+  var tBadge = '';
+  var alertBox = '';
+  if (sf.tier === 'CRITICAL_LOCK') {
+    tBadge = '<span class="vBadge vb-risk">🚨 CRITICAL OVERHANG (' + sf.fdvMcap + 'x FDV/Mcap · ล็อก ' + sf.lockedPct + '%)</span>';
+    alertBox = '<div class="tokAlert crit"><b>🚨 คำเตือนระดับสูงสุด (VC / Team Unlock Overhang):</b> เหรียญ <b>' + c.s + '</b> มีเหรียญที่เสกออกมาแล้วแต่ยังล็อกอยู่ถึง <b>' + fmtNum(sf.lockedTokens) + ' เหรียญ (' + sf.lockedPct + '% ของอุปทานทั้งหมด)</b> คิดเป็นมูลค่า <b>' + fmtUsd(sf.lockedUsd) + '</b> ณ ราคาปัจจุบัน (สูงกว่ามูลค่าตลาดหมุนเวียนปัจจุบันถึง <b>' + (sf.fdvMcap - 1).toFixed(2) + ' เท่า</b>) · <b>กลยุทธ์ที่แนะนำ (แบบไม่กาว):</b> <u>ห้ามไล่ราคาเมื่อเหรียญพุ่งแรง</u> เพราะทุกครั้งที่ราคาขึ้น กองทุน/ทีมงานที่มีต้นทุนต่ำจะมีแรงจูงใจเทขายเมื่อปลดล็อก หากต้องการลงทุนควรแบ่งไม้เล็กเก็งกำไรตามรอบ หรือรอให้สัดส่วนเหรียญหมุนเวียนเกิน 50% ก่อนถือยาว</div>';
+  } else if (sf.tier === 'HEAVY_LOCK') {
+    tBadge = '<span class="vBadge vb-warn">⚠️ HEAVY LOCKED OVERHANG (' + sf.fdvMcap + 'x · ล็อก ' + sf.lockedPct + '%)</span>';
+    alertBox = '<div class="tokAlert warn"><b>⚠️ ข้อควรระวัง (เหรียญล็อกระดับสูง):</b> มีเหรียญเสกไว้แล้วรอปลดล็อก <b>' + fmtNum(sf.lockedTokens) + ' เหรียญ (' + sf.lockedPct + '%)</b> มูลค่า <b>' + fmtUsd(sf.lockedUsd) + '</b> · เวลาตั้งเป้าหมายราคาในรอบ Bull Run ต้องดูช่อง <b>"เด้งสุทธิ (หักเหรียญล็อก FDV)"</b> เป็นหลัก เพราะกำไรต่อเหรียญจะถูกหารด้วยจำนวนเหรียญที่เพิ่มขึ้นประมาณ <b>' + sf.fdvMcap + ' เท่า</b></div>';
+  } else if (sf.tier === 'MOD_LOCK') {
+    tBadge = '<span class="vBadge vb-watch">🔸 MODERATE VESTING (' + sf.fdvMcap + 'x · ล็อก ' + sf.lockedPct + '%)</span>';
+    alertBox = '<div class="tokAlert warn"><b>🔸 โครงสร้างเหรียญมีส่วนล็อกปานกลาง (' + sf.lockedPct + '%):</b> เหรียญหมุนเวียนแล้ว <b>' + sf.circPct + '%</b> ยังมีเหรียญที่ล็อกอยู่ในคลัง/ทีมงานอีก <b>' + fmtNum(sf.lockedTokens) + ' เหรียญ (' + fmtUsd(sf.lockedUsd) + ')</b> แรงกดดันการเทขายอยู่ในระดับที่ตลาดพอซับได้ (ใช้วอลุ่มราว <b>' + sf.daysToAbsorbLocked + ' วัน</b>) แต่ยังต้องหักส่วนลด Dilution ราว <b>' + Math.round(100 - sf.retentionPct) + '%</b></div>';
+  } else if (sf.tier === 'POW_EMISSION') {
+    tBadge = '<span class="vBadge vb-top">⛏️ PROTOCOL / POW EMISSION (' + sf.circPct + '% หมุนเวียน · ล็อก VC 0%)</span>';
+    alertBox = '<div class="tokAlert pow"><b>⛏️ โครงสร้างปลอดภัยจาก VC Dump (Unmined Protocol Emission):</b> แม้เพดานสูงสุด (Max Supply) จะทำให้ FDV สูงกว่า Mcap <b>' + sf.fdvMcap + 'x</b> แต่เหรียญที่เสกออกมาแล้วหมุนเวียนอยู่ในตลาดเกือบ 100% (<b>Pre-minted Locked = ' + sf.lockedPct + '%</b>) ส่วนที่เหลืออีก <b>' + fmtNum(sf.unminedTokens) + ' เหรียญ (' + sf.unminedPct + '%)</b> คือเหรียญที่ยังไม่ได้ถูกสร้างและต้องค่อยๆ ขุดตามบล็อกในอนาคตหลายสิบปี จึง<b>ไม่มีแรงเทขายก้อนใหญ่แบบเหรียญ VC</b></div>';
+  } else {
+    tBadge = '<span class="vBadge vb-gem">💎 CLEAN FLOAT (' + sf.circPct + '% หมุนเวียน · ไร้แรงเทขายเหรียญล็อก)</span>';
+    alertBox = '<div class="tokAlert ok"><b>💎 โครงสร้าง Tokenomics สะอาดระดับดีเยี่ยม (Clean Float):</b> เหรียญหมุนเวียนในตลาดแล้วถึง <b>' + sf.circPct + '%</b> (ไร้ก้อนเหรียญล็อกของ VC หรือทีมงานรอทุบ) เมื่อมีเม็ดเงินไหลเข้าซื้อในรอบ Bull Run เม็ดเงินเกือบ <b>' + sf.retentionPct + '%</b> จะส่งผลดันราคาเหรียญขึ้นโดยตรงเหมือนกรณี Zcash และ Monero!</div>';
+  }
+
+  var shockTxt = sf.lockedTokens <= 0
+    ? '<span class="up">0% (ไม่มีเหรียญเสกล็อกอยู่)</span>'
+    : '<b class="' + (sf.shock5PctOfVol > 100 ? 'down' : (sf.shock5PctOfVol > 30 ? 'acc' : 'up')) + '">' + sf.shock5PctOfVol + '% ของวอลุ่มรายวัน</b> (' + fmtUsd(sf.lockedUsd * 0.05) + ')';
+
+  var absorbTxt = sf.lockedTokens <= 0
+    ? '<span class="up">0 วัน (ปลอดเหรียญล็อก)</span>'
+    : '<b class="' + (sf.daysToAbsorbLocked > 30 ? 'down' : (sf.daysToAbsorbLocked > 7 ? 'acc' : 'up')) + '">' + sf.daysToAbsorbLocked + ' วัน</b> (เทียบ Vol 24h $' + fmtCompact(c.v) + ')';
+
+  return '<div class="ddCard" id="tokCard_' + c.s + '" style="margin-bottom:14px;border-color:' + (sf.tier === 'CRITICAL_LOCK' ? '#8c2d2f' : 'var(--line2)') + '">' +
+    '<h3>🔓 3. ผ่าโครงสร้าง Tokenomics, FDV Overhang &amp; วิเคราะห์แรงเทขายเหรียญล็อกแบบละเอียดยิบ (Supply &amp; Unlock Stress-Test) ' + tBadge + '</h3>' +
+    '<div class="supBar3">' +
+    '<i style="width:' + sf.circPct + '%;background:#2ecc71" title="หมุนเวียนในตลาด (Circulating): ' + sf.circPct + '%"></i>' +
+    '<i style="width:' + sf.lockedPct + '%;background:#ff5a5c" title="เสกแล้วแต่ยังล็อกอยู่ (Pre-Minted Locked Overhang): ' + sf.lockedPct + '%"></i>' +
+    '<i style="width:' + sf.unminedPct + '%;background:#4cc2ff" title="ยังไม่ถูกสร้าง/รอขุดตามบล็อก (Unmined Future Emission): ' + sf.unminedPct + '%"></i>' +
+    '</div>' +
+    '<div class="supLeg">' +
+    '<span><b class="dot" style="background:#2ecc71"></b> <b>1. หมุนเวียนในตลาด (Circulating):</b> ' + fmtNum(sf.cs) + ' ' + c.s + ' (<b>' + sf.circPct + '%</b> · Mcap $' + fmtCompact(c.m) + ')</span>' +
+    '<span><b class="dot" style="background:#ff5a5c"></b> <b>2. เสกแล้วแต่ล็อกอยู่ (Pre-Minted Locked — แรงเทขายจริง):</b> <b class="' + (sf.lockedPct > 25 ? 'down' : '') + '">' + fmtNum(sf.lockedTokens) + ' ' + c.s + ' (' + sf.lockedPct + '% · มูลค่า ' + (sf.lockedUsd > 0 ? fmtUsd(sf.lockedUsd) : '$0') + ')</b></span>' +
+    '<span><b class="dot" style="background:#4cc2ff"></b> <b>3. ยังไม่ถูกสร้าง/รอขุดตามบล็อก (Unmined Emission):</b> ' + (sf.isUncapped ? 'ไม่จำกัดเพดาน (Tail Emission ตามบล็อก)' : fmtNum(sf.unminedTokens) + ' ' + c.s + ' (' + sf.unminedPct + '%)') + '</span>' +
+    '</div>' +
+    '<div class="thesisGrid">' +
+    '<div class="tBox"><div class="tk">1. อัตราส่วน FDV / Market Cap จริง</div><div class="tv"><b class="mono ' + (sf.fdvMcap > 2.5 ? 'down' : 'up') + '" style="font-size:15px">' + sf.fdvMcap + 'x</b> <span class="dim">(FDV $' + fmtCompact(sf.effectiveFdv) + ' vs Mcap $' + fmtCompact(c.m) + ')</span></div></div>' +
+    '<div class="tBox"><div class="tk">2. เหรียญเสกแล้วที่ล็อกรอปลด (Locked Supply)</div><div class="tv"><b class="mono ' + (sf.lockedPct > 25 ? 'down' : 'up') + '">' + fmtNum(sf.lockedTokens) + ' ' + c.s + '</b> <span class="dim">(' + sf.lockedPct + '% ของเพดานทั้งหมด)</span></div></div>' +
+    '<div class="tBox"><div class="tk">3. มูลค่าดอลลาร์ของก้อนที่ล็อกอยู่ ณ ปัจจุบัน</div><div class="tv"><b class="mono ' + (sf.lockedUsd > (c.m || 0) ? 'down' : '') + '" style="font-size:15px">' + (sf.lockedUsd > 0 ? fmtUsd(sf.lockedUsd) : '$0 (ไม่มีเหรียญล็อก)') + '</b></div></div>' +
+    '<div class="tBox"><div class="tk">4. วอลุ่มตลาดต้องใช้กี่วันเพื่อซับเหรียญล็อกทั้งหมด</div><div class="tv">' + absorbTxt + '</div></div>' +
+    '<div class="tBox"><div class="tk">5. จำลอง Unlock Shock (หากปลดล็อกออกมา 5%)</div><div class="tv">' + shockTxt + '</div></div>' +
+    '<div class="tBox"><div class="tk">6. เม็ดเงินใหม่ที่ต้องไหลเข้าเพื่อยันราคาเดิม</div><div class="tv"><b class="mono">' + (sf.newCashNeeded > 0 ? fmtUsd(sf.newCashNeeded) : '$0') + '</b> <span class="dim">เมื่อปลดล็อกครบ 100%</span></div></div>' +
+    '<div class="tBox"><div class="tk">7. ประสิทธิภาพการส่งผ่านราคา (Price Retention)</div><div class="tv"><b class="mono ' + (sf.retentionPct >= 75 ? 'up' : (sf.retentionPct >= 45 ? 'acc' : 'down')) + '">' + sf.retentionPct + '%</b> <span class="dim">(Mcap โต 10x → ราคาจริงโต <b>' + (10 * sf.retentionPct / 100).toFixed(2) + 'x</b>)</span></div></div>' +
+    '<div class="tBox"><div class="tk">8. คะแนนความสะอาด Tokenomics (ในสูตร Bull)</div><div class="tv"><b class="mono" style="font-size:15px">' + sf.tokScore + ' / 100</b> <span class="dim">(หักน้ำหนักเหรียญล็อก 100% · รอขุด 40%)</span></div></div>' +
+    '</div>' +
+    alertBox +
+    '</div>';
+}
+
 function dnaPanel(c) {
   var d = dna(c), q = cur(c.s), dt = det(c), ev = evalCoin(c);
-  var pl = ev.pl || {}, asy = ev.asy, vd = verdictOf(c);
+  var pl = ev.pl || {}, asy = ev.asy, sf = ev.sf || {}, vd = verdictOf(c);
   var p2 = pl.Pdetail, v1 = gradeOf(d);
   var cr = compositeRank(c, 'privacy_investor'), bh = compositeRank(c, 'bull_hunter'), br = compositeRank(c, 'asymmetry');
   var inv = state.invAmt || 1000;
 
-  var fdvVal = c.fdv || ((c.m && c.cs && (c.ms || c.ts)) ? (c.p * (c.ms || c.ts)) : c.m);
+  var fdvVal = sf.effectiveFdv || c.fdv || c.m;
   var turnPct = (c.m && c.v) ? ((c.v / c.m) * 100).toFixed(2) + '%' : '—';
 
   /* Top Executive Banner */
@@ -432,7 +525,7 @@ function dnaPanel(c) {
     '<div class="ddKpi"><div class="kLbl">สถานะวิเคราะห์</div><div><span class="vBadge ' + vd.cls + '">' + vd.lbl + '</span></div></div>' +
     '<div class="ddKpi"><div class="kLbl">Composite Score</div><div class="kVal gA">' + (cr ? cr.v + '/100 <span class="dim" style="font-size:11px">(#' + cr.r + ')</span>' : '—') + '</div></div>' +
     '<div class="ddKpi"><div class="kLbl">Bull Upside Score</div><div class="kVal acc">' + (asy ? asy.score + '/100 <span class="dim" style="font-size:11px">(#' + (br ? br.r : '—') + ')</span>' : '—') + '</div></div>' +
-    '<div class="ddKpi"><div class="kLbl">Mcap / FDV</div><div class="kVal">$' + fmtCompact(c.m) + ' <span class="dim" style="font-size:11px">/ $' + fmtCompact(fdvVal) + '</span></div></div>' +
+    '<div class="ddKpi"><div class="kLbl">Mcap / FDV (' + (sf.fdvMcap || 1) + 'x)</div><div class="kVal">$' + fmtCompact(c.m) + ' <span class="dim" style="font-size:11px">/ $' + fmtCompact(fdvVal) + '</span></div></div>' +
     '<div class="ddKpi"><div class="kLbl">สภาพคล่อง (Turnover)</div><div class="kVal">' + turnPct + ' <span class="dim" style="font-size:11px">(' + (dt.ex_count || '—') + ' กระดาน)</span></div></div>' +
     '</div></div>';
 
@@ -487,10 +580,10 @@ function dnaPanel(c) {
   } else {
     roiRows = '<tr><td colspan="5" class="dim">ไม่มีข้อมูลราคาหรือ Market Cap สำหรับจำลองผลตอบแทน</td></tr>';
   }
-  var maxS = c.ms || c.ts;
-  var floatPct = (c.cs && maxS && maxS > 0) ? Math.min(100, Math.round((c.cs / maxS) * 100)) : null;
+  var maxS = sf.effMax || c.ms || c.ts;
+  var floatPct = sf.circPct != null ? Math.round(sf.circPct) : null;
   var card2 = '<div class="ddCard"><h3>💰 2. จำลองเป้าหมายราคา &amp; ผลตอบแทน (เมื่อลงทุน $' + inv.toLocaleString('en-US') + ') ' +
-    '<span class="subH">Supply หมุนเวียน: ' + (floatPct != null ? floatPct + '% (' + fmtNum(c.cs) + ' / ' + fmtNum(maxS) + ')' : (c.cs ? fmtNum(c.cs) + ' / ไม่จำกัดเพดาน' : '—')) + '</span></h3>' +
+    '<span class="subH">หมุนเวียน: ' + (floatPct != null ? floatPct + '% (' + fmtNum(c.cs) + ' / ' + fmtNum(maxS) + ')' : (c.cs ? fmtNum(c.cs) + ' / ไม่จำกัดเพดาน' : '—')) + '</span></h3>' +
     '<table class="roiTbl"><thead><tr>' +
     '<th>สถานการณ์เป้าหมายในรอบ Bull Run</th>' +
     '<th class="num">ราคาเป้าหมาย</th>' +
@@ -500,7 +593,10 @@ function dnaPanel(c) {
     '</tr></thead><tbody>' + roiRows + '</tbody></table>' +
     '<div class="dim" style="font-size:11px;margin-top:7px">* หมายเหตุ: ช่อง "เด้งสุทธิ (หักเหรียญล็อก FDV)" คำนวณกรณีเหรียญที่ล็อกอยู่ถูกปลดล็อกออกมาทั้งหมด เพื่อป้องกันกับดักเหรียญ VC ที่ตั้ง Market Cap เริ่มต้นต่ำแต่มี Supply รอเทขาย</div></div>';
 
-  /* Card 3: 6-Pillar Gauges + Bull-Run Asymmetry Breakdown */
+  /* Card 3: Tokenomics & FDV Overhang Forensics */
+  var cardTok = tokForensicCard(c, ev);
+
+  /* Card 4: 6-Pillar Gauges + Bull-Run Asymmetry Breakdown */
   var dd = pl.Ddetail;
   var pMeta = [
     ['P — Privacy Strength (ความแข็งของกลไกความลับ)', pl.P, p2 ? 'ช่วงความเชื่อมั่น ±' + p2.band + ' · หลักฐาน ' + Math.round(p2.coverage * 100) + '% · เกรด v1 = ' + (v1 != null ? v1 : '—') : 'วัดจากการซ่อนผู้ส่ง/ผู้รับ/จำนวน/State/Metadata'],
@@ -526,11 +622,11 @@ function dnaPanel(c) {
       '<span class="chip">3. ความสะอาด Tokenomics (15%) = <b>' + asy.tokenomics + '</b></span> ' +
       '<span class="chip">4. ท่อรับเงินตลาดกระทิง (15%) = <b>' + asy.rails + '</b></span></div>';
   }
-  var card3 = '<div class="ddCard"><h3>📊 3. คะแนนวิเคราะห์เชิงลึกครบ 6 เสาหลัก (6-Pillar Institutional Breakdown) ' +
+  var card3 = '<div class="ddCard"><h3>📊 4. คะแนนวิเคราะห์เชิงลึกครบ 6 เสาหลัก (6-Pillar Institutional Breakdown) ' +
     '<span class="subH">Privacy Investor: ' + (cr ? cr.v : '—') + ' · Bull Hunter: ' + (bh ? bh.v : '—') + '</span></h3>' +
     '<div class="pGaugeList">' + gaugesHtml + '</div>' + asySubHtml + '</div>';
 
-  /* Card 4: Bull Catalysts vs Red Flags */
+  /* Card 5: Bull Catalysts vs Red Flags (with Deep Forensic Drill-Downs) */
   var posList = (ev.pos || []).map(function (p) {
     return '<li class="posItem"><span>🟢</span><div><b>' + p.id + ':</b> ' + p.msg + '</div></li>';
   }).join('');
@@ -539,18 +635,18 @@ function dnaPanel(c) {
   var flgList = (ev.fl || []).map(function (f) {
     var cls = (f.lv === 'CRITICAL' || f.lv === 'HIGH') ? 'flgItem' : 'medItem';
     var ic = f.lv === 'CRITICAL' ? '🚨' : (f.lv === 'HIGH' ? '⚠️' : '🔸');
-    return '<li class="' + cls + '"><span>' + ic + '</span><div><b>[' + f.lv + ' · ' + f.id + ']</b> ' + f.msg + '</div></li>';
+    return '<li class="' + cls + '"><span>' + ic + '</span><div style="width:100%"><div><b>[' + f.lv + ' · ' + f.id + ']</b> ' + f.msg + '</div>' + flagForensicHtml(f, c, ev) + '</div></li>';
   }).join('');
-  if (!flgList) flgList = '<li class="posItem"><span>✅</span><div><b>ไม่พบธงแดง (0 Red Flags):</b> ผ่านเกณฑ์ตรวจสอบความเสี่ยงพื้นฐานทั้งหมด</div></li>';
+  if (!flgList) flgList = '<li class="posItem"><span>✅</span><div><b>ไม่พบธงแดง (0 Red Flags):</b> ผ่านเกณฑ์ตรวจสอบความเสี่ยงพื้นฐานและไม่มีระเบิดเวลา FDV Overhang</div></li>';
 
-  var card4 = '<div class="ddCard"><h3>⚡ 4. สัญญาณบวกหนุนราคา (Bull Catalysts) vs สัญญาณเตือนภัย (Red Flags) ' +
+  var card4 = '<div class="ddCard"><h3>⚡ 5. สัญญาณบวกหนุนราคา (Bull Catalysts) vs เจาะลึกความเสี่ยงธงแดง (Red Flags Forensics) ' +
     '<span class="subH">บวก ' + (ev.pos ? ev.pos.length : 0) + ' · เตือน ' + (ev.fl ? ev.fl.length : 0) + '</span></h3>' +
     '<div class="ddGrid2" style="margin-bottom:0;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">' +
     '<div><div style="font-weight:700;color:var(--up);margin-bottom:6px;font-size:12px">🟢 ปัจจัยบวกและสัญญาณต้นรอบ (Alpha Catalysts)</div><ul class="chkList">' + posList + '</ul></div>' +
-    '<div><div style="font-weight:700;color:var(--down);margin-bottom:6px;font-size:12px">🚨 ความเสี่ยงและจุดที่ต้องระวัง (Risk &amp; Red Flags)</div><ul class="chkList">' + flgList + '</ul></div>' +
+    '<div><div style="font-weight:700;color:var(--down);margin-bottom:6px;font-size:12px">🚨 ความเสี่ยงและจุดที่ต้องระวัง (Risk &amp; Red Flags — พร้อมข้อมูลจริงรายตัว)</div><ul class="chkList">' + flgList + '</ul></div>' +
     '</div></div>';
 
-  /* Card 5: 14-Gene Evidence & Source Verification Table */
+  /* Card 6: 14-Gene Evidence & Source Verification Table */
   var evRows = GENE_LABELS.map(function (gl) {
     var key = gl[0], label = gl[1], fmtFn = gl[2];
     var raw = d[key];
@@ -571,13 +667,13 @@ function dnaPanel(c) {
       '</tr>';
   }).join('');
 
-  var card5 = '<div class="ddCard" style="margin-bottom:14px"><h3>🧬 5. ตารางชำแหละ 14 ยีนเทคนิคความลับ &amp; ลิงก์หลักฐานอ้างอิงที่ตรวจสอบได้จริง (Verified Cryptographic DNA) ' +
+  var card5 = '<div class="ddCard" style="margin-bottom:14px"><h3>🧬 6. ตารางชำแหละ 14 ยีนเทคนิคความลับ &amp; ลิงก์หลักฐานอ้างอิงที่ตรวจสอบได้จริง (Verified Cryptographic DNA) ' +
     '<span class="subH">ทุกค่ามีแหล่งอ้างอิงตรวจสอบได้ ไม่มีการเดาคะแนนฟรี</span></h3>' +
     '<table class="evTbl"><thead><tr>' +
     '<th>มิติทางเทคนิค (Gene)</th><th>ผลการประเมิน</th><th>ความเชื่อมั่น</th><th>หมายเหตุ / รายละเอียดเชิงลึก</th><th class="num">เอกสารอ้างอิง</th>' +
     '</tr></thead><tbody>' + evRows + '</tbody></table></div>';
 
-  /* Card 6: Market Depth, GitHub Stats & Official Due Diligence Links */
+  /* Card 7: Market Depth, GitHub Stats & Official Due Diligence Links */
   function lnk(url, label) { return url ? '<a class="lk" href="' + url + '" target="_blank" rel="noopener">🔗 ' + label + ' ↗</a>' : ''; }
   var linksHtml = lnk(dt.home, 'เว็บไซต์ทางการ') + lnk(dt.wp, 'Whitepaper / เอกสารเทคนิค') + lnk(dt.gh, 'GitHub โค้ดต้นฉบับ') +
     lnk(dt.explorer, 'Block Explorer') + lnk(dt.tw ? 'https://x.com/' + dt.tw : '', 'X / Twitter') +
@@ -605,7 +701,7 @@ function dnaPanel(c) {
       '<div class="mono dim" style="font-size:11px">ต่ำสุด ' + fmtPrice(Math.min.apply(null, dt.spark)) + ' — สูงสุด ' + fmtPrice(Math.max.apply(null, dt.spark)) + '</div></div>'
     : '';
 
-  var card6 = '<div class="ddCard"><h3>🌐 6. ข้อมูลตลาดเชิงลึก, GitHub &amp; ลิงก์ตรวจสอบด้วยตัวเอง (Due Diligence Dossier)</h3>' +
+  var card6 = '<div class="ddCard"><h3>🌐 7. ข้อมูลตลาดเชิงลึก, GitHub &amp; ลิงก์ตรวจสอบด้วยตัวเอง (Due Diligence Dossier)</h3>' +
     (linksHtml ? '<div class="links">' + linksHtml + '</div>' : '') +
     (dt.desc ? '<p class="desc">' + dt.desc + '</p>' : '') +
     sparkBox +
@@ -616,6 +712,7 @@ function dnaPanel(c) {
   return '<div class="ddWrap">' +
     banner +
     '<div class="ddGrid2">' + card1 + card2 + '</div>' +
+    cardTok +
     '<div class="ddGrid2">' + card3 + card4 + '</div>' +
     card5 +
     card6 +
@@ -786,13 +883,198 @@ function renderBull() {
   }
 }
 
+/* ============================================================================
+ * Personal Gem Finder & FDV Trap Scanner ("เครื่องมือส่วนตัวคัดเพชรเม็ดงาม — ไม่กาว")
+ * ============================================================================ */
+function renderGems() {
+  var gw = $('gemsWrap');
+  if (!gw) return;
+  var inv = state.invAmt || 1000;
+  var rows = [];
+  for (var i = 0; i < DATA.length; i++) {
+    var c = DATA[i];
+    if (!matchesQuery(c)) continue;
+    var ev = evalCoin(c);
+    var pi = activeScore(c, 'privacy_investor');
+    var bh = activeScore(c, 'bull_hunter');
+    var bull = (ev.asy && ev.asy.score != null) ? ev.asy.score : null;
+    rows.push({ c: c, ev: ev, pi: pi, bh: bh, bull: bull, sf: ev.sf || {} });
+  }
+
+  /* 1. High-Conviction Clean Gems:
+   *    - Validated privacy & fundamentals (bull >= 66 or pi >= 60)
+   *    - Accumulation / Mid-cap zone ($3M <= mcap <= $650M)
+   *    - Clean tokenomics (lockedPct <= 25% and tier !== 'CRITICAL_LOCK' and tier !== 'HEAVY_LOCK')
+   *    - No CRITICAL red flags & not sanctioned */
+  var cleanGems = rows.filter(function (r) {
+    var m = r.c.m || 0;
+    return r.bull != null && r.bull >= 66 && m >= 3e6 && m <= 6.5e8 &&
+           !r.ev.hasCrit && !gval(dna(r.c), 'sanctioned') &&
+           (r.sf.lockedPct || 0) <= 25 && r.sf.tier !== 'CRITICAL_LOCK' && r.sf.tier !== 'HEAVY_LOCK';
+  }).sort(function (a, b) { return (b.bull || 0) - (a.bull || 0) || (b.pi || 0) - (a.pi || 0); });
+
+  /* 2. Core Blue-Chip Anchors ($200M+ Mcap, high liquidity, clean/manageable float) */
+  var coreAnchors = rows.filter(function (r) {
+    var m = r.c.m || 0;
+    return r.bull != null && m > 2e8 && !r.ev.hasCrit && !gval(dna(r.c), 'sanctioned') && (r.sf.lockedPct || 0) <= 35;
+  }).sort(function (a, b) { return (b.bull || 0) - (a.bull || 0); });
+
+  /* 3. High-FDV / Locked Overhang Watchlist (fdvMcap > 1.75 or lockedPct >= 30%) */
+  var fdvTraps = rows.filter(function (r) {
+    return r.sf && (r.sf.fdvMcap > 1.75 || r.sf.lockedPct >= 30);
+  }).sort(function (a, b) { return (b.sf.lockedPct || 0) - (a.sf.lockedPct || 0) || (b.sf.fdvMcap || 0) - (a.sf.fdvMcap || 0); });
+
+  function gemPlaybookCard(r, kind) {
+    var c = r.c, d = dna(c), q = cur(c.s), dt = det(c), ev = r.ev, pl = ev.pl || {}, sf = r.sf || {}, asy = ev.asy || {};
+    var isTrap = (kind === 'trap');
+    var turnPct = (c.m && c.v) ? ((c.v / c.m) * 100).toFixed(2) + '%/วัน' : '—';
+
+    /* Realistic Base Target vs Bull Target (after FDV dilution!) */
+    var mcap = c.m || 0;
+    var baseTargetMcap = mcap < 2.5e7 ? 1.5e8 : (mcap < 1.5e8 ? 7e8 : (mcap < 8e8 ? 2.5e9 : 6.5e9));
+    var bullTargetMcap = mcap < 2.5e7 ? 7e8 : (mcap < 1.5e8 ? 2.5e9 : (mcap < 8e8 ? 6.5e9 : 25.95e9));
+    var simBase = calcTarget(c, baseTargetMcap);
+    var simBull = calcTarget(c, bullTargetMcap);
+
+    /* Data-backed Why Bullish (No Hype) */
+    var whyBull = [];
+    if (gval(d, 'comp') === 2) whyBull.push('มี <b>Viewing Key / Selective Disclosure (comp=2)</b> รองรับเกณฑ์สถาบันและ CEX เหมือน ZEC');
+    if (pl.P >= 70) whyBull.push('กลไกความลับระดับแข็งแกร่งมาก (<b>P=' + pl.P + '/100</b> · ' + (d.prim || q.mech || '') + ')');
+    else if (pl.P >= 45) whyBull.push('กลไกความลับผ่านเกณฑ์มาตรฐาน (<b>P=' + pl.P + '/100</b> · ' + (d.prim || q.mech || '') + ')');
+    if (pl.D >= 80) whyBull.push('ทีมพัฒนา Active สูงบน GitHub (<b>D=' + pl.D + '/100</b>)');
+    if (sf.lockedPct <= 5) whyBull.push('<b>ไร้ระเบิดเวลา VC Lock</b> (เหรียญเสกล็อก ' + sf.lockedPct + '% · ประสิทธิภาพส่งผ่านราคา ' + sf.retentionPct + '%)');
+    if (dt.ex_count >= 10) whyBull.push('สภาพคล่องเข้าถึงง่าย ลิสต์อยู่ <b>' + dt.ex_count + ' กระดานเทรด</b> (Turnover ' + turnPct + ')');
+    if (!whyBull.length) whyBull.push((d.prim || q.mech || 'เทคโนโลยีเฉพาะทาง') + ' · Mcap ปัจจุบัน $' + fmtCompact(c.m));
+
+    /* Honest Risk Disclosure (No Hype!) */
+    var honestRisks = [];
+    if (sf.lockedPct >= 30) {
+      honestRisks.push('🚨 <b>แรงเทขายเหรียญล็อกสูงมาก:</b> มีเหรียญเสกล็อกรอปลดถึง <b>' + fmtNum(sf.lockedTokens) + ' ' + c.s + ' (' + sf.lockedPct + '% · มูลค่า ' + fmtUsd(sf.lockedUsd) + ')</b> วอลุ่มปัจจุบันต้องใช้ <b>' + sf.daysToAbsorbLocked + ' วัน</b> เพื่อรับของ');
+    } else if (sf.lockedPct >= 10) {
+      honestRisks.push('🔸 มีเหรียญล็อกรอปลดล็อก <b>' + sf.lockedPct + '% (' + fmtUsd(sf.lockedUsd) + ')</b> ต้องหักส่วนลด Dilution ราว ' + (100 - sf.retentionPct) + '%');
+    }
+    if (ev.fl && ev.fl.length) {
+      ev.fl.forEach(function (f) { honestRisks.push('⚠️ <b>[' + f.id + ']</b> ' + f.msg); });
+    }
+    if (d.risk) honestRisks.push('📌 <b>ข้อจำกัดเชิงเทคนิค/ตลาด:</b> ' + d.risk);
+    if (!honestRisks.length) honestRisks.push('ความผันผวนตามรอบตลาดคริปโตและเกณฑ์กำกับดูแลเหรียญ Privacy ในแต่ละประเทศ');
+
+    /* Actionable Strategy */
+    var actionPlan = '';
+    if (isTrap) {
+      actionPlan = '🛑 <b>ห้ามไล่ราคาเด็ดขาด (Avoid Chasing Pumps):</b> แม้เทคโนโลยี (' + (d.fam || d.prim || '') + ') จะน่าสนใจ แต่ FDV สูงถึง <b>$' + fmtCompact(sf.effectiveFdv) + ' (' + sf.fdvMcap + 'x ของ Mcap)</b> แนะนำให้ใช้กลยุทธ์ <b>"ดักซื้อเมื่อย่อแรงหลังวัน Unlock หรือรอสัดส่วนหมุนเวียนเกิน 50%"</b>';
+    } else if (kind === 'core') {
+      actionPlan = '🏛️ <b>กลยุทธ์พอร์ตหลัก (Core Allocation 15%–25%):</b> สภาพคล่องสูง ($' + fmtCompact(c.v) + '/วัน) โครงสร้างเหรียญสะอาด เหมาะสำหรับทยอยสะสม (DCA) เป็นแกนหลักของพอร์ต Privacy เพื่อรับเม็ดเงินรอบใหญ่';
+    } else {
+      var sz = (c.m && c.m >= 4e7 && (dt.ex_count || 0) >= 8) ? '5%–12% ของพอร์ต' : '2%–5% ของพอร์ต (แบ่งไม้ซื้อเพื่อลด Slippage)';
+      actionPlan = '💎 <b>กลยุทธ์สะสมเพชรเม็ดงาม (Suggested Sizing: ' + sz + '):</b> พื้นฐานผ่านเกณฑ์ (Bull Score <b>' + r.bull + '</b>) และไม่มีก้อนเหรียญ VC รอทุบ สามารถทยอยเก็บสะสมช่วงตลาดพักตัว';
+    }
+
+    var targetHtml = '';
+    if (simBase && simBull) {
+      targetHtml = '<div class="gemSecBox" style="border-color:#1e3a2f;background:#081310">' +
+        '<div class="gLbl" style="color:var(--teal)">🎯 กรอบเป้าหมายราคาตามข้อมูลจริง (หัก Dilution เหรียญล็อกแล้ว)</div>' +
+        '<div>• <b>เป้าฐาน (แตะ Mcap $' + fmtCompact(baseTargetMcap) + '):</b> ราคา <b>' + fmtPrice(simBase.targetPrice * (sf.retentionPct / 100)) + '</b> (<b class="up">' + fmtMult(simBase.fdvMult) + ' สุทธิ</b> · ทุน $' + inv.toLocaleString('en-US') + ' → <b>' + fmtUsd(inv * simBase.fdvMult) + '</b>)</div>' +
+        '<div>• <b>เป้ากระทิง (แตะ Mcap $' + fmtCompact(bullTargetMcap) + '):</b> ราคา <b>' + fmtPrice(simBull.targetPrice * (sf.retentionPct / 100)) + '</b> (<b class="up">' + fmtMult(simBull.fdvMult) + ' สุทธิ</b> · ทุน $' + inv.toLocaleString('en-US') + ' → <b>' + fmtUsd(inv * simBull.fdvMult) + '</b>)</div>' +
+        '</div>';
+    }
+
+    return '<div class="gemCard' + (isTrap ? ' trapCard' : '') + '" data-bcard="' + c.s + '">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
+      '<div><span style="font:800 18px var(--mono);color:var(--bright)">' + c.s + '</span> <span class="dim" style="font-size:13px">' + c.n + '</span>' +
+      '<div style="margin-top:3px">' + archetypeBadge(asy.archetype) + ' ' + famChip(d.fam) + ' <span class="chip">P=' + (pl.P != null ? pl.P : '?') + ' · D=' + (pl.D != null ? pl.D : '?') + ' · R=' + (pl.R != null ? pl.R : '?') + '</span></div></div>' +
+      '<div style="text-align:right"><div style="font:800 15px var(--mono);color:' + (isTrap ? '#ff6b6d' : '#4ce89d') + '">' + (isTrap ? 'FDV ' + sf.fdvMcap + 'x' : 'Bull ' + (r.bull || '—') + '/100') + '</div>' +
+      '<div class="mono dim" style="font-size:11px">Mcap $' + fmtCompact(c.m) + ' · ' + fmtPrice(c.p) + '</div></div></div>' +
+      '<div class="supBar3" style="margin:3px 0">' +
+      '<i style="width:' + sf.circPct + '%;background:#2ecc71"></i>' +
+      '<i style="width:' + sf.lockedPct + '%;background:#ff5a5c"></i>' +
+      '<i style="width:' + sf.unminedPct + '%;background:#4cc2ff"></i></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tx2)">' +
+      '<span>🟢 หมุนเวียน <b>' + sf.circPct + '%</b></span>' +
+      '<span class="' + (sf.lockedPct > 25 ? 'down' : '') + '">🔴 เสกล็อก <b>' + sf.lockedPct + '%</b> (' + (sf.lockedUsd > 0 ? fmtUsd(sf.lockedUsd) : '$0') + ')</span>' +
+      '<span>🔵 รอขุด <b>' + sf.unminedPct + '%</b></span></div>' +
+      '<div class="gemSecBox"><div class="gLbl" style="color:#4ce89d">✅ ทำไมถึงน่าสนใจ (Data-Backed Thesis)</div><div>• ' + whyBull.join('<br>• ') + '</div></div>' +
+      '<div class="gemSecBox" style="border-color:rgba(255,90,92,.3)"><div class="gLbl" style="color:#ff7a7c">🚨 ความเสี่ยงจริงที่ต้องระวัง (ไม่กาว)</div><div>' + honestRisks.join('<br>') + '</div></div>' +
+      targetHtml +
+      '<div class="gemSecBox" style="border-color:rgba(76,194,255,.3)"><div class="gLbl" style="color:var(--accent)">🧭 แผนการลงทุนแนะนำ (Playbook)</div><div>' + actionPlan + '</div></div>' +
+      '</div>';
+  }
+
+  var out = [];
+  out.push('<div class="rubric"><b>💎 เครื่องมือคัดเพชรเม็ดงาม &amp; ผ่ากับดัก FDV ส่วนตัว (Zero-Hype Personal Investment Advisor)</b><br>' +
+    '<i>"ทุกอย่างคือการลงทุน การลงทุนมีความเสี่ยง — เราจะไม่กาว แต่ใช้ข้อมูลจริงคัดเหรียญที่มีแต้มต่อสูงสุด"</i><br>' +
+    'ระบบนี้แยกแยะ <b>"เพชรเม็ดงามที่ของจริงและโครงสร้างเหรียญสะอาด (Clean Asymmetric Gems)"</b> ออกจาก <b>"เหรียญเทคโนโลยีดีแต่ติดระเบิดเวลา VC Unlock (FDV Overhang &gt; 3x)"</b> พร้อมคำนวณเป้าราคาสุทธิหลังหัก Dilution และความเสี่ยงจริงทุกมิติ คลิกที่การ์ดหรือแถวใดก็ได้เพื่อกางรายงานฉบับเต็ม</div>');
+
+  out.push('<div class="secHead"><h2>💎 ตะกร้าที่ 1: เพชรเม็ดงามพร้อมสะสม (Clean Asymmetric Gems — พื้นฐานแกร่ง · โซนสะสม $3M–$650M · ไร้ระเบิดเวลา VC Lock) [' + cleanGems.length + ' เหรียญ]</h2></div>');
+  out.push('<div class="gemGrid">' + (cleanGems.length ? cleanGems.map(function (r) { return gemPlaybookCard(r, 'gem'); }).join('') : '<div class="dim">ไม่พบเหรียญที่ตรงตามตัวกรอง</div>') + '</div>');
+
+  out.push('<div class="secHead"><h2>🏛️ ตะกร้าที่ 2: เสาหลักพอร์ตสถาบัน &amp; สภาพคล่องสูง (Core Blue-Chip Anchors — Mcap &gt;$200M · สภาพคล่องลึก) [' + coreAnchors.length + ' เหรียญ]</h2></div>');
+  out.push('<div class="gemGrid">' + (coreAnchors.length ? coreAnchors.map(function (r) { return gemPlaybookCard(r, 'core'); }).join('') : '<div class="dim">ไม่พบเหรียญที่ตรงตามตัวกรอง</div>') + '</div>');
+
+  out.push('<div class="secHead"><h2>🚨 ตะกร้าที่ 3: บัญชีเฝ้าระวัง "ติดล็อก FDV Overhang สูง" (High-FDV &amp; Locked Supply Watchlist — ห้ามไล่ราคา! ต้องรอจังหวะปลดล็อก) [' + fdvTraps.length + ' เหรียญ]</h2></div>');
+  out.push('<div class="gemGrid">' + (fdvTraps.length ? fdvTraps.map(function (r) { return gemPlaybookCard(r, 'trap'); }).join('') : '<div class="dim">ไม่พบเหรียญที่ตรงตามตัวกรอง</div>') + '</div>');
+
+  /* Full-Sector FDV Overhang & Supply Anatomy Table */
+  var allByOverhang = rows.slice().sort(function (a, b) {
+    return (b.sf.lockedPct || 0) - (a.sf.lockedPct || 0) || (b.sf.fdvMcap || 0) - (a.sf.fdvMcap || 0);
+  });
+  out.push('<div class="secHead"><h2>🔬 ตารางผ่าตัด FDV Overhang &amp; แรงเทขายเหรียญล็อกทั้ง 51 โครงการ (เรียงตามสัดส่วนเหรียญที่เสกล็อกไว้สูงสุด → ต่ำสุด)</h2></div>');
+  out.push('<table class="mx"><thead><tr>' +
+    '<th>#</th><th>เหรียญ</th><th>สถานะ Tokenomics</th><th class="num">FDV / Mcap</th>' +
+    '<th>สัดส่วน 3 ชั้น (🟢หมุนเวียน / 🔴เสกล็อก / 🔵รอขุด)</th>' +
+    '<th class="num">🟢 หมุนเวียน</th><th class="num">🔴 เสกล็อกรอขาย</th><th class="num">🔵 รอขุดตามบล็อก</th>' +
+    '<th class="num">มูลค่าก้อนที่ล็อก ($)</th><th class="num">วอลุ่มซับของ (วัน)</th><th class="num">5% Unlock / Vol</th><th class="num">ส่งผ่านราคาจริง</th>' +
+    '</tr></thead><tbody>');
+  for (var k = 0; k < allByOverhang.length; k++) {
+    var r = allByOverhang[k], c = r.c, sf = r.sf || {};
+    var tLbl = sf.tier === 'CRITICAL_LOCK' ? '<span class="vBadge vb-risk">🚨 ล็อกหนัก &gt;3x</span>'
+             : (sf.tier === 'HEAVY_LOCK' ? '<span class="vBadge vb-warn">⚠️ ล็อกสูง</span>'
+             : (sf.tier === 'MOD_LOCK' ? '<span class="vBadge vb-watch">🔸 ล็อกปานกลาง</span>'
+             : (sf.tier === 'POW_EMISSION' ? '<span class="vBadge vb-top">⛏️ รอขุดตามบล็อก</span>'
+             : '<span class="vBadge vb-gem">💎 สะอาด (Clean)</span>')));
+    var bar3 = '<div class="supBar3" style="width:140px;height:9px;margin:0"><i style="width:' + sf.circPct + '%;background:#2ecc71"></i><i style="width:' + sf.lockedPct + '%;background:#ff5a5c"></i><i style="width:' + sf.unminedPct + '%;background:#4cc2ff"></i></div>';
+    out.push('<tr data-bcard="' + c.s + '" class="row">' +
+      '<td class="num dim">' + (k + 1) + '</td>' +
+      '<td class="coin"><span class="sym">' + c.s + '</span><span class="nm">' + c.n + '</span></td>' +
+      '<td>' + tLbl + '</td>' +
+      '<td class="num"><b class="' + (sf.fdvMcap > 2.5 ? 'down' : 'up') + '">' + (sf.fdvMcap || 1) + 'x</b></td>' +
+      '<td>' + bar3 + '</td>' +
+      '<td class="num up"><b>' + sf.circPct + '%</b></td>' +
+      '<td class="num ' + (sf.lockedPct > 25 ? 'down' : 'dim') + '"><b>' + sf.lockedPct + '%</b></td>' +
+      '<td class="num acc">' + sf.unminedPct + '%</td>' +
+      '<td class="num ' + (sf.lockedUsd > (c.m || 0) ? 'down' : '') + '">' + (sf.lockedUsd > 0 ? '<b>' + fmtUsd(sf.lockedUsd) + '</b>' : '<span class="dim">$0</span>') + '</td>' +
+      '<td class="num">' + (sf.daysToAbsorbLocked > 0 ? sf.daysToAbsorbLocked + ' วัน' : '<span class="dim">0</span>') + '</td>' +
+      '<td class="num">' + (sf.shock5PctOfVol > 0 ? sf.shock5PctOfVol + '%' : '<span class="dim">0%</span>') + '</td>' +
+      '<td class="num"><b>' + sf.retentionPct + '%</b></td>' +
+      '</tr>');
+  }
+  out.push('</tbody></table>');
+  gw.innerHTML = out.join('');
+  $('count').textContent = 'เพชรเม็ดงาม ' + cleanGems.length + ' · เสาหลัก ' + coreAnchors.length + ' · เฝ้าระวัง FDV ' + fdvTraps.length;
+
+  var clickEls = gw.querySelectorAll ? gw.querySelectorAll('[data-bcard]') : [];
+  for (var m = 0; m < clickEls.length; m++) {
+    clickEls[m].onclick = function () {
+      var sym = this.getAttribute('data-bcard');
+      if (!sym) return;
+      state.expanded = sym;
+      state.view = 'table';
+      renderViewSwitch();
+      renderTable();
+      var tr = $('tbody') ? $('tbody').querySelector('tr[data-sym="' + sym + '"]') : null;
+      if (tr && tr.scrollIntoView) tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+  }
+}
+
 function renderTable() {
-  var mw = $('matrixWrap'), tw = $('tblWrap'), dw = $('docsWrap'), cw = $('cmpWrap'), bw = $('bullWrap');
+  var mw = $('matrixWrap'), tw = $('tblWrap'), dw = $('docsWrap'), cw = $('cmpWrap'), bw = $('bullWrap'), gw = $('gemsWrap');
   if (tw) tw.style.display = 'none';
   if (mw) mw.style.display = 'none';
   if (dw) dw.style.display = 'none';
   if (cw) cw.style.display = 'none';
   if (bw) bw.style.display = 'none';
+  if (gw) gw.style.display = 'none';
 
   if (state.view === 'docs') {
     if (dw) { dw.style.display = 'block'; renderDocs(); }
@@ -810,6 +1092,10 @@ function renderTable() {
     if (bw) { bw.style.display = 'block'; renderBull(); }
     return;
   }
+  if (state.view === 'gems') {
+    if (gw) { gw.style.display = 'block'; renderGems(); }
+    return;
+  }
   if (tw) tw.style.display = 'block';
 
   view = [];
@@ -821,20 +1107,23 @@ function renderTable() {
   });
   var rows = [];
   for (var j = 0; j < view.length; j++) {
-    var c = view[j], k = cur(c.s), d = dna(c), dt = det(c), ev = evalCoin(c), pl = ev.pl || {}, vd = verdictOf(c);
+    var c = view[j], k = cur(c.s), d = dna(c), dt = det(c), ev = evalCoin(c), pl = ev.pl || {}, sf = ev.sf || {}, vd = verdictOf(c);
 
-    /* Supply & Float Progress Bar */
-    var maxS = c.ms || c.ts;
+    /* 3-Layer Supply & Overhang Progress Bar in Main Table */
+    var maxS = sf.effMax || c.ms || c.ts;
     var supplyHtml = '<span class="dim">—</span>';
     if (c.cs) {
       if (maxS && maxS > 0) {
-        var pct = Math.min(100, Math.round(100 * c.cs / maxS));
-        var bCol = pct >= 80 ? '#2ecc71' : (pct >= 50 ? '#f5a623' : '#ff5a5c');
-        supplyHtml = '<div class="flWrap"><div><b>' + pct + '%</b> <span class="dim">(' + fmtNum(c.cs) + '/' + fmtNum(maxS) + ')</span></div>' +
-          '<div class="flBar"><i style="width:' + pct + '%;background:' + bCol + '"></i></div></div>';
+        var lockNote = sf.lockedPct >= 15
+          ? '<span class="subCell" style="color:var(--down)">🔒 เสกล็อก ' + Math.round(sf.lockedPct) + '% (' + sf.fdvMcap + 'x)</span>'
+          : (sf.unminedPct >= 15 ? '<span class="subCell" style="color:var(--accent)">⛏️ รอขุด ' + Math.round(sf.unminedPct) + '%</span>' : '<span class="subCell">' + fmtNum(c.cs) + '/' + fmtNum(maxS) + '</span>');
+        supplyHtml = '<div class="flWrap" title="หมุนเวียน ' + sf.circPct + '% | เสกล็อกรอปลด ' + sf.lockedPct + '% | รอขุดตามบล็อก ' + sf.unminedPct + '%">' +
+          '<div><b>' + Math.round(sf.circPct) + '%</b></div>' +
+          '<div class="flBar" style="display:flex"><i style="width:' + sf.circPct + '%;background:#2ecc71"></i><i style="width:' + sf.lockedPct + '%;background:#ff5a5c"></i><i style="width:' + sf.unminedPct + '%;background:#4cc2ff"></i></div>' +
+          lockNote + '</div>';
       } else {
-        supplyHtml = '<div class="flWrap"><div><b>100%</b> <span class="dim">(' + fmtNum(c.cs) + ' / ∞)</span></div>' +
-          '<div class="flBar"><i style="width:100%;background:#4cc2ff"></i></div></div>';
+        supplyHtml = '<div class="flWrap"><div><b>100%</b> <span class="dim">(∞)</span></div>' +
+          '<div class="flBar"><i style="width:100%;background:#4cc2ff"></i></div><span class="subCell">' + fmtNum(c.cs) + ' (Tail)</span></div>';
       }
     }
 
@@ -862,8 +1151,8 @@ function renderTable() {
     }
 
     /* Mcap & FDV */
-    var fdvVal = c.fdv || ((c.m && c.cs && maxS) ? (c.p * maxS) : null);
-    var fdvSub = fdvVal ? '<span class="subCell">FDV: $' + fmtCompact(fdvVal) + '</span>' : '';
+    var fdvVal = sf.effectiveFdv || c.fdv || ((c.m && c.cs && maxS) ? (c.p * maxS) : null);
+    var fdvSub = fdvVal ? '<span class="subCell' + (sf.fdvMcap > 2.5 ? ' down' : '') + '">FDV: $' + fmtCompact(fdvVal) + (sf.fdvMcap > 1.2 ? ' (' + sf.fdvMcap + 'x)' : '') + '</span>' : '';
 
     /* Vol 24h & Turnover % + Exchange Count */
     var turnStr = (c.m && c.v) ? ((c.v / c.m) * 100).toFixed(1) + '%/วัน' : '';
@@ -1189,12 +1478,14 @@ function renderCompare() {
 function renderViewSwitch() {
   $('vsw').innerHTML =
     '<button id="vTable" class="' + (state.view === 'table' ? 'on' : '') + '">📊 ตารางวิเคราะห์การลงทุน (' + DATA.length + ' เหรียญ)</button>' +
+    '<button id="vGems" class="gemTab' + (state.view === 'gems' ? ' on' : '') + '">💎 คัดเพชรเม็ดงาม &amp; ผ่ากับดัก FDV (ไม่กาว)</button>' +
     '<button id="vBull" class="bullTab' + (state.view === 'bull' ? ' on' : '') + '">⚡ Bull-Run Radar &amp; จำลองกำไร (The Next ZEC)</button>' +
     '<button id="vMatrix" class="' + (state.view === 'matrix' ? 'on' : '') + '">🧬 ตารางยีนเทคนิค (DNA Matrix)</button>' +
     '<button id="vCmp" class="' + (state.view === 'compare' ? 'on' : '') + '"' +
     (state.compare.length < 2 ? ' disabled title="เลือกเหรียญ 2–4 ตัวจากปุ่ม ⇄ ในตารางก่อน"' : '') + '>⇄ เปรียบเทียบเรดาร์ (' + state.compare.length + ')</button>' +
     '<button id="vDocs" class="' + (state.view === 'docs' ? 'on' : '') + '">📚 เอกสารงานวิจัย &amp; ข้อมูลดิบ</button>';
   $('vTable').onclick = function () { state.view = 'table'; renderViewSwitch(); renderTable(); };
+  $('vGems').onclick = function () { state.view = 'gems'; renderViewSwitch(); renderTable(); };
   $('vBull').onclick = function () { state.view = 'bull'; renderViewSwitch(); renderTable(); };
   $('vMatrix').onclick = function () { state.view = 'matrix'; renderViewSwitch(); renderTable(); };
   $('vDocs').onclick = function () { state.view = 'docs'; renderViewSwitch(); renderTable(); };

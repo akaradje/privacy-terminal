@@ -21,6 +21,7 @@ var FLAG_RULES = [
   { id: 'no_dev_data', lv: 'LOW', test: function (x) { return x.days_since_push == null; }, msg: 'ไม่มีข้อมูล repo ที่ยืนยันได้ — ประเมิน pillar D ไม่ได้' },
   { id: 'high_inflation', lv: 'MED', test: function (x) { return x.inflation > 10; }, msg: 'เงินเฟ้อปีละเกิน 10%' },
   { id: 'fdv_overhang', lv: 'MED', test: function (x) { return x.fdv_mcap > 3; }, msg: 'FDV สูงกว่า mcap เกิน 3 เท่า (แรงเทขายจากเหรียญที่ยังล็อกอยู่)' },
+  { id: 'locked_overhang', lv: 'MED', test: function (x) { return x.fdv_mcap > 1.75 && x.fdv_mcap <= 3 && x.locked_pct >= 35; }, msg: 'มีเหรียญเสกไว้แล้วแต่ยังล็อกอยู่ 35%–65% ของอุปทาน (FDV 1.8x–3.0x ของ mcap)' },
   { id: 'optin_theatre', lv: 'MED', test: function (x) { return x.man === 0 && x.shielded_pct != null && x.shielded_pct < 5; }, msg: 'privacy แบบ opt-in ที่มีคนใช้ต่ำกว่า 5% (privacy theatre)' },
   { id: 'thin_liquidity', lv: 'MED', test: function (x) { return x.depth2 != null && x.depth2 < 50000; }, msg: 'depth ±2% ต่ำกว่า $50k' },
   { id: 'stale_data', lv: 'LOW', test: function (x) { return x.data_age_days > 180; }, msg: 'ข้อมูลเก่ากว่า 180 วัน' },
@@ -43,15 +44,16 @@ var POSITIVE_RULES = [
     id: 'asymmetric_gem',
     test: function (x) {
       return x.composite != null && x.composite >= 64 && x.mcap != null &&
-             x.mcap >= 5e6 && x.mcap <= 6e8 && (x.fdv_mcap == null || x.fdv_mcap <= 1.35);
+             x.mcap >= 5e6 && x.mcap <= 6e8 && (x.fdv_mcap == null || x.fdv_mcap <= 1.45) &&
+             (x.locked_pct == null || x.locked_pct <= 22);
     },
-    msg: 'Asymmetric Gem: คะแนนพื้นฐานระดับ Top-tier (Composite ≥64) แต่ Market Cap ยังอยู่ในโซนสะสม ($5M–$600M) เหมือน ZEC ตอน $700M'
+    msg: 'Asymmetric Gem: คะแนนพื้นฐานระดับ Top-tier (Composite ≥64) + โซนสะสม ($5M–$600M) + ไร้ระเบิดเวลา FDV'
   },
   {
     id: 'sovereign_scarcity',
     test: function (x) {
       return x.P != null && x.P >= 70 && x.man != null && x.man >= 0.5 &&
-             (x.fdv_mcap == null || x.fdv_mcap <= 1.15) && x.days_since_push != null && x.days_since_push <= 35;
+             (x.locked_pct == null || x.locked_pct <= 15) && x.days_since_push != null && x.days_since_push <= 35;
     },
     msg: 'Sovereign Privacy: ความลับระดับสูงสุด (P ≥70, Default/Mandatory) + ไร้ VC Unlock Overhang'
   },
@@ -76,7 +78,7 @@ var POSITIVE_RULES = [
   { id: 'dev_surge', test: function (x) { return x.stars != null && x.stars >= 500 && x.days_since_push != null && x.days_since_push <= 30; }, msg: 'repo มีนักพัฒนา/ผู้ติดตามสูง (★ ≥500) และยัง active ใน 30 วัน' },
   { id: 'deep_liquidity', test: function (x) { return x.turnover != null && x.turnover >= 0.02 && x.mcap >= 5e7; }, msg: 'สภาพคล่องหนา (turnover ≥2% ต่อวัน, mcap ≥$50M)' },
   { id: 'low_fdv', test: function (x) { return x.fdv_mcap != null && x.fdv_mcap <= 1.1; }, msg: 'FDV ใกล้ mcap — ไม่มี unlock overhang กดราคาในตลาดกระทิง' },
-  { id: 'managed_float', test: function (x) { return x.cs != null && x.ms != null && x.cs / x.ms >= 0.9; }, msg: 'เหรียญหมุนเวียนแล้วเกิน 90% (ไร้แรงเทขายจากเหรียญปลดล็อก)' },
+  { id: 'managed_float', test: function (x) { return x.cs != null && x.eff_max != null && x.eff_max > 0 && x.cs / x.eff_max >= 0.9; }, msg: 'เหรียญหมุนเวียนแล้วเกิน 90% (ไร้แรงเทขายจากเหรียญปลดล็อก)' },
   { id: 'repricing_from_low', test: function (x) { return x.c1y != null && x.c1y > 100 && x.mcap >= 1e7; }, msg: 'ขึ้นเกิน 100% ในรอบปีจากฐานต่ำ — ตลาดเริ่มรับรู้มูลค่าแล้ว' }
 ];
 
@@ -127,10 +129,19 @@ function metricsFor(coin, detail, dna, asof) {
   }
   if (coin) {
     if (coin.m && coin.v) out.turnover = +(coin.v / coin.m).toFixed(4);
-    if (coin.ms && coin.cs && coin.cs > 0) out.fdv_mcap = +(coin.ms / coin.cs).toFixed(2);
+    var effMax = Math.max(coin.ms || 0, coin.ts || 0);
+    if (effMax > 0 && coin.cs && coin.cs > 0) {
+      out.fdv_mcap = +(effMax / coin.cs).toFixed(2);
+      out.eff_max = effMax;
+      var locked = Math.max(0, (coin.ts || coin.cs) - coin.cs);
+      out.locked_pct = +((locked / effMax) * 100).toFixed(1);
+    } else if (coin.fdv && coin.m && coin.m > 0) {
+      out.fdv_mcap = +(coin.fdv / coin.m).toFixed(2);
+    }
     if (coin.m != null) out.mcap = coin.m;
     if (coin.mi != null) out.mcap_imputed = coin.mi;
     if (coin.cs != null) out.cs = coin.cs;
+    if (coin.ts != null) out.ts = coin.ts;
     if (coin.ms != null) out.ms = coin.ms;
     if (coin.c24 != null) out.c24 = coin.c24;
     if (coin.c7 != null) out.c7 = coin.c7;

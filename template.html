@@ -217,10 +217,37 @@ tr.exp>td{background:#091018;border-bottom:2px solid var(--accent);white-space:n
 
 /* Catalysts & Red Flags Checklist */
 .chkList{list-style:none;margin:0;padding:0}
-.chkList li{padding:7px 10px;border-radius:6px;margin-bottom:6px;font-size:12.5px;line-height:1.5;display:flex;align-items:flex-start;gap:8px}
+.chkList li{padding:8px 11px;border-radius:6px;margin-bottom:7px;font-size:12.5px;line-height:1.55;display:flex;align-items:flex-start;gap:8px}
 .chkList li.posItem{background:rgba(46,204,113,.09);border:1px solid rgba(46,204,113,.28);color:#d8f8e5}
 .chkList li.flgItem{background:rgba(255,90,92,.09);border:1px solid rgba(255,90,92,.28);color:#ffd8d8}
 .chkList li.medItem{background:rgba(245,166,35,.09);border:1px solid rgba(245,166,35,.28);color:#fce8c3}
+.flgSub{margin-top:6px;padding:7px 10px;background:rgba(7,11,16,.65);border-left:3px solid var(--amber);border-radius:4px;font-size:11.5px;color:var(--tx);line-height:1.55}
+.flgSub b{color:var(--bright)}
+.flgJump{display:inline-block;margin-top:5px;padding:3px 9px;background:rgba(76,194,255,.15);border:1px solid var(--accent);border-radius:5px;color:var(--accent);font:700 11px var(--sans);cursor:pointer}
+.flgJump:hover{background:var(--accent);color:#070b10;text-decoration:none}
+
+/* 3-Layer Supply Forensics Bar */
+.supBar3{height:14px;background:#141e2b;border-radius:6px;overflow:hidden;display:flex;margin:8px 0;border:1px solid var(--line2)}
+.supBar3 i{display:block;height:100%}
+.supLeg{display:flex;flex-wrap:wrap;gap:14px;font-size:11.5px;color:var(--tx2);margin-bottom:10px}
+.supLeg span{display:inline-flex;align-items:center;gap:5px}
+.supLeg b.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tokAlert{padding:10px 13px;border-radius:7px;margin-top:9px;font-size:12px;line-height:1.6}
+.tokAlert.crit{background:rgba(255,90,92,.12);border:1px solid rgba(255,90,92,.4);color:#ffd8d8}
+.tokAlert.warn{background:rgba(245,166,35,.11);border:1px solid rgba(245,166,35,.38);color:#fce8c3}
+.tokAlert.ok{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.35);color:#d8f8e5}
+.tokAlert.pow{background:rgba(76,194,255,.1);border:1px solid rgba(76,194,255,.35);color:#d6f0ff}
+
+/* Personal Gem Finder & Conviction Cards */
+nav.vsw button.gemTab{color:#f7b84b;border-color:rgba(245,166,35,.4)}
+nav.vsw button.gemTab.on{color:#070b10;background:linear-gradient(90deg,#f5a623,#4ce89d);border-color:#f5a623;box-shadow:none;font-weight:800}
+.gemGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;margin:12px 0 22px}
+.gemCard{background:linear-gradient(180deg,#111c2a,#0a1119);border:1px solid var(--line2);border-radius:10px;padding:15px 17px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+.gemCard:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.gemCard.trapCard{border-color:#632f2f;background:linear-gradient(180deg,#1c1318,#0c0f16)}
+.gemCard.trapCard:hover{border-color:#ff5a5c}
+.gemSecBox{background:#080e16;border:1px solid var(--line);border-radius:7px;padding:8px 11px;font-size:12px;line-height:1.55}
+.gemSecBox .gLbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px}
 
 /* 14-Gene Evidence Table inside Deep-Dive */
 .evTbl{width:100%;border-collapse:collapse;min-width:0;margin-top:4px}
@@ -421,6 +448,7 @@ footer .disc{margin-top:10px;color:#8b98a8}
     <tbody id="tbody"></tbody>
   </table>
 </div>
+<div class="tablewrap" id="gemsWrap" style="display:none"></div>
 <div class="tablewrap" id="bullWrap" style="display:none"></div>
 <div class="tablewrap" id="matrixWrap" style="display:none"></div>
 <div id="docsWrap" style="display:none"></div>

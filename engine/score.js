@@ -220,7 +220,8 @@ function liqScore(coin) {
   var turnover = coin.v / coin.m;
   var turn = Math.min(turnover / 0.10, 1);                                  // 10%/day = full marks
   var depth = Math.max(0, Math.min(1, (Math.log(coin.m) / Math.LN10 - 6) / 3)); // $1M -> 0, $1B -> 1
-  var float = (coin.cs && coin.ms) ? Math.min(coin.cs / coin.ms, 1) : 1;    // pending unlock overhang
+  var effMax = Math.max(coin.ms || 0, coin.ts || 0);
+  var float = (coin.cs && effMax > 0) ? Math.min(coin.cs / effMax, 1) : 1;  // pending unlock overhang
   return Math.round((0.45 * turn + 0.35 * depth + 0.20 * float) * 100);
 }
 
@@ -364,12 +365,11 @@ function asymmetryOf(d, coin, det, asof) {
   var pGate = Math.min(1, Math.max(0.25, pAdj / 45));
   var upside = Math.round(rawUpside * pGate);
 
-  /* Clean tokenomics: high circulating ratio (cs/ms) means no VC cliff overhang */
-  var tok = 75; // default for tail-emission / uncapped PoW chains with no VC unlock schedule
-  if (coin && coin.cs && coin.ms && coin.ms > 0) {
-    var fl = Math.max(0, Math.min(1, coin.cs / coin.ms));
-    tok = Math.round(Math.pow(fl, 0.85) * 100);
-  }
+  /* Clean tokenomics: uses effective supply (max of ms and ts) and separates pre-minted locked
+   * overhang (ts - cs, active VC/team/treasury cliff risk) from unmined future block emission
+   * (ms - ts, gradual multi-decade PoW/staking issuance). */
+  var sf = supplyForensicsOf(coin, d);
+  var tok = sf ? sf.tokScore : 75;
 
   /* Market access & liquidity rails */
   var comp = gval(d, 'comp');
@@ -399,6 +399,92 @@ function asymmetryOf(d, coin, det, asof) {
     tokenomics: tok,
     rails: rails,
     archetype: archetype
+  };
+}
+
+/* --- Tokenomics, FDV Overhang & Supply Unlock Forensics --------------------------------------
+ * Decomposes supply into 3 distinct layers so investors never confuse multi-decade PoW mining
+ * emission with pre-minted VC/Team locked tokens waiting to dump:
+ *   Layer 1: Circulating Supply (`cs`) — live liquid tokens in the market.
+ *   Layer 2: Pre-Minted Locked Overhang (`max(0, ts - cs)`) — already minted tokens sitting in
+ *            vesting/treasury/team contracts (immediate unlock sell-pressure risk).
+ *   Layer 3: Unmined Future Emission (`max(0, ms - max(ts, cs))`) — unissued coins to be mined
+ *            or staked block-by-block over years/decades. */
+function supplyForensicsOf(coin, d) {
+  if (!coin) return null;
+  var cs = (coin.cs && coin.cs > 0) ? coin.cs : null;
+  var ts = (coin.ts && coin.ts > 0) ? coin.ts : cs;
+  var ms = (coin.ms && coin.ms > 0) ? coin.ms : null;
+  var p = (coin.p && coin.p > 0) ? coin.p : null;
+  var mcap = (coin.m && coin.m > 0) ? coin.m : (cs && p ? cs * p : null);
+  var vol = (coin.v && coin.v > 0) ? coin.v : null;
+
+  var effMax = Math.max(ms || 0, ts || 0, cs || 0);
+  if (!cs || effMax <= 0) {
+    return {
+      cs: cs, ts: ts, ms: ms, effMax: effMax || null,
+      lockedTokens: 0, unminedTokens: 0,
+      circPct: 100, lockedPct: 0, unminedPct: 0,
+      fdvMcap: 1, lockedRatio: 1,
+      effectiveFdv: coin.fdv || mcap || null,
+      lockedUsd: 0, unminedUsd: 0, newCashNeeded: 0,
+      daysToAbsorbLocked: 0, shock5PctOfVol: 0,
+      retentionPct: 100, tokScore: 75,
+      tier: 'UNCAPPED', isUncapped: !ms
+    };
+  }
+
+  var lockedTokens = Math.max(0, (ts || cs) - cs);
+  var unminedTokens = ms ? Math.max(0, ms - Math.max(ts || 0, cs)) : 0;
+
+  var circPct = +((cs / effMax) * 100).toFixed(1);
+  var lockedPct = +((lockedTokens / effMax) * 100).toFixed(1);
+  var unminedPct = Math.max(0, +(100 - circPct - lockedPct).toFixed(1));
+
+  var fdvMcap = +(effMax / cs).toFixed(2);
+  var lockedRatio = +(((cs + lockedTokens) / cs)).toFixed(2);
+  var effectiveFdv = (p && effMax) ? (p * effMax) : (coin.fdv || (mcap ? mcap * fdvMcap : null));
+  var lockedUsd = (p && lockedTokens > 0) ? (lockedTokens * p) : 0;
+  var unminedUsd = (p && unminedTokens > 0) ? (unminedTokens * p) : 0;
+  var newCashNeeded = (effectiveFdv && mcap) ? Math.max(0, effectiveFdv - mcap) : 0;
+
+  var daysToAbsorbLocked = (vol && lockedUsd > 0) ? +(lockedUsd / vol).toFixed(1) : 0;
+  var shock5PctOfVol = (vol && lockedUsd > 0) ? +(((0.05 * lockedUsd) / vol) * 100).toFixed(1) : 0;
+  var retentionPct = Math.max(1, Math.min(100, Math.round((cs / effMax) * 100)));
+
+  /* Weighted effective supply for tokenomics score: pre-minted locked tokens count 100% as
+   * overhang, while unmined long-term protocol emission counts 40%. Uncapped tail-emission
+   * chains with zero pre-minted lock get 82. */
+  var tokScore = 82;
+  if (ms || lockedTokens > 0) {
+    var weightedDenom = cs + lockedTokens + 0.40 * unminedTokens;
+    var fl = weightedDenom > 0 ? Math.max(0, Math.min(1, cs / weightedDenom)) : 1;
+    tokScore = Math.round(Math.pow(fl, 0.85) * 100);
+  }
+
+  var tier = 'CLEAN';
+  if (fdvMcap > 3.0 && lockedPct >= 10) {
+    tier = 'CRITICAL_LOCK';
+  } else if (lockedRatio >= 1.9 || lockedPct >= 45) {
+    tier = 'HEAVY_LOCK';
+  } else if (lockedRatio >= 1.18 || lockedPct >= 15) {
+    tier = 'MOD_LOCK';
+  } else if (fdvMcap > 1.20 && lockedPct < 10) {
+    tier = 'POW_EMISSION';
+  } else if (!ms && lockedPct < 5) {
+    tier = 'UNCAPPED';
+  }
+
+  return {
+    cs: cs, ts: ts, ms: ms, effMax: effMax,
+    lockedTokens: lockedTokens, unminedTokens: unminedTokens,
+    circPct: circPct, lockedPct: lockedPct, unminedPct: unminedPct,
+    fdvMcap: fdvMcap, lockedRatio: lockedRatio,
+    effectiveFdv: effectiveFdv,
+    lockedUsd: lockedUsd, unminedUsd: unminedUsd, newCashNeeded: newCashNeeded,
+    daysToAbsorbLocked: daysToAbsorbLocked, shock5PctOfVol: shock5PctOfVol,
+    retentionPct: retentionPct, tokScore: tokScore,
+    tier: tier, isUncapped: !ms
   };
 }
 
