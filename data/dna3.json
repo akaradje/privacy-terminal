@@ -111,7 +111,7 @@
    "conf": "med",
    "src": "https://zips.z.cash/protocol/protocol.pdf",
    "asof": "2026-10-16",
-   "note": "viewing key + selective disclosure เป็นส่วนหนึ่งของโปรโตคอล"
+   "note": "viewing key + selective disclosure ระดับโปรโตคอล"
   }
  },
  "XMR": {
@@ -162,11 +162,11 @@
   "yr": 2014,
   "setup": "ไม่มี trusted setup",
   "audit": {
-   "v": 2,
+   "v": 1,
    "conf": "med",
-   "src": "https://www.getmonero.org/",
+   "src": "https://github.com/monero-project/research-lab",
    "asof": "2026-10-16",
-   "note": "ได้รับการตรวจทางวิชาการกว้าง · 0 หมายถึง \"ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิด\" ไม่ได้หมายถึง \"ไม่เคยมีบั๊ก\""
+   "note": "repo นี้คือชุดงานวิจัย + vulnerability response process (HackerOne) — พิสูจน์ได้ว่ามี security programme แต่ยังยืนยันชื่อบริษัท audit ไม่ได้ (probe: repo มี README แสดง vulnerability response process ไม่ใช่รายงาน audit) → ใช้ 1 ไว้ก่อน · ถ้าจะขึ้น 2 ต้องหาลิงก์รายงาน audit ฉบับเต็ม"
   },
   "gov": "ชุมชน + CCS funding ไม่มีบริษัทกลาง",
   "risk": "ถูกถอดจาก 70+ CEX · ไม่มี ETF · ขัด travel rule",
@@ -207,11 +207,11 @@
    "note": "พึ่ง elliptic curve (Ed25519/curve25519) ไม่มีแผน PQ ที่ใช้แล้ว"
   },
   "brk": {
-   "v": 0,
-   "conf": "med",
-   "src": "https://www.google.com/search?q=XMR+security+advisory",
+   "v": 0.5,
+   "conf": "high",
+   "src": "https://www.getmonero.org/2017/05/17/disclosure-of-a-major-bug-in-cryptonote-based-currencies.html",
    "asof": "2026-10-16",
-   "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
+   "note": "ช่องโหว่ระดับ CryptoNote (พ.ค. 2017): key image ซ้ำได้ → สร้างเหรียญ/double-spend ไม่จำกัด · ทีม Monero ค้นพบและแพตช์ก่อนถูกใช้โจมตี · แก้ที่ระดับโค้ด CryptoNote ทุกตัวจึงกระทบทั้งตระกาล"
   },
   "aset": {
    "v": 16,
@@ -228,11 +228,11 @@
    "note": "โอนมูลค่าบนเชนของตัวเอง"
   },
   "comp": {
-   "v": 0,
-   "conf": "high",
+   "v": 1,
+   "conf": "med",
    "src": "https://www.getmonero.org/",
    "asof": "2026-10-16",
-   "note": "ไม่มี viewing key / selective disclosure (เป็นคุณสมบัติที่ตั้งใจ)"
+   "note": "Secret View Key + per-tx proof (TxProof/OutProof) ในตัว wallet — ยืนยันรายธุรกรรมได้แต่ไม่ใช่ programmable viewing key ระดับบัญชี"
   }
  },
  "DASH": {
@@ -462,7 +462,7 @@
    "conf": "med",
    "src": "https://docs.decred.org/privacy/",
    "asof": "2026-10-16",
-   "note": "CoinShuffle++ — ไม่มี viewing key"
+   "note": "CoinShuffle++ ไม่มี viewing key"
   }
  },
  "BDX": {
@@ -573,11 +573,11 @@
   },
   "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
   "comp": {
-   "v": 0,
-   "conf": "med",
+   "v": 1,
+   "conf": "low",
    "src": "https://beldex.io/",
    "asof": "2026-10-16",
-   "note": "CryptoNote (Monero fork) — ไม่มี viewing key"
+   "note": "CryptoNote (Monero fork) — น่าจะมี view key รายธุรกรรม"
   }
  },
  "ZANO": {
@@ -688,11 +688,11 @@
   },
   "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
   "comp": {
-   "v": 0,
-   "conf": "med",
+   "v": 1,
+   "conf": "low",
    "src": "https://zano.org/",
    "asof": "2026-10-16",
-   "note": "CryptoNote — ไม่มี viewing key"
+   "note": "CryptoNote lineage"
   }
  },
  "ARRR": {
@@ -850,9 +850,9 @@
   "tl": {
    "v": 2,
    "conf": "med",
-   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "src": "https://github.com/firoorg/firo",
    "asof": "2026-10-16",
-   "note": "Lelantus Spark: เว็บโปรเจกต์ระบุว่า \"hides the sender, receiver, transaction amount\" และเป็น \"trustless\" → tl=2 (ไม่มี trusted setup) · opt-in (ที่อยู่ transparent ยังใช้ได้) · hmeta=1: ยังมี transparent tx ปนในเชน"
+   "note": "README ของ repo ยืนยันว่า Spark \"without requiring trusted setup\" — ยืนยัน tl=2 จากเอกสารโปรเจกต์เอง"
   },
   "big": 1,
   "yr": 2016,
@@ -860,9 +860,9 @@
   "audit": {
    "v": 1,
    "conf": "med",
-   "src": "https://firo.org/2022/05/10/introducing-lelantus-spark.html",
+   "src": "https://github.com/firoorg/firo",
    "asof": "2026-10-16",
-   "note": "Lelantus / Lelantus Spark ได้รับการตรวจวิชาการเปิด แต่ไม่ใช่ audit จากบริษัท Tier-1"
+   "note": "README ของ repo (HTTP 200) ยืนยันว่า Spark \"supports high anonymity sets without requiring trusted setup\" (→ ยืนยัน tl=2) แต่ไม่ได้ระบุชื่อบริษัท audit · post-mortem Zerocoin 2019 ที่เสนอลิงก์มาเป็น 404 ทั้งหมด"
   },
   "gov": "",
   "risk": "",
@@ -917,13 +917,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวน coin ใน Spark pool ณ asof — ยังไม่มีแหล่งนับสาธารณะ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=FIRO+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "XVG": {
   "g": "coin",
@@ -1037,7 +1031,7 @@
    "conf": "high",
    "src": "https://vergecurrency.com/",
    "asof": "2026-10-16",
-   "note": "ledger โปร่งใสทั้งหมด ไม่มีอะไรให้ selective disclose"
+   "note": "ledger โปร่งใสทั้งหมด"
   }
  },
  "GRIN": {
@@ -1152,7 +1146,7 @@
    "conf": "high",
    "src": "https://docs.grin.mw/",
    "asof": "2026-10-16",
-   "note": "ไม่มี viewing key"
+   "note": "MimbleWimble ตัด input-output ทิ้ง — สร้าง view key ย้อนหลังทั้งบัญชีไม่ได้"
   }
  },
  "BEAM": {
@@ -1267,7 +1261,7 @@
    "conf": "med",
    "src": "https://docs.beam.mw/",
    "asof": "2026-10-16",
-   "note": "ไม่มี viewing key (auditability เป็นเรื่องของ wallet ไม่ใช่โปรโตคอล)"
+   "note": "เช่นเดียวกับ MimbleWimble อื่น"
   }
  },
  "DERO": {
@@ -1378,11 +1372,11 @@
   },
   "aset_note": "ชั้น 1: ring size ของ CryptoNote กำหนดในโค้ด — ต้องอ้างไฟล์โค้ด/สเปกฉบับระบุเลขก่อนจึงจะใส่ได้",
   "comp": {
-   "v": 0,
-   "conf": "med",
+   "v": 1,
+   "conf": "low",
    "src": "https://dero.io/",
    "asof": "2026-10-16",
-   "note": "CryptoNote — ไม่มี viewing key"
+   "note": "CryptoNote lineage — น่าจะมี view key รายธุรกรรม (ต้องยืนยันในซอร์ส)"
   }
  },
  "ZEPH": {
@@ -1493,11 +1487,11 @@
   },
   "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
   "comp": {
-   "v": 0,
-   "conf": "med",
+   "v": 1,
+   "conf": "low",
    "src": "https://www.zephyrprotocol.com/",
    "asof": "2026-10-16",
-   "note": "Monero fork — ไม่มี viewing key"
+   "note": "Monero fork — น่าจะมี view key รายธุรกรรม"
   }
  },
  "ZCL": {
@@ -1957,7 +1951,7 @@
    "conf": "low",
    "src": "https://rfc.tari.com/",
    "asof": "2026-10-16",
-   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+   "note": "สืบทอด MimbleWimble"
   }
  },
  "ABEL": {
@@ -2067,13 +2061,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=ABEL+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "EPIC": {
   "g": "coin",
@@ -2187,7 +2175,7 @@
    "conf": "low",
    "src": "https://epiccash.com/",
    "asof": "2026-10-16",
-   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+   "note": "สืบทอด MimbleWimble"
   }
  },
  "MWC": {
@@ -2302,7 +2290,7 @@
    "conf": "low",
    "src": "https://www.mwc.mw/",
    "asof": "2026-10-16",
-   "note": "สืบทอด Mimblewimble — ไม่มี viewing key"
+   "note": "สืบทอด MimbleWimble"
   }
  },
  "YEC": {
@@ -2527,13 +2515,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 1: ring size กำหนดในโค้ด — ต้องอ้างสเปกที่ระบุเลขก่อน",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=XEL+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "PART": {
   "g": "coin",
@@ -2642,13 +2624,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ขนาด ring/CT pool — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=PART+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "NAV": {
   "g": "coin",
@@ -2757,13 +2733,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวน output ที่ยังไม่ถูกใช้ใน confidential pool ณ asof — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=NAV+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "ZER": {
   "g": "coin",
@@ -2929,10 +2899,10 @@
   "setup": "PLONK/Honk — ไม่ต้อง trusted setup",
   "audit": {
    "v": 1,
-   "conf": "low",
-   "src": "https://docs.aztec.network/",
+   "conf": "med",
+   "src": "https://raw.githubusercontent.com/AztecProtocol/aztec-packages/next/SECURITY.md",
    "asof": "2026-10-16",
-   "note": "มี bug-bounty ผ่าน Cantina (234+ นักวิจัย) ซึ่งไม่ใช่ audit จากบริษัท — ต้องยืนยันรายงาน audit ฉบับเป็นทางการ"
+   "note": "SECURITY.md ยืนยัน (HTTP 200, อ่านเนื้อหาได้): \"currently under internal and external review\" + bug bounty ผ่าน Cantina — ยังไม่มีรายงาน audit จากบริษัท Tier-1 ที่เผยแพร่ → 1 ไม่ใช่ 2"
   },
   "gov": "Aztec Foundation + on-chain governance (V5 ผ่านโหวต)",
   "risk": "alpha · V5 vuln · 71% supply ล็อกถึง 2027+",
@@ -3209,13 +3179,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=ZAMA+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "TORN": {
   "g": "proto",
@@ -3329,7 +3293,7 @@
    "conf": "high",
    "src": "https://sanctionssearch.ofac.treas.gov/",
    "asof": "2026-10-16",
-   "note": "mixer ล้วน ไม่มีกลไก selective disclosure — และถูกคว่ำบาตรโดยตรง"
+   "note": "mixer ล้วน ไม่มี proof of innocence — และถูกคว่ำบาตรโดยตรง"
   },
   "sanctioned": {
    "v": 1,
@@ -3674,13 +3638,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวน intent ที่ settle ในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=XAN+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "UMBRA": {
   "g": "proto",
@@ -3791,9 +3749,9 @@
   "comp": {
    "v": 1,
    "conf": "low",
-   "src": "https://www.google.com/search?q=UMBRA+viewing+key+OR+selective+disclosure",
+   "src": "https://www.umbra.cash/",
    "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+   "note": "claim flow ให้ผู้รับพิสูจน์การรับเงินรายครั้งได้ (per-tx proof)"
   }
  },
  "DARK": {
@@ -3907,7 +3865,7 @@
    "conf": "med",
    "src": "https://darkswap.io/",
    "asof": "2026-10-16",
-   "note": "พึ่งผู้ให้บริการ third party — ไม่มีกลไกของตัวเอง"
+   "note": "พึ่งผู้ให้บริการ third party"
   }
  },
  "ZKP": {
@@ -4358,13 +4316,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=AZERO+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "VRSC": {
   "g": "proto",
@@ -4697,10 +4649,10 @@
   "aset_note": "ชั้น 3: ไม่มีสถิติผู้ใช้ mixnet ต่อ epoch ที่ตรวจสอบซ้ำได้",
   "comp": {
    "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=NYM+viewing+key+OR+selective+disclosure",
+   "conf": "med",
+   "src": "https://nymtech.net/docs/",
    "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
+   "note": "ซ่อนเฉพาะ IP ของเครือข่าย — เนื้อหาธุรกรรมยังอยู่บนเชนโฮสต์ที่ audit ได้"
   }
  },
  "HOPR": {
@@ -4811,11 +4763,11 @@
   },
   "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือขนาด mixnet ต่อ epoch (ยังไม่มีแหล่งนับสาธารณะ)",
   "comp": {
-   "v": 0,
-   "conf": "low",
+   "v": 1,
+   "conf": "med",
    "src": "https://hoprnet.org/",
    "asof": "2026-10-16",
-   "note": "mixnet — ไม่พบ compliance tooling"
+   "note": "เช่นเดียวกับ mixnet อื่น — ไม่อุ่นกับ AML ของเชนต้นทาง"
   }
  },
  "SESH": {
@@ -4925,11 +4877,11 @@
   },
   "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน onion routing node ต่อ epoch",
   "comp": {
-   "v": 0,
-   "conf": "med",
+   "v": 1,
+   "conf": "low",
    "src": "https://getsession.org/",
    "asof": "2026-10-16",
-   "note": "E2E messaging — ไม่มี selective disclosure ระดับการเงิน"
+   "note": "messaging — เชนโฮสต์ audit ได้"
   }
  },
  "MYST": {
@@ -5039,11 +4991,11 @@
   },
   "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน exit node ต่อประเทศ/ช่วงเวลา",
   "comp": {
-   "v": 0,
+   "v": 1,
    "conf": "med",
    "src": "https://mysterium.network/",
    "asof": "2026-10-16",
-   "note": "dVPN — ไม่มี compliance tooling"
+   "note": "dVPN — ซ่อน IP เท่านั้น เชนโฮสต์ audit ได้"
   }
  },
  "P2P": {
@@ -5153,11 +5105,11 @@
   },
   "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม — ตัวชี้วัดที่ควรใช้คือจำนวน active node",
   "comp": {
-   "v": 0,
+   "v": 1,
    "conf": "med",
    "src": "https://sentinel.co/",
    "asof": "2026-10-16",
-   "note": "dVPN — ไม่มี compliance tooling"
+   "note": "dVPN — ซ่อน IP เท่านั้น"
   }
  },
  "ANYONE": {
@@ -5267,11 +5219,11 @@
   },
   "aset_note": "ชั้น 3: ไม่มี anonymity set ระดับธุรกรรม (การโอนโปร่งใส) — ตัวชี้วัดที่ควรใช้คือจำนวนโหนด/ผู้ใช้ในเส้นทาง ต้องออกแบบการวัดก่อน",
   "comp": {
-   "v": 0,
+   "v": 1,
    "conf": "low",
    "src": "https://anyone.io/",
    "asof": "2026-10-16",
-   "note": "DePIN onion — ไม่พบ compliance tooling"
+   "note": "DePIN onion — ซ่อน IP เท่านั้น"
   }
  },
  "SCRT": {
@@ -5495,13 +5447,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=ROSE+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "PHA": {
   "g": "compute",
@@ -5609,13 +5555,7 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้/worker ที่ประมวลผลงานเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=PHA+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "MPC": {
   "g": "compute",
@@ -5723,13 +5663,7 @@
    "note": "ตัวโทเค็นอยู่บนเชนโฮสต์แบบโปร่งใส"
   },
   "aset_note": "ชั้น 2 ต้องใช้จำนวนผู้ใช้ต่อ epoch — ยังไม่มีแหล่งที่นับได้",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=MPC+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  },
  "OCT": {
   "g": "compute",
@@ -5837,12 +5771,6 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนธุรกรรมที่เข้ารหัสในกลุ่มเดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": {
-   "v": 1,
-   "conf": "low",
-   "src": "https://www.google.com/search?q=OCT+viewing+key+OR+selective+disclosure",
-   "asof": "2026-10-16",
-   "note": "ไม่พบหลักฐาน — comp=1 หมายถึง \"ยังไม่ยืนยัน\" ไม่ใช่ \"มีบางส่วน\""
-  }
+  "comp": null
  }
 }

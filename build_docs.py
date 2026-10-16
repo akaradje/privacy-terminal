@@ -18,6 +18,7 @@ DOCS = [
     ('pilot/result.md', 'Pilot round — result', 'ผลรอบ pilot 6 เหรียญ: คะแนน, เกณฑ์ที่ไม่ผ่าน, ค่าที่หาแหล่งอ้างอิงไม่ได้'),
     ('pilot/expected.md', 'Pilot — expected ranking (pre-registered)', 'อันดับที่เขียนไว้ก่อนกรอกข้อมูล + เงื่อนไขที่ทำให้รู้ว่า engine ผิด'),
     ('pilot/aset-probes.md', 'aset tier-2 probes (what was tried)', 'ผล probe API สาธารณะสำหรับ aset: อะไรเข้าได้/ไม่ได้ + เหตุผลที่ AZTEC ต้องไม่ถูกตั้งเป็น 0'),
+    ('pilot/round4-audit.md', 'R4 — comp re-grade · S citations · 6-pillar history', 'กำจัดคะแนนฟรี 50% ใน comp, เติม citation S สำหรับ XMR/FIRO/RAIL/AZTEC, อัปเกรด snapshot_history เป็น 6 pillars'),
     ('pilot/round3-pillars.md', 'T/S dedup + Pillar R + Compare', 'แยกการนับซ้ำ T/S, brk แบบ 3 ระดับพร้อมประวัติ, pillar R และโหมดเปรียบเทียบเรดาร์'),
     ('pilot/round2-pillars.md', 'MW hmeta cap · MWC mcap · Pillars T/S', 'แก้ 3 ข้อ: เพดาน hmeta ของ Mimblewimble, market cap fallback ของ MWC, และ pillar T/S + risk-adjusted composite'),
     ('pilot/pass-pillars-result.md', 'P-core close + Pillars D/L', 'ปิดแกน P: hst ขยาย, hnet/hmeta เกณฑ์โปรโตคอล, band floor + anomaly detection + pillar D/L และ composite 4 presets'),

@@ -3,6 +3,40 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.7.0-preview — 2026-10-16
+
+Three cleanups that close the last logical leaks in Pillar R / S and make the history snapshot usable.
+
+**1. `comp` no longer grants a free 50%.** The old `comp=1` meant "not evidenced" and scored 50 in
+Pillar R — so a coin with *no* compliance evidence outscored a coin proven to have *none* (`comp=0` →
+0). Re-defined: `2` = documented selective disclosure / viewing keys / proof of innocence · `1` = basic
+or partial (XMR native view key, CryptoNote, IP-only privacy) · `0` = no privacy to disclose and no
+tooling · `null` = not evidenced. The engine now floors `comp=null` to **0 with its 0.45 weight
+retained** (not dropped). Monotonicity holds: `R(comp=0)=55` equals `R(comp=null)=55`, so an unknown
+can never outrank a known absence.
+
+**2. S citations filled for XMR / FIRO / RAIL / AZTEC (all `src` HTTP-probed before acceptance).**
+- XMR `brk=0.5` (HIGH) — getmonero.org 2017 disclosure, HTTP 200, content confirms "key image" /
+  "double-spend"; `audit=1` (med) from monero-project/research-lab vulnerability-response process
+  (not a named firm); `comp=1` (native view key).
+- FIRO `tl=2` (med) from the repo README, HTTP 200; `brk=0`, `audit=1`; `comp=null` — the supplied
+  2019 post-mortem URLs were all 404, recorded as dead, never encoded.
+- RAIL `comp=2` (med, railgun.org); `audit=0`, `brk=0`.
+- AZTEC `comp=2` (med, docs.aztec.network); `audit=1` (med) — SECURITY.md says "under internal and
+  external review" + Cantina bounty, no published Tier-1 audit, so `1` not `2`; `brk=null` stays a
+  named gap (V5 patch status unconfirmed). Dead links supplied (firo.org post-mortem, Railgun-Community
+  contract, railgun.org/audits SPA) were recorded, not scored.
+
+**3. `snapshot_history.py` now records all six pillars + composite.** Calls `pillarsOf()` /
+`compositeOf()` from the engine per asset, emits `pillars:{P,D,L,T,S,R,composite}`, adds an `_asof()`
+helper so pillar D is diffable day-over-day, and fixed two bugs (a self-recursive `_asof()` that caused
+`RecursionError`, and an invalid `\.` escape). Output: `history/2026-10-16.json.gz` — 51 assets,
+`scoring_version: 2.7.0-preview`.
+
+Validation: **0 errors, 16 named warnings** (12 `comp=null` gaps, AZTEC `brk=null`, DUSK/P2P archived
+repos, MWC imputed market cap). Composite leaderboard (`privacy_investor`, risk-adjusted): XMR 81 ›
+BDX 78 › GRIN 77 › ZANO 74 › BEAM 73 › EPIC 72 › ARRR 70 › ZEC 68 › XTM 67 › AZTEC 66 › FIRO 65 › PIVX 64.
+
 ## 2.6.0-preview — 2026-10-16
 
 Three things: T and S stop double-counting, `brk` becomes a real history, and pillar R exists.

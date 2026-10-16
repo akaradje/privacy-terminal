@@ -160,9 +160,12 @@ def main():
         sv = unwrap(g.get('sanctioned'))
         if sv is not None and sv not in (0, 1):
             errs.append('%s: sanctioned=%r must be 0 or 1' % (s, sv))
-        # audit 0 means "no record found", comp 1 means "not evidenced" — neither may be silent
+        # comp null is a legitimate "not evidenced" state: the engine floors it to 0, but it must
+        # stay visible so the gap does not silently pass as a finding
         if unwrap(g.get('comp')) is None:
-            errs.append('%s: comp is missing — pillar R cannot be scored' % s)
+            warns.append('%s: comp is null (not evidenced) → floored to 0 in pillar R' % s)
+        if unwrap(g.get('brk')) is None:
+            warns.append('%s: brk is null (patch/exploit status unconfirmed) → pillar S not scored' % s)
         mv = unwrap(g.get('man'))
         if mv is not None and mv not in (0, 0.5, 1):
             errs.append('%s: man=%r must be 0, 0.5 or 1' % (s, mv))

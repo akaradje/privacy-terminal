@@ -2,7 +2,7 @@
  * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.6.0-preview
+ * scoring_version: 2.7.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.6.0-preview';
+var SCORING_VERSION = '2.7.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 /* Conservative floor — makes the score strictly monotonic.
@@ -313,10 +313,14 @@ function regulatoryScore(d) {
   var tl = gval(d, 'tl'), comp = gval(d, 'comp');
   if (tl == null && comp == null) return null;
   var tlS = tl == null ? null : (tl <= 0 ? 25 : tl <= 1 ? 50 : tl <= 1.5 ? 75 : 100);
-  var compS = comp == null ? null : (comp / 2) * 100;
+  /* comp null means "not evidenced", NOT "none". It floors to 0 with the weight retained — the
+   * same rule as the P components: unknown must never outscore a known absence. (The old version
+   * dropped the weight instead, which meant an unchecked coin scored higher than a checked one
+   * that turned out to have nothing.) */
+  var compS = comp == null ? 0 : (comp / 2) * 100;
   var parts = [];
   if (tlS != null) parts.push([0.55, tlS]);
-  if (compS != null) parts.push([0.45, compS]);
+  parts.push([0.45, compS]);
   var tw = 0, acc = 0;
   for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
   var R = tw ? Math.round(acc / tw) : null;
