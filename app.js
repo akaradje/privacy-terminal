@@ -7,7 +7,10 @@ var STATS = __STATS__;
 /* Snapshot date. Pillar D is a recency measure, so it must be computed against a fixed date —
  * using "now" would make the same data produce a different score tomorrow and break diffing. */
 var ASOF_DATE = (STATS && STATS.snap) ? String(STATS.snap).slice(0, 10) : new Date().toISOString().slice(0, 10);
-var state = { view: 'table', q: '', sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null, compare: [] };
+var state = {
+  view: 'table', q: '', preset: 'privacy_investor', bullFilter: 'all', curOnly: false,
+  targetMcap: 2.5e9, sortKey: 'm', dir: -1, minMcap: 0, minGrade: 0, sel: -1, expanded: null, compare: []
+};
 var view = [];
 var TIERMAP = {};
 var IDMAP = {};
@@ -38,6 +41,12 @@ function fmtPrice(p) {
   if (p >= 0.01) return '$' + p.toFixed(4);
   return '$' + p.toFixed(6);
 }
+function fmtMult(m) {
+  if (m == null || !isFinite(m) || m <= 0) return '—';
+  if (m >= 100) return Math.round(m) + 'x';
+  if (m >= 10) return m.toFixed(1) + 'x';
+  return m.toFixed(2) + 'x';
+}
 function fmtPct(v) {
   if (v == null || !isFinite(v)) return '<span class="dim">n/a</span>';
   var cls = v > 0 ? 'up' : (v < 0 ? 'down' : 'dim');
@@ -63,6 +72,67 @@ function dna(c) {
 function tierOf(c) { return c.tier || (IDMAP[c.id] && IDMAP[c.id].tier) || TIERMAP[c.s] || 't3'; }
 function grpOf(c) { return c.g || dna(c).g || 'proto'; }
 function det(c) { return DETAIL[c.id] || {}; }
+
+var _evalCache = {};
+function evalCoin(c) {
+  if (!c) return {};
+  if (_evalCache[c.s]) return _evalCache[c.s];
+  var d = dna(c), dt = det(c);
+  var pl = null, asy = null, fl = [], pos = [], m = {};
+  try { pl = pillarsOf(d, c, dt, ASOF_DATE); } catch (e) { pl = null; }
+  try { asy = asymmetryOf(d, c, dt, ASOF_DATE); } catch (e) { asy = null; }
+  try {
+    m = metricsFor(c, dt, d, ASOF_DATE);
+    fl = evaluateFlags(m);
+    pos = evaluatePositives(m);
+  } catch (e) { fl = []; pos = []; }
+  var posIds = pos.map(function (p) { return p.id; });
+  var hasCrit = fl.some(function (f) { return f.lv === 'CRITICAL'; });
+  var res = { pl: pl, asy: asy, fl: fl, pos: pos, posIds: posIds, hasCrit: hasCrit, m: m };
+  _evalCache[c.s] = res;
+  return res;
+}
+
+function activeScore(c, presetKey) {
+  var pk = presetKey || state.preset || 'privacy_investor';
+  var r = compositeRank(c, pk);
+  return r ? r.v : null;
+}
+
+function archetypeBadge(arch) {
+  if (!arch) return '';
+  if (arch === 'ZEC-ARCHETYPE') return '<span class="chip arch-zec" title="พิมพ์เขียว ZEC: มี Viewing Key/Selective Disclosure (comp=2) + กลไกความลับจริง + โค้ด Active">ZEC-TYPE</span>';
+  if (arch === 'SOVEREIGN-PRIV') return '<span class="chip arch-sov" title="Sovereign Privacy: ความลับระดับสูงสุด (Default/Mandatory) + โค้ด Active">SOVEREIGN</span>';
+  if (arch === 'CONF-COMPUTE') return '<span class="chip arch-cmp" title="Confidential Compute (FHE / MPC / TEE)">COMPUTE</span>';
+  if (arch === 'PRIV-NETWORK') return '<span class="chip" title="Network / Metadata Privacy (Mixnet / dVPN)">NET-PRIV</span>';
+  return '<span class="chip">' + arch + '</span>';
+}
+
+function pillarMiniHtml(pl) {
+  if (!pl) return '';
+  var keys = ['P', 'D', 'L', 'T', 'S', 'R'];
+  var tip = keys.map(function (k) { return k + ':' + (pl[k] == null ? '—' : pl[k]); }).join(' · ');
+  var bars = keys.map(function (k) {
+    var v = pl[k];
+    var h = v == null ? 2 : Math.max(2, Math.round((v / 100) * 12));
+    var col = v == null ? '#263347' : (v >= 75 ? '#3fd68c' : (v >= 55 ? '#4cc2ff' : (v >= 35 ? '#f5a623' : '#e2705f')));
+    return '<i style="height:' + h + 'px;background:' + col + '"></i>';
+  }).join('');
+  return '<span class="pMini" title="6 Pillars (' + tip + ')">' + bars + '</span>';
+}
+
+/* Implied re-rating multiple & target price if coin reaches targetMcap */
+function calcTarget(c, targetMcap) {
+  if (!c || !c.m || c.m <= 0 || !c.p || c.p <= 0) return null;
+  var mult = targetMcap / c.m;
+  var targetPrice = c.p * mult;
+  var fdvMult = mult;
+  if (c.ms && c.cs && c.ms > c.cs && c.cs > 0) {
+    fdvMult = targetMcap / (c.p * c.ms);
+  }
+  return { mult: mult, fdvMult: fdvMult, targetPrice: targetPrice };
+}
+
 function sparkColor(arr) {
   if (!arr || arr.length < 2) return '#5d6a7a';
   return arr[arr.length - 1] >= arr[0] ? '#2ecc71' : '#ff4d4f';
@@ -136,17 +206,14 @@ function archChip(d) {
   var cls = a === 'value-transfer' ? 'tier-t1' : (a === 'transport' ? 'tier-t2' : 'tier-t3');
   return '<span class="chip ' + cls + '" title="แยก leaderboard ตามสถาปัตยกรรม — ห้ามเทียบข้ามกลุ่ม">' + a + '</span>';
 }
-function geneCell(v) {
+function geneCell(x) {
+  var v = (x && typeof x === 'object') ? x.v : x;
   if (v === 2) return '<span class="gene g2">FULL</span>';
   if (v === 1) return '<span class="gene g1">OPT</span>';
   return '<span class="gene g0">—</span>';
 }
 function gradeOf(d) {
-  if (!d || d.hs == null) return null;
-  var denom = 8 - (d.nst ? 2 : 0);
-  // clamp: bad data (e.g. nst=1 with hst>0) must never push the score above the 100 cap
-  var cov = Math.min(((d.hs || 0) + (d.hr || 0) + (d.ha || 0) + (d.hst || 0)) / denom, 1);
-  return Math.round(cov * 60 + (d.man ? 15 : 0) + (d.tl ? 15 : 0) + (d.big ? 10 : 0));
+  return scoreV1(d);
 }
 function gradeLetter(s) {
   if (s == null) return '—';
@@ -164,31 +231,86 @@ function gradeCls(s) {
   return 'gD';
 }
 
+function matchBullMode(c, mode) {
+  if (!mode || mode === 'all') return true;
+  var ev = evalCoin(c);
+  var pids = ev.posIds || [];
+  if (mode === 'zec') return pids.indexOf('zec_archetype') >= 0 || (ev.asy && ev.asy.archetype === 'ZEC-ARCHETYPE');
+  if (mode === 'gem') return pids.indexOf('asymmetric_gem') >= 0;
+  if (mode === 'sov') return !!(ev.asy && ev.asy.archetype === 'SOVEREIGN-PRIV');
+  if (mode === 'accum') return pids.indexOf('early_accumulation') >= 0;
+  if (mode === 'safe') return !ev.hasCrit && !gval(dna(c), 'sanctioned');
+  return true;
+}
+
+function renderPillBar() {
+  var pb = $('pillBar');
+  if (!pb) return;
+  var modes = [
+    ['all', 'ทั้งหมด'],
+    ['zec', '🟢 พิมพ์เขียว ZEC (comp=2 · โค้ด Active)'],
+    ['gem', '💎 Asymmetric Gems (Score ≥64 · Mcap <$600M)'],
+    ['sov', '🛡️ Sovereign Privacy (P ≥65 · Default/Mandatory)'],
+    ['accum', '🚀 สัญญาณสะสมต้นรอบ (Early Accumulation)'],
+    ['safe', '✅ ไร้ CRITICAL Flag']
+  ];
+  var html = '<span class="pLbl">Quick Filter:</span>';
+  for (var i = 0; i < modes.length; i++) {
+    var m = modes[i][0], lbl = modes[i][1], cnt = 0;
+    for (var j = 0; j < DATA.length; j++) if (matchBullMode(DATA[j], m)) cnt++;
+    html += '<button class="fPill' + (state.bullFilter === m ? ' on' : '') + '" data-bf="' + m + '">' +
+      lbl + ' <b>' + cnt + '</b></button>';
+  }
+  pb.innerHTML = html;
+  var btns = pb.querySelectorAll ? pb.querySelectorAll('.fPill') : [];
+  for (var k = 0; k < btns.length; k++) {
+    btns[k].onclick = function () {
+      var bf = this.getAttribute('data-bf') || 'all';
+      state.bullFilter = bf;
+      if ($('bullFilter')) $('bullFilter').value = bf;
+      state.sel = -1;
+      renderPillBar();
+      renderTable();
+    };
+  }
+}
+
 function renderStats() {
-  var mcap = 0, nA = 0, n1y = 0;
+  var mcap = 0, nA = 0, nZecType = 0, nGem = 0;
   for (var i = 0; i < DATA.length; i++) {
     var c = DATA[i];
     mcap += (c.m || 0);
-    if (c.c1y != null) n1y++;
     var g = gradeOf(dna(c));
     if (g != null && g >= 70) nA++;
+    if (matchBullMode(c, 'zec')) nZecType++;
+    if (matchBullMode(c, 'gem')) nGem++;
   }
   var med = STATS.median_1y;
   $('statsbar').innerHTML =
     '<div class="stat">PURE PRIVACY <b>' + DATA.length + '</b> assets</div>' +
     '<div class="stat">mcap รวม <b>$' + (mcap / 1e9).toFixed(2) + 'B</b></div>' +
-    '<div class="stat">DNA grade A ขึ้นไป <b>' + nA + '</b></div>' +
-    '<div class="stat">DNA profiles <b>' + STATS.n_dna + '</b></div>' +
+    '<div class="stat" title="เหรียญที่มี Viewing Key/Selective Disclosure (comp=2) + โค้ด Active + P ผ่านเกณฑ์">🟢 พิมพ์เขียว ZEC <b>' + nZecType + '</b></div>' +
+    '<div class="stat" title="Composite ≥64 แต่ Market Cap ยังอยู่ในโซนสะสม ($5M–$600M)">💎 Asymmetric Gems <b>' + nGem + '</b></div>' +
+    '<div class="stat">DNA v1 ≥ A <b>' + nA + '</b></div>' +
     '<div class="stat">median 1Y <b>' + (med == null ? 'n/a' : (med > 0 ? '+' : '') + med.toFixed(0) + '%') + '</b></div>' +
-    '<div class="stat">ตัดออก <b>' + STATS.n_cut + '</b> (ไม่ใช่ privacy แท้)</div>' +
+    '<div class="stat">engine <b>' + SCORING_VERSION + '</b></div>' +
     '<div class="stat">snapshot <b>' + STATS.snap + '</b></div>' +
     '<button id="liveBtn" title="ดึงราคาสดจาก CoinGecko">⟳ LIVE</button>' +
     '<span id="liveStatus"></span>';
   $('liveBtn').onclick = liveRefresh;
 }
 
-var SPOT = ['ZEC', 'XMR', 'AZTEC', 'ZAMA', 'RAIL', 'NIGHT', 'DASH', 'FIRO', 'ARRR', 'DERO', 'TORN'];
-var CHIPS = { 'TORN': ['SANCTIONED', 'r'], 'AZTEC': ['ALPHA · VULN DISCLOSED', 'a'], 'XMR': ['NO ETF', ''], 'ZEC': ['ETF · ZCSH', 'a'], 'SCRT': ['TEE-NOT-ZK', 'a'] };
+var SPOT = ['ZEC', 'XMR', 'FIRO', 'ARRR', 'ZANO', 'AZTEC', 'ZAMA', 'ROSE', 'RAIL', 'NIGHT', 'DUSK', 'TORN'];
+var CHIPS = {
+  'TORN': ['SANCTIONED', 'r'],
+  'AZTEC': ['ZK ROLLUP · 71% LOCKED', 'a'],
+  'XMR': ['SOVEREIGN #1 · NO ETF', ''],
+  'ZEC': ['ETF · $25.95B BENCHMARK', 'a'],
+  'FIRO': ['SPARK ZK · COMP=2 · GEM', 'a'],
+  'ARRR': ['100% SHIELDED · COMP=2', 'a'],
+  'ZANO': ['CONF ASSETS · SOVEREIGN', ''],
+  'ROSE': ['CONF EVM · COMP=2', '']
+};
 
 function renderSpot() {
   var out = [];
@@ -196,33 +318,52 @@ function renderSpot() {
     var c = null;
     for (var j = 0; j < DATA.length; j++) if (DATA[j].s === SPOT[i]) { c = DATA[j]; break; }
     if (!c) continue;
-    var q = cur(c.s);
-    var note = (q.note || '').length > 110 ? q.note.slice(0, 110) + '…' : (q.note || '');
+    var q = cur(c.s), ev = evalCoin(c);
+    var note = (q.note || '').length > 105 ? q.note.slice(0, 105) + '…' : (q.note || '');
     var chips = '';
     if (CHIPS[c.s]) chips = '<span class="chip ' + CHIPS[c.s][1] + '">' + CHIPS[c.s][0] + '</span>';
-    out.push('<div class="card ' + (c.s === 'TORN' ? 'risk' : '') + '">' +
-      '<span class="cs">' + c.s + '</span><span class="cn">' + c.n + '</span>' +
+    var bullBadge = (ev.asy && ev.asy.score != null)
+      ? '<span class="chip arch-zec">Bull ' + ev.asy.score + '</span>'
+      : '';
+    out.push('<div class="card ' + (c.s === 'TORN' ? 'risk' : '') + '" data-spot="' + c.s + '" style="cursor:pointer">' +
+      '<span class="cs">' + c.s + '</span><span class="cn">' + c.n + ' · $' + fmtCompact(c.m) + '</span>' +
       '<div class="cp num">' + fmtPrice(c.p) + '</div>' +
       '<div class="chg num">24h ' + fmtPct(c.c24) + ' &nbsp;·&nbsp; 1Y ' + fmtPct(c.c1y) + '</div>' +
-      '<div>' + badge(q.model) + chips + '</div>' +
+      '<div>' + badge(q.model) + ' ' + bullBadge + chips + '</div>' +
       '<div class="note">' + (q.mech || '') + (note ? ' — ' + note : '') + '</div></div>');
   }
   $('spotCards').innerHTML = out.join('');
+  var cards = $('spotCards').querySelectorAll ? $('spotCards').querySelectorAll('.card') : [];
+  for (var k = 0; k < cards.length; k++) {
+    cards[k].onclick = function () {
+      var sym = this.getAttribute('data-spot');
+      if (!sym) return;
+      state.expanded = (state.expanded === sym) ? null : sym;
+      if (state.view !== 'table') { state.view = 'table'; renderViewSwitch(); }
+      renderTable();
+      var tr = $('tbody') ? $('tbody').querySelector('tr[data-sym="' + sym + '"]') : null;
+      if (tr && tr.scrollIntoView) tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+  }
 }
 
 function hayOf(c) {
-  var k = cur(c.s), dd = dna(c);
-  return (c.s + ' ' + c.n + ' ' + grpOf(c) + ' ' + (k.mech || '') + ' ' + (k.note || '') + ' ' + (k.access || '') + ' ' +
+  var k = cur(c.s), dd = dna(c), ev = evalCoin(c);
+  var arch = (ev.asy && ev.asy.archetype) ? ev.asy.archetype : '';
+  return (c.s + ' ' + c.n + ' ' + grpOf(c) + ' ' + arch + ' ' + (ev.posIds || []).join(' ') + ' ' +
+    (k.mech || '') + ' ' + (k.note || '') + ' ' + (k.access || '') + ' ' +
     (dd.fam || '') + ' ' + (dd.prim || '') + ' ' + (dd.hides || '') + ' ' + (dd.trust || '') + ' ' + (dd.anonset || '') + ' ' +
     (dd.sec || '') + ' ' + (dd.comp || '') + ' ' + (dd.stage || '') + ' ' + (dd.setup || '') + ' ' + (dd.audit || '') + ' ' +
     (dd.gov || '') + ' ' + (dd.risk || '')).toLowerCase();
 }
 function matchesQuery(c) {
   if ((c.m || 0) < state.minMcap) return false;
+  if (state.curOnly && SPOT.indexOf(c.s) < 0) return false;
   if (state.minGrade) {
     var gr = gradeOf(dna(c));
     if (gr == null || gr < state.minGrade) return false;
   }
+  if (!matchBullMode(c, state.bullFilter)) return false;
   var q = state.q.trim().toLowerCase();
   if (q && hayOf(c).indexOf(q) < 0) return false;
   return true;
@@ -230,22 +371,44 @@ function matchesQuery(c) {
 function passFilter(c) { return matchesQuery(c); }
 function sortVal(c, k) {
   if (k === 's' || k === 'n') return c.s;
+  if (k === 'mcap') return (c.m == null ? -1e18 : c.m);
+  if (k === 'comp') {
+    var sc = activeScore(c);
+    return (sc == null ? -1e18 : sc);
+  }
+  if (k === 'bull') {
+    var ev = evalCoin(c);
+    return (ev.asy && ev.asy.score != null) ? ev.asy.score : -1e18;
+  }
+  if (k === 'v1') {
+    var g = gradeOf(dna(c));
+    return (g == null ? -1e18 : g);
+  }
+  if (k === 'sp') {
+    return (c.cs && c.ms && c.ms > 0) ? (c.cs / c.ms) : -1e18;
+  }
   var v = c[k];
   return (v == null ? -1e18 : v);
 }
+
 function dnaPanel(c) {
-  var d = dna(c), q = cur(c.s), g = gradeOf(d);
+  var d = dna(c), q = cur(c.s), g = gradeOf(d), ev = evalCoin(c);
   var head = '<div class="dnaHead"><b>' + c.s + '</b><span class="dim">' + c.n + '</span>' +
     '<span class="chip">' + (c.g || 'proto') + '</span>' + archChip(d) + famChip(d.fam) + badge(q.model) +
-    (g == null ? '' : '<span class="' + gradeCls(g) + '">DNA ' + g + '/100 · ' + gradeLetter(g) + '</span>') + '</div>';
+    (ev.asy ? ' ' + archetypeBadge(ev.asy.archetype) : '') +
+    (g == null ? '' : '<span class="' + gradeCls(g) + '">DNA v1 ' + g + '/100 · ' + gradeLetter(g) + '</span>') + '</div>';
+  var manV = gval(d, 'man'), tlV = gval(d, 'tl');
   var strip = '<div class="geneRow"><span class="lbl">ซ่อน:</span>' +
     '<span class="lbl">ผู้ส่ง</span>' + geneCell(d.hs) +
     '<span class="lbl">ผู้รับ</span>' + geneCell(d.hr) +
     '<span class="lbl">จำนวน</span>' + geneCell(d.ha) +
     '<span class="lbl">state</span>' + geneCell(d.hst) +
-    '<span class="lbl">· บังคับใช้</span>' + (d.man ? '<span class="gene g2">YES</span>' : '<span class="gene g1">OPT</span>') +
-    '<span class="lbl">trustless</span>' + (d.tl ? '<span class="gene g2">YES</span>' : '<span class="gene g0">NO</span>') + '</div>';
-  function kv(k, v) { return v ? '<div><div class="k">' + k + '</div><div class="v">' + v + '</div></div>' : ''; }
+    '<span class="lbl">· บังคับใช้</span>' + (manV >= 1 ? '<span class="gene g2">YES</span>' : (manV >= 0.5 ? '<span class="gene g1">DEF</span>' : '<span class="gene g1">OPT</span>')) +
+    '<span class="lbl">trustless</span>' + (tlV >= 2 ? '<span class="gene g2">YES</span>' : (tlV >= 1 ? '<span class="gene g1">PART</span>' : '<span class="gene g0">NO</span>')) + '</div>';
+  function kv(k, v) {
+    var val = (v && typeof v === 'object') ? (v.note || v.v) : v;
+    return val ? '<div><div class="k">' + k + '</div><div class="v">' + val + '</div></div>' : '';
+  }
   var grid = '<div class="dnaGrid">' +
     kv('primitive (แกนคริปโต)', d.prim) +
     kv('hides (ซ่อนอะไรจริง)', d.hides) +
@@ -257,7 +420,7 @@ function dnaPanel(c) {
     kv('security history', d.sec) +
     kv('compliance / access', d.comp || q.access) +
     kv('stage', d.stage) +
-    kv('ปี mainnet', d.yr ? String(d.yr) : '') +
+    kv('ปี mainnet', gval(d, 'yr') ? String(gval(d, 'yr')) : '') +
     kv('ไทม์ไลน์สำคัญ', d.hist) +
     kv('ความเสี่ยงหลัก', d.risk) +
     kv('notes', q.note) +
@@ -265,10 +428,9 @@ function dnaPanel(c) {
   return head + strip + grid + v3Block(c) + dossierHtml(c);
 }
 
-/* v3 surface: DNA v2 (engine/score.js) + red flags (engine/flags.js)
- * v2 is PREVIEW: the new genes are still being populated, so v1 remains the score the UI ranks on. */
+/* v3 surface: DNA v2.8 (engine/score.js) + Bull-Run Asymmetry + Target Simulator + Flags */
 function v3Block(c) {
-  var d = dna(c), det_ = det(c), out = '';
+  var d = dna(c), det_ = det(c), ev = evalCoin(c), out = '';
   var p2 = null;
   try { p2 = scoreP(d); } catch (e) { p2 = null; }
   var v1 = null;
@@ -276,7 +438,7 @@ function v3Block(c) {
 
   if (p2) {
     var pct = Math.round(p2.coverage * 100);
-    out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span> <span class="chip fl-MED">PREVIEW</span></div>';
+    out += '<div class="v3"><div class="v3t">DNA v2 <span class="dim">(' + p2.version + ')</span></div>';
     var imp = p2.imputed || [];
     if (p2.insufficient) {
       out += '<div class="dim" style="font-size:11px">ข้อมูลไม่พอสำหรับจัดอันดับ (มีข้อมูล ' + pct + '% ของน้ำหนัก — ขาด: ' + p2.missing.join(', ') + ') → ตัวเลขนี้ไม่ใช้จัดอันดับ ใช้คะแนน v1 แทน</div>';
@@ -294,12 +456,70 @@ function v3Block(c) {
     if (imp.length) {
       out += '<div class="dim" style="font-size:10px">มี component ที่ยังไม่มีหลักฐาน: <b>' + imp.join(', ') + '</b> — คิดเป็นค่าฐานล่าง (0) โดยไม่ตัดน้ำหนักออกจากตัวหาร เพื่อไม่ให้เหรียญที่ไม่มีหลักฐานได้คะแนนฟรี</div>';
     }
-    out += '<div class="dim" style="font-size:10px">คะแนนที่ใช้จัดอันดับจริง = v1 ' + (v1 == null ? '—' : v1 + ' / 100') + ' · v2 (' + p2.version + ') ต้องมีหลักฐาน ≥ 80% จึงมีสิทธิ์ถูกจัดอันดับ</div>';
     out += '</div>';
   }
 
-  var fl = [];
-  try { fl = evaluateFlags(metricsFor(c, det_, d)); } catch (e) { fl = []; }
+  /* --- Bull-Run Asymmetry & Next-Zcash Re-rating Panel --- */
+  if (ev.asy) {
+    var a = ev.asy, br = compositeRank(c, 'asymmetry');
+    out += '<div class="v3"><div class="v3t">⚡ BULL-RUN ASYMMETRY &amp; RE-RATING SIMULATOR <span class="dim">(เทียบพิมพ์เขียว ZEC $700M → $25.95B)</span></div>';
+    out += '<div class="v3score">Bull Asymmetry = <b>' + a.score + '</b> / 100 ' +
+      (br ? '<span class="dim">→ อันดับ <b>#' + br.r + '/' + br.n + '</b></span> ' : '') +
+      archetypeBadge(a.archetype) + '</div>';
+    out += '<div class="v3parts">' +
+      plChip('Fundamentals (50%)', a.fundamentals) +
+      plChip('Mcap Upside Room (20%)', a.upside) +
+      plChip('Clean Tokenomics (15%)', a.tokenomics) +
+      plChip('Market Access Rails (15%)', a.rails) +
+      '</div>';
+    if (c.m && c.m > 0 && c.p && c.p > 0) {
+      var targets = [
+        ['$700M (ZEC ก่อนวิ่ง)', 7e8],
+        ['$2.5B (Mid-Cap Bull)', 2.5e9],
+        ['$6.5B (ระดับ XMR)', 6.5e9],
+        ['$25.95B (ZEC Peak)', 25.95e9]
+      ];
+      var tHtml = targets.map(function (t) {
+        var sim = calcTarget(c, t[1]);
+        if (!sim || sim.mult <= 1.05) return '<span class="chip dim">' + t[0] + ': ผ่านเป้าแล้ว</span>';
+        var dil = (sim.fdvMult < sim.mult * 0.85) ? ' <span class="dim">(FDV ' + fmtMult(sim.fdvMult) + ')</span>' : '';
+        return '<span class="chip b-sel">' + t[0] + ' → <b>' + fmtMult(sim.mult) + '</b> (' + fmtPrice(sim.targetPrice) + ')' + dil + '</span>';
+      }).join(' ');
+      out += '<div class="v3parts" style="margin-top:4px">' + tHtml + '</div>';
+    }
+    out += '<div class="dim" style="font-size:10px">โมเดลวัด 4 ปัจจัยที่ทำให้เหรียญพุ่งระดับ 10x–35x ในตลาดกระทิง: (1) พื้นฐาน P·D·R·S·T แข็งและโค้ดไม่ตาย · (2) ขนาด Market Cap ยังมีรูมเติบโต (คูณด้วยความแข็งของ P เพื่อกันเหรียญอ่อนแอมั่วติดอันดับ) · (3) สัดส่วนเหรียญหมุนเวียนสูง ไม่โดน VC เทปลดล็อก · (4) มี Viewing Key / Compliance (comp=2) และลิสต์บนกระดานเทรด</div>';
+    out += '</div>';
+  }
+
+  /* --- 6 Pillars D / L / T / S / R / P + Composite --- */
+  var pl = ev.pl;
+  if (pl) {
+    var pos = ev.pos || [];
+    var dd = pl.Ddetail;
+    out += '<div class="v3"><div class="v3t">6 PILLARS: P · D · L · T · S · R <span class="dim">(privacy · developer · liquidity · maturity · security · regulatory+access)</span></div><div class="v3parts">' +
+      plChip('P', pl.P) + plChip('D', pl.D) + plChip('L', pl.L) + plChip('T', pl.T) + plChip('S', pl.S) + plChip('R', pl.R) +
+      '</div>';
+    if (dd) {
+      out += '<div class="dim" style="font-size:10px">' + (dd.repo || 'repo ไม่ระบุ') + ' · push ล่าสุด ' + dd.pushed +
+        ' (' + dd.days + ' วันที่แล้ว)' + (dd.archived ? ' · <span class="chip fl-CRITICAL">archived</span>' : '') +
+        (dd.stars ? ' · ★ ' + dd.stars : '') + '</div>';
+    } else {
+      out += '<div class="dim" style="font-size:10px">ไม่มี repo ที่ยืนยันได้ — pillar D ประเมินไม่ได้</div>';
+    }
+    var cr = compositeRank(c, 'privacy_investor'), bh = compositeRank(c, 'bull_hunter'), cb = compositeRank(c, 'investor');
+    if (cr) {
+      out += '<div class="dim" style="font-size:10px">Composite: <b>Privacy Investor = ' + cr.v + '</b> (#' + cr.r + '/' + cr.n + ') &nbsp;·&nbsp; ' +
+        '<b>Bull-Run Hunter = ' + (bh ? bh.v + ' (#' + bh.r + ')' : 'n/a') + '</b> &nbsp;·&nbsp; ' +
+        'General Investor = ' + (cb ? cb.v + ' (#' + cb.r + ')' : 'n/a') + '</div>';
+    }
+    if (pos.length) {
+      out += '<div class="v3flags" style="margin-top:5px">' + pos.map(function (f) { return '<span class="chip b-sel">🟢 ' + f.id + '</span> '; }).join('') + '</div>' +
+        '<div class="dim" style="font-size:10px">' + pos.map(function (f) { return f.msg; }).join(' · ') + '</div>';
+    }
+    out += '</div>';
+  }
+
+  var fl = ev.fl || [];
   out += '<div class="v3"><div class="v3t">RED FLAGS <span class="dim">(' + fl.length + ')</span></div>';
   if (fl.length) {
     out += '<div class="v3flags">' + fl.map(function (f) { return '<span class="chip fl-' + f.lv + '">' + f.lv + ' · ' + f.id + '</span> '; }).join('') + '</div>' +
@@ -310,42 +530,12 @@ function v3Block(c) {
   if (det_ && det_.repo_note) out += '<div class="dim" style="font-size:10px">! ' + det_.repo_note + '</div>';
   out += '</div>';
 
-  /* --- pillars D / L + composite: the part that turns "strong mechanism" into "worth looking at" */
-  var pl = null;
-  try { pl = pillarsOf(d, c, det_, ASOF_DATE); } catch (e) { pl = null; }
-  if (pl) {
-    var pos = [];
-    try { pos = evaluatePositives(metricsFor(c, det_, d)); } catch (e) { pos = []; }
-    var dd = pl.Ddetail;
-    out += '<div class="v3"><div class="v3t">PILLAR D · L · T · S · R <span class="dim">(developer · liquidity · maturity · security · regulatory)</span></div><div class="v3parts">' +
-      plChip('D', pl.D) + plChip('L', pl.L) + plChip('T', pl.T) + plChip('S', pl.S) + plChip('P', pl.P) +
-      '</div>';
-    if (dd) {
-      out += '<div class="dim" style="font-size:10px">' + (dd.repo || 'repo ไม่ระบุ') + ' · push ล่าสุด ' + dd.pushed +
-        ' (' + dd.days + ' วันที่แล้ว)' + (dd.archived ? ' · <span class="chip fl-CRITICAL">archived</span>' : '') +
-        (dd.stars ? ' · ★ ' + dd.stars : '') + '</div>';
-    } else {
-      out += '<div class="dim" style="font-size:10px">ไม่มี repo ที่ยืนยันได้ — pillar D ประเมินไม่ได้ (D เป็นตัวแทนของความเคลื่อนไหวจากวันที่ push และสถานะ archive เพราะ GitHub GraphQL pass ยังอยู่ใน roadmap)</div>';
-    }
-    var cr = compositeRank(c), cb = compositeRank(c, 'investor');
-    if (cr) {
-      out += '<div class="dim" style="font-size:10px">composite = <b>' + cr.v + '</b> / 100 → อันดับ <b>' + cr.r + '/' + cr.n +
-        '</b> <span class="dim">(preset privacy-investor: P 45 / D 30 / L 25 · preset investor ของ blueprint: ' +
-        (cb ? cb.v + ' → #' + cb.r : 'n/a') + ')</span></div>';
-    }
-    if (pos.length) {
-      out += '<div class="v3flags">' + pos.map(function (f) { return '<span class="chip b-sel">+ ' + f.id + '</span> '; }).join('') + '</div>' +
-        '<div class="dim" style="font-size:10px">' + pos.map(function (f) { return f.msg; }).join(' · ') + '</div>';
-    }
-    out += '</div>';
-  }
   return out;
 }
 
-/* D/L/P chip: >=55 shown as a strength colour, null shown as unavailable (never as 0) */
 function plChip(k, v) {
   if (v == null) return '<span class="chip" title="ประเมินไม่ได้ — ข้อมูลไม่พอ">' + k + ' ?</span>';
-  return '<span class="chip' + (v >= 55 ? ' b-sel' : '') + '">' + k + ' ' + v + '</span>';
+  return '<span class="chip' + (v >= 60 ? ' b-sel' : '') + '">' + k + ' ' + v + '</span>';
 }
 
 var _compCache = null;
@@ -357,7 +547,8 @@ function compositeRank(c, preset) {
     var list = [];
     for (var i = 0; i < DATA.length; i++) {
       var x = DATA[i], s = null;
-      try { s = compositeOf(dna(x), x, det(x), ASOF_DATE, key, key === 'privacy_investor'); } catch (e) { s = null; }
+      var riskAdj = (key === 'privacy_investor' || key === 'bull_hunter');
+      try { s = compositeOf(dna(x), x, det(x), ASOF_DATE, key, riskAdj); } catch (e) { s = null; }
       if (s != null) list.push([x.s, s]);
     }
     list.sort(function (a, b) { return b[1] - a[1]; });
@@ -369,33 +560,167 @@ function compositeRank(c, preset) {
   return e ? { v: e.v, r: e.r, n: _compCache[key].n } : null;
 }
 
+function renderBull() {
+  var bw = $('bullWrap');
+  if (!bw) return;
+  var rows = [];
+  for (var i = 0; i < DATA.length; i++) {
+    var c = DATA[i];
+    if (!matchesQuery(c)) continue;
+    var ev = evalCoin(c);
+    if (ev.asy && ev.asy.score != null) {
+      rows.push({ c: c, ev: ev, bull: ev.asy.score, pi: activeScore(c, 'privacy_investor'), bh: activeScore(c, 'bull_hunter') });
+    }
+  }
+  rows.sort(function (a, b) { return b.bull - a.bull || (b.bh || 0) - (a.bh || 0); });
+
+  var zecList = rows.filter(function (r) { return r.ev.asy.archetype === 'ZEC-ARCHETYPE' && !r.ev.hasCrit; });
+  var sovList = rows.filter(function (r) { return r.ev.asy.archetype === 'SOVEREIGN-PRIV' && !r.ev.hasCrit; });
+
+  var tBench = [
+    [7e8, 'เป้า $700M (ZEC ก่อนวิ่ง)'],
+    [2.5e9, 'เป้า $2.5B (Mid-Cap Bull)'],
+    [6.5e9, 'เป้า $6.5B (ระดับ XMR)'],
+    [25.95e9, 'เป้า $25.95B (ZEC Bull Peak)']
+  ];
+
+  function cardHtml(r) {
+    var c = r.c, a = r.ev.asy, pl = r.ev.pl || {};
+    var posChips = (r.ev.pos || []).slice(0, 3).map(function (p) {
+      return '<span class="chip b-sel">🟢 ' + p.id + '</span>';
+    }).join(' ');
+    var sim = calcTarget(c, state.targetMcap);
+    var simHtml = '';
+    if (sim && sim.mult > 1.05) {
+      var dilNote = (sim.fdvMult < sim.mult * 0.85) ? ' <span class="dim">(หลังปลดล็อกครบ: ' + fmtMult(sim.fdvMult) + ')</span>' : ' <span class="dim">(ไร้ VC Overhang)</span>';
+      simHtml = '<div class="multBox"><span>เป้า Mcap $' + fmtCompact(state.targetMcap) + ' → <b>' + fmtPrice(sim.targetPrice) + '</b>' + dilNote + '</span><span class="mVal">' + fmtMult(sim.mult) + '</span></div>';
+    } else {
+      simHtml = '<div class="multBox"><span class="dim">Mcap ปัจจุบัน ($' + fmtCompact(c.m) + ') สูงกว่าเป้าหมายที่เลือกแล้ว</span><span class="dim">—</span></div>';
+    }
+    return '<div class="bullCard" data-bcard="' + c.s + '">' +
+      '<div class="bTop"><div><span class="bSym">' + c.s + '</span> <span class="dim">' + c.n + '</span></div>' +
+      '<div class="bScore">Bull ' + a.score + '/100</div></div>' +
+      '<div class="bullBar"><i style="width:' + a.score + '%"></i></div>' +
+      '<div class="dim" style="font-size:10.5px">Mcap <b>$' + fmtCompact(c.m) + '</b> · ราคา <b>' + fmtPrice(c.p) + '</b> · 30d ' + fmtPct(c.c30) + ' · 1Y ' + fmtPct(c.c1y) + '</div>' +
+      simHtml +
+      '<div class="v3parts" style="margin-bottom:4px">' +
+      '<span class="chip">Fund ' + a.fundamentals + '</span>' +
+      '<span class="chip">Upside ' + a.upside + '</span>' +
+      '<span class="chip">Tok ' + a.tokenomics + '</span>' +
+      '<span class="chip">Rails ' + a.rails + '</span>' +
+      '<span class="chip">P=' + (pl.P != null ? pl.P : '—') + ' R=' + (pl.R != null ? pl.R : '—') + '</span>' +
+      '</div>' +
+      '<div>' + archetypeBadge(a.archetype) + ' ' + posChips + '</div>' +
+      '</div>';
+  }
+
+  var out = [];
+  out.push('<div class="rubric"><b>⚡ Bull-Run Asymmetry Radar — ทำไม Zcash (ZEC) ถึงขึ้นจาก $700M ไป $25.95B (~37x) และเราจะหาตัวถัดไปอย่างไร?</b><br>' +
+    'ในตลาดกระทิง เหรียญที่จะเกิดการ Re-rate ระดับ 10x–35x ต้องมีครบ 4 แกนพร้อมกัน: ' +
+    '<b>(1) Fundamentals 50%</b> (กลไกความลับ P แข็งจริง, โค้ด Active D, ความปลอดภัย S, อายุเครือข่าย T) &nbsp;·&nbsp; ' +
+    '<b>(2) Valuation Upside Room 20%</b> (Market Cap ยังอยู่ในโซนสะสม $5M–$800M และถูกคูณถ่วงน้ำหนักด้วย P เพื่อกันเหรียญกลไกอ่อนแอ) &nbsp;·&nbsp; ' +
+    '<b>(3) Clean Tokenomics 15%</b> (สัดส่วนเหรียญหมุนเวียนสูง ไม่โดน VC เทปลดล็อก) &nbsp;·&nbsp; ' +
+    '<b>(4) Market Access Rails 15%</b> (มี Viewing Keys / Selective Disclosure <code>comp=2</code> รองรับเกณฑ์สถาบัน/CEX เหมือน ZEC)</div>');
+
+  out.push('<div class="simBar"><div class="sTitle">🎯 จำลองเป้าหมาย Re-rating (Target Market Cap Simulator):</div><div class="simBtns">' +
+    tBench.map(function (b) {
+      return '<button class="simBtn' + (state.targetMcap === b[0] ? ' on' : '') + '" data-tmcap="' + b[0] + '">' + b[1] + '</button>';
+    }).join('') +
+    '</div><span class="dim" style="font-size:10.5px;margin-left:auto">คำนวณทั้งจำนวนเด้งตาม Supply หมุนเวียนจริง และหักลดทอนกรณีมีเหรียญล็อก (FDV Dilution)</span></div>');
+
+  out.push('<div class="secHead"><h2>🟢 กลุ่มที่ 1: พิมพ์เขียว ZEC (ZEC-ARCHETYPE — มี Viewing Keys / Selective Disclosure comp=2 + กลไกความลับแข็ง + โค้ด Active)</h2></div>');
+  out.push('<div class="bullGrid">' + (zecList.length ? zecList.map(cardHtml).join('') : '<div class="dim">ไม่พบเหรียญที่ตรงเงื่อนไข</div>') + '</div>');
+
+  out.push('<div class="secHead"><h2>🛡️ กลุ่มที่ 2: Sovereign Privacy Gems (SOVEREIGN-PRIV — ความลับ Default/Mandatory P ≥65 + โซนสะสม + ไร้ VC Overhang)</h2></div>');
+  out.push('<div class="bullGrid">' + (sovList.length ? sovList.map(cardHtml).join('') : '<div class="dim">ไม่พบเหรียญที่ตรงเงื่อนไข</div>') + '</div>');
+
+  out.push('<div class="secHead"><h2>📊 ตารางจัดอันดับ Bull-Run Asymmetry ครบทุกแกน (' + rows.length + ' เหรียญที่มีหลักฐาน P ≥80%)</h2></div>');
+  out.push('<table class="mx"><thead><tr>' +
+    '<th>#</th><th>Coin</th><th>Archetype</th><th class="num">Bull Score</th><th class="num">Bull Hunter</th><th class="num">Priv Investor</th>' +
+    '<th class="num">เป้า $' + fmtCompact(state.targetMcap) + '</th>' +
+    '<th class="num">Fund (50%)</th><th class="num">Upside (20%)</th><th class="num">Tokenomics (15%)</th><th class="num">Rails (15%)</th>' +
+    '<th class="num">Mcap</th><th>P · D · L · T · S · R</th><th>🟢 Bull-Run Signals</th><th>⚠️ Flags</th>' +
+    '</tr></thead><tbody>');
+  for (var j = 0; j < rows.length; j++) {
+    var r = rows[j], c = r.c, a = r.ev.asy, pl = r.ev.pl || {};
+    var pStr = [pl.P, pl.D, pl.L, pl.T, pl.S, pl.R].map(function (x) { return x == null ? '—' : x; }).join(' · ');
+    var posHtml = (r.ev.pos || []).map(function (p) { return '<span class="chip b-sel">🟢 ' + p.id + '</span>'; }).join(' ');
+    var flHtml = (r.ev.fl || []).map(function (f) { return '<span class="chip fl-' + f.lv + '">' + f.id + '</span>'; }).join(' ');
+    var simRow = calcTarget(c, state.targetMcap);
+    var multCell = (simRow && simRow.mult > 1.05)
+      ? '<b class="up">' + fmtMult(simRow.mult) + '</b> <span class="dim">(' + fmtPrice(simRow.targetPrice) + ')</span>'
+      : '<span class="dim">—</span>';
+    out.push('<tr data-bcard="' + c.s + '" class="row">' +
+      '<td class="num dim">' + (j + 1) + '</td>' +
+      '<td class="coin"><span class="sym">' + c.s + '</span><span class="nm">' + c.n + '</span></td>' +
+      '<td>' + archetypeBadge(a.archetype) + '</td>' +
+      '<td class="num"><b class="gA">' + a.score + '</b></td>' +
+      '<td class="num">' + (r.bh == null ? '—' : r.bh) + '</td>' +
+      '<td class="num dim">' + (r.pi == null ? '—' : r.pi) + '</td>' +
+      '<td class="num">' + multCell + '</td>' +
+      '<td class="num">' + a.fundamentals + '</td>' +
+      '<td class="num">' + a.upside + '</td>' +
+      '<td class="num">' + a.tokenomics + '</td>' +
+      '<td class="num">' + a.rails + '</td>' +
+      '<td class="num">$' + fmtCompact(c.m) + '</td>' +
+      '<td class="num dim">' + pStr + '</td>' +
+      '<td class="wide">' + (posHtml || '<span class="dim">—</span>') + '</td>' +
+      '<td class="wide">' + (flHtml || '<span class="dim">—</span>') + '</td>' +
+      '</tr>');
+  }
+  out.push('</tbody></table>');
+  bw.innerHTML = out.join('');
+  $('count').textContent = rows.length + ' / ' + DATA.length + ' assets (Bull-Run Radar)';
+
+  var sbs = bw.querySelectorAll ? bw.querySelectorAll('.simBtn') : [];
+  for (var si = 0; si < sbs.length; si++) {
+    sbs[si].onclick = function () {
+      state.targetMcap = parseFloat(this.getAttribute('data-tmcap')) || 2.5e9;
+      renderBull();
+    };
+  }
+
+  var clickEls = bw.querySelectorAll ? bw.querySelectorAll('[data-bcard]') : [];
+  for (var k = 0; k < clickEls.length; k++) {
+    clickEls[k].onclick = function () {
+      var sym = this.getAttribute('data-bcard');
+      if (!sym) return;
+      state.expanded = sym;
+      state.view = 'table';
+      renderViewSwitch();
+      renderTable();
+      var tr = $('tbody') ? $('tbody').querySelector('tr[data-sym="' + sym + '"]') : null;
+      if (tr && tr.scrollIntoView) tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+  }
+}
+
 function renderTable() {
-  var mw = $('matrixWrap'), tw = $('tblWrap');
-  var dw = $('docsWrap');
+  var mw = $('matrixWrap'), tw = $('tblWrap'), dw = $('docsWrap'), cw = $('cmpWrap'), bw = $('bullWrap');
+  if (tw) tw.style.display = 'none';
+  if (mw) mw.style.display = 'none';
+  if (dw) dw.style.display = 'none';
+  if (cw) cw.style.display = 'none';
+  if (bw) bw.style.display = 'none';
+
   if (state.view === 'docs') {
-    if (tw) tw.style.display = 'none';
-    if (mw) mw.style.display = 'none';
     if (dw) { dw.style.display = 'block'; renderDocs(); }
     return;
   }
-  if (dw) dw.style.display = 'none';
   if (state.view === 'compare') {
-    if (tw) tw.style.display = 'none';
-    if (mw) mw.style.display = 'none';
-    var cw = $('cmpWrap');
     if (cw) { cw.style.display = 'block'; renderCompare(); }
     return;
   }
-  var cw2 = $('cmpWrap');
-  if (cw2) cw2.style.display = 'none';
   if (state.view === 'matrix') {
-    if (tw) tw.style.display = 'none';
-    if (mw) mw.style.display = 'block';
-    renderMatrix();
+    if (mw) { mw.style.display = 'block'; renderMatrix(); }
+    return;
+  }
+  if (state.view === 'bull') {
+    if (bw) { bw.style.display = 'block'; renderBull(); }
     return;
   }
   if (tw) tw.style.display = 'block';
-  if (mw) mw.style.display = 'none';
+
   view = [];
   for (var i = 0; i < DATA.length; i++) if (passFilter(DATA[i])) view.push(DATA[i]);
   view.sort(function (a, b) {
@@ -405,18 +730,35 @@ function renderTable() {
   });
   var rows = [];
   for (var j = 0; j < view.length; j++) {
-    var c = view[j], k = cur(c.s), d = dna(c);
+    var c = view[j], k = cur(c.s), d = dna(c), ev = evalCoin(c);
     var supply = '—';
     if (c.cs) {
       supply = c.ms
         ? fmtNum(c.cs) + ' / ' + fmtNum(c.ms) + ' <span class="dim">' + Math.round(100 * c.cs / c.ms) + '%</span>'
         : fmtNum(c.cs) + ' / ∞';
     }
+    var sc = activeScore(c);
+    var scHtml = sc == null
+      ? '<span class="dim" title="หลักฐาน P ยังไม่ถึง 80% จึงไม่จัดอันดับ">—</span>'
+      : '<span class="' + gradeCls(sc) + '">' + sc + '</span>' + pillarMiniHtml(ev.pl);
+
+    var bullHtml = '<span class="dim">—</span>';
+    if (ev.asy && ev.asy.score != null) {
+      var nPos = (ev.pos || []).length;
+      var tag = ev.asy.archetype === 'ZEC-ARCHETYPE' ? ' <span class="chip arch-zec">ZEC</span>'
+              : (ev.asy.archetype === 'SOVEREIGN-PRIV' ? ' <span class="chip arch-sov">SOV</span>' : '');
+      var sig = nPos > 0 ? ' <span class="chip b-sel" title="' + ev.pos.map(function (x) { return x.id; }).join(', ') + '">🟢×' + nPos + '</span>' : '';
+      var crit = ev.hasCrit ? ' <span class="chip fl-CRITICAL" title="มี CRITICAL Flag">!</span>' : '';
+      bullHtml = '<span class="' + gradeCls(ev.asy.score) + '">' + ev.asy.score + '</span>' + tag + sig + crit;
+    }
+
     var sel = (j === state.sel ? ' sel' : '');
     rows.push('<tr data-sym="' + c.s + '" class="row' + sel + '">' +
       '<td class="num dim">' + (j + 1) + '</td>' +
       '<td class="coin">' + (c.img ? '<img src="' + c.img + '" alt="">' : '') + '<span class="sym">' + c.s + '</span><span class="nm">' + c.n + '</span>' +
       (det(c).spark && det(c).spark.length > 2 ? sparkSvg(det(c).spark, 56, 14, sparkColor(det(c).spark)) : '') + '</td>' +
+      '<td class="num">' + scHtml + '</td>' +
+      '<td class="num">' + bullHtml + '</td>' +
       '<td class="num">' + fmtPrice(c.p) + '</td>' +
       '<td class="num">' + fmtPct(c.c24) + '</td>' +
       '<td class="num">' + fmtPct(c.c7) + '</td>' +
@@ -432,7 +774,7 @@ function renderTable() {
       'title="' + (state.compare.indexOf(c.s) >= 0 ? 'เอาออกจากเครื่องมือเปรียบเทียบ' : 'เพิ่มลงเครื่องมือเปรียบเทียบ (2–4 ตัว)') + '">⇄</button></td>' +
       '</tr>');
     if (state.expanded === c.s) {
-      rows.push('<tr class="exp"><td colspan="14">' + dnaPanel(c) + '</td></tr>');
+      rows.push('<tr class="exp"><td colspan="16">' + dnaPanel(c) + '</td></tr>');
     }
   }
   $('tbody').innerHTML = rows.join('');
@@ -440,7 +782,8 @@ function renderTable() {
   var btns = $('tbody').querySelectorAll ? $('tbody').querySelectorAll('.cmpBtn') : [];
   for (var bi = 0; bi < btns.length; bi++) {
     btns[bi].onclick = (function (btn) {
-      return function () {
+      return function (e) {
+        if (e && e.stopPropagation) e.stopPropagation();
         var sym = btn.getAttribute('data-cmp');
         var i = state.compare.indexOf(sym);
         if (i >= 0) state.compare.splice(i, 1);
@@ -478,11 +821,11 @@ function renderMatrix() {
       '<td>' + geneCell(d.hr) + '</td>' +
       '<td>' + geneCell(d.ha) + '</td>' +
       '<td>' + geneCell(d.hst) + '</td>' +
-      '<td>' + (d.man ? '<span class="gene g2">YES</span>' : '<span class="gene g1">OPT</span>') + '</td>' +
-      '<td>' + (d.tl ? '<span class="gene g2">YES</span>' : '<span class="gene g0">NO</span>') + '</td>' +
-      '<td>' + (d.big ? '<span class="gene g2">NETWORK</span>' : '<span class="gene g1">POOL</span>') + '</td>' +
+      '<td>' + (gval(d, 'man') ? '<span class="gene g2">YES</span>' : '<span class="gene g1">OPT</span>') + '</td>' +
+      '<td>' + (gval(d, 'tl') ? '<span class="gene g2">YES</span>' : '<span class="gene g0">NO</span>') + '</td>' +
+      '<td>' + (gval(d, 'big') ? '<span class="gene g2">NETWORK</span>' : '<span class="gene g1">POOL</span>') + '</td>' +
       '<td class="wide">' + (d.setup || '—') + '</td>' +
-      '<td class="num dim">' + (d.yr || '—') + '</td>' +
+      '<td class="num dim">' + (gval(d, 'yr') || '—') + '</td>' +
       '<td class="' + gradeCls(g) + '">' + (g == null ? '—' : g + ' · ' + gradeLetter(g)) + '</td>' +
       '<td class="wide">' + (d.sec || '—') + '</td>' +
       '<td class="wide">' + (d.risk || '—') + '</td>' +
@@ -493,7 +836,7 @@ function renderMatrix() {
   $('count').textContent = rows.length + ' / ' + DATA.length + ' assets (DNA matrix)';
 }
 function markSort() {
-  var ths = document.querySelectorAll('thead th');
+  var ths = document.querySelectorAll('#tbl thead th');
   for (var i = 0; i < ths.length; i++) {
     var th = ths[i];
     var base = th.getAttribute('data-label') || th.textContent;
@@ -518,6 +861,8 @@ function recFrom(c, tag) {
   };
 }
 function augment() {
+  _evalCache = {};
+  _compCache = null;
   for (var i = 0; i < DATA.length; i++) {
     var c = DATA[i];
     if (c.priv && CUR[c.s] && c.tags.indexOf('pc') < 0) c.tags.push('pc');
@@ -550,7 +895,7 @@ function liveRefresh() {
     DATA = out;
     augment();
     state.sel = -1;
-    renderStats(); renderSpot(); renderTable();
+    renderStats(); renderSpot(); renderPillBar(); renderTable();
     $('liveStatus').textContent = 'LIVE OK · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC · ' + DATA.length + ' assets';
     btn.classList.remove('busy'); btn.textContent = '⟳ LIVE';
   }).catch(function (err) {
@@ -595,10 +940,7 @@ function renderDocs() {
   }
 }
 
-/* ---- Compare view: radar over the six pillars + a gene-by-gene table -------------------------
- * Enabled once 2-4 coins are selected with the ⇄ button. The radar is the "profile shape" — which
- * pillar carries a coin and which one is missing — and the table underneath is the evidence for
- * every axis, because a shape alone is not a finding. */
+/* ---- Compare view: radar over the six pillars + a gene-by-gene table ------------------------- */
 var CMP_COLORS = ['#4cc2ff', '#2ecc71', '#f5a623', '#b48cff'];
 var CMP_PILLARS = [
   ['P', 'Privacy'], ['D', 'Developer'], ['L', 'Liquidity'],
@@ -609,7 +951,7 @@ var CMP_GENES = ['arch', 'hs', 'hr', 'ha', 'hst', 'nst', 'man', 'tl', 'hmeta', '
 
 function cmpCoins() {
   return state.compare.map(function (sym) { return DATA.find(function (c) { return c.s === sym; }); })
-                     .filter(function (c) { return !!c; });
+                      .filter(function (c) { return !!c; });
 }
 
 function cmpPillars(c) {
@@ -640,7 +982,7 @@ function radarSvg(series) {
            'text-anchor="' + (l[0] > cx + 4 ? 'start' : (l[0] < cx - 4 ? 'end' : 'middle')) + '" ' +
            'dominant-baseline="middle" font-family="monospace">' + CMP_PILLARS[i][0] + '</text>';
   }
-  series.forEach(function (sr, si) {
+  series.forEach(function (sr) {
     var pts = [];
     for (var k = 0; k < n; k++) {
       var p = pt(k, sr.vals[k]);
@@ -652,7 +994,7 @@ function radarSvg(series) {
   return out + '</svg>';
 }
 
-function geneCell(d, gene) {
+function cmpGeneCell(d, gene) {
   var x = d ? d[gene] : null;
   if (x == null) return '<td class="null">—</td>';
   var v = (typeof x === 'object') ? x.v : x;
@@ -673,7 +1015,7 @@ function renderCompare() {
     return;
   }
   var series = coins.map(function (c, i) {
-    return { c: c, color: CMP_COLORS[i % CMP_COLORS.length], vals: cmpPillars(c) || [] };
+    return { c: c, color: CMP_COLORS[i % CMP_COLORS.length], vals: cmpPillars(c) || [], ev: evalCoin(c) };
   });
   var head = '<div class="cmpHead"><h2>เปรียบเทียบ ' + coins.length + ' โครงการ</h2>' +
     '<span class="dim">เรดาร์ = รูปร่างของ 6 pillar (ยิ่งออกดูกว้างยิ่งสมดุล) · ตารางล่าง = หลักฐานของทุกแกน ' +
@@ -683,13 +1025,15 @@ function renderCompare() {
     return '<span><i style="background:' + sr.color + '"></i>' + sr.c.s + ' ' + sr.c.n + '</span>';
   }).join('') + '</div>';
   var rowsHtml = '';
+  rowsHtml += '<tr class="hl"><td class="k">Bull Asymmetry Score</td>' +
+    series.map(function (sr) { return '<td class="v">' + (sr.ev.asy ? sr.ev.asy.score : '—') + '</td>'; }).join('') + '</tr>';
   CMP_PILLARS.forEach(function (pl, i) {
     rowsHtml += '<tr class="hl"><td class="k">' + pl[1] + ' (' + pl[0] + ')</td>' +
       series.map(function (sr) { return '<td class="v">' + (sr.vals[i] == null ? '—' : sr.vals[i]) + '</td>'; }).join('') + '</tr>';
   });
   CMP_GENES.forEach(function (gene) {
     rowsHtml += '<tr><td class="k">' + gene + '</td>' +
-      series.map(function (sr) { return geneCell(dna(sr.c), gene); }).join('') + '</tr>';
+      series.map(function (sr) { return cmpGeneCell(dna(sr.c), gene); }).join('') + '</tr>';
   });
   var table = '<table class="gtbl"><tr><th>gene / pillar</th>' +
     series.map(function (sr) { return '<th>' + sr.c.s + '</th>'; }).join('') + '</tr>' + rowsHtml + '</table>';
@@ -702,11 +1046,13 @@ function renderCompare() {
 function renderViewSwitch() {
   $('vsw').innerHTML =
     '<button id="vTable" class="' + (state.view === 'table' ? 'on' : '') + '">ตาราง · ' + DATA.length + ' เหรียญ</button>' +
+    '<button id="vBull" class="bullTab' + (state.view === 'bull' ? ' on' : '') + '">⚡ Bull-Run Radar (The Next ZEC)</button>' +
     '<button id="vMatrix" class="' + (state.view === 'matrix' ? 'on' : '') + '">DNA Matrix</button>' +
     '<button id="vDocs" class="' + (state.view === 'docs' ? 'on' : '') + '">เอกสาร &amp; ข้อมูล</button>' +
     '<button id="vCmp" class="' + (state.view === 'compare' ? 'on' : '') + '"' +
     (state.compare.length < 2 ? ' disabled title="เลือกเหรียญ 2–4 ตัวจากปุ่ม ⇄ ในตารางก่อน"' : '') + '>เปรียบเทียบ (' + state.compare.length + ')</button>';
   $('vTable').onclick = function () { state.view = 'table'; renderViewSwitch(); renderTable(); };
+  $('vBull').onclick = function () { state.view = 'bull'; renderViewSwitch(); renderTable(); };
   $('vMatrix').onclick = function () { state.view = 'matrix'; renderViewSwitch(); renderTable(); };
   $('vDocs').onclick = function () { state.view = 'docs'; renderViewSwitch(); renderTable(); };
   $('vCmp').onclick = function () { if (state.compare.length >= 2) { state.view = 'compare'; renderViewSwitch(); renderTable(); } };
@@ -715,8 +1061,29 @@ function renderViewSwitch() {
 function init() {
   for (var t = 0; t < DATA.length; t++) { TIERMAP[DATA[t].s] = DATA[t].tier || 't3'; IDMAP[DATA[t].id] = { tier: DATA[t].tier || 't3', dna: DATA[t].dna || 0 }; }
   augment();
-  renderStats(); renderSpot(); renderViewSwitch(); renderTable(); markSort();
+  renderStats(); renderSpot(); renderPillBar(); renderViewSwitch(); renderTable(); markSort();
   $('q').addEventListener('input', function () { state.q = this.value; state.sel = -1; renderTable(); });
+  if ($('presetSel')) {
+    $('presetSel').addEventListener('change', function () {
+      state.preset = this.value || 'privacy_investor';
+      renderTable();
+    });
+  }
+  if ($('bullFilter')) {
+    $('bullFilter').addEventListener('change', function () {
+      state.bullFilter = this.value || 'all';
+      state.sel = -1;
+      renderPillBar();
+      renderTable();
+    });
+  }
+  if ($('curOnly')) {
+    $('curOnly').addEventListener('change', function () {
+      state.curOnly = !!this.checked;
+      state.sel = -1;
+      renderTable();
+    });
+  }
   $('minMcap').addEventListener('change', function () { state.minMcap = parseFloat(this.value) || 0; renderTable(); });
   $('minGrade').addEventListener('change', function () { state.minGrade = parseFloat(this.value) || 0; renderTable(); });
   $('tbody').addEventListener('click', function (e) {
@@ -728,7 +1095,7 @@ function init() {
     state.expanded = (state.expanded === sym) ? null : sym;
     renderTable();
   });
-  var ths = document.querySelectorAll('thead th');
+  var ths = document.querySelectorAll('#tbl thead th');
   for (var i = 0; i < ths.length; i++) {
     (function (th) {
       var k = th.getAttribute('data-k');

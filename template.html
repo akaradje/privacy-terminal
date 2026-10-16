@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PRIVACY//TERMINAL — pure-privacy crypto scanner</title>
+<title>PRIVACY//TERMINAL — pure-privacy crypto &amp; bull-run asymmetry scanner</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Research terminal for pure-privacy crypto assets: 51 privacy-first coins and protocols with hand-built DNA profiles — what the cryptography actually hides, what you must trust, anonymity set, security history and compliance posture.">
+<meta name="description" content="Research terminal for pure-privacy crypto assets: 51 privacy-first coins and protocols with hand-built DNA profiles, 6-pillar institutional scoring, and Zcash ($700M to $25.95B) Bull-Run Asymmetry scanner.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="PRIVACY//TERMINAL — pure-privacy crypto scanner">
-<meta property="og:description" content="51 privacy-first assets, DNA-graded: what the cryptography actually hides, what you must trust, anonymity set, security history, compliance.">
+<meta property="og:description" content="51 privacy-first assets, DNA-graded: what the cryptography actually hides, what you must trust, anonymity set, security history, compliance &amp; bull-run re-rating upside.">
 <meta property="og:image" content="https://akaradje.github.io/privacy-terminal/docs/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 :root{
-  --bg:#0b0f14; --panel:#10161f; --panel2:#0e141c; --line:#1e2936; --line2:#263347;
-  --tx:#c9d4e0; --dim:#6b7a8d; --bright:#eef4fb;
-  --up:#2ecc71; --down:#ff4d4f; --accent:#4cc2ff; --amber:#f5a623; --teal:#2fd4c4;
+  --bg:#080c11; --panel:#0f1620; --panel2:#0b1119; --panel3:#131d2a;
+  --line:#1c2838; --line2:#27374d;
+  --tx:#d0dbe7; --dim:#6e8094; --bright:#f2f7fd;
+  --up:#2ecc71; --down:#ff4d4f; --accent:#4cc2ff; --amber:#f5a623; --teal:#2fd4c4; --purple:#b48cff;
   --mono:ui-monospace,'Cascadia Mono','JetBrains Mono',Consolas,'Courier New',monospace;
 }
 *{box-sizing:border-box}
@@ -26,74 +27,98 @@ body{background:var(--bg);color:var(--tx);font:13px/1.5 var(--mono);-webkit-font
 .num{font-variant-numeric:tabular-nums;text-align:right}
 .up{color:var(--up)} .down{color:var(--down)} .dim{color:var(--dim)} .acc{color:var(--accent)}
 a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-header{padding:14px 18px 10px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d131b,#0b0f14)}
-.brand{font-size:18px;font-weight:700;letter-spacing:.5px;color:var(--bright)}
+
+header{padding:16px 20px 12px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at top left,#112236 0%,#0b1017 55%,#080c11 100%)}
+.hdrTop{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.brand{font-size:19px;font-weight:800;letter-spacing:.8px;color:var(--bright);display:flex;align-items:center;gap:8px}
 .brand .slash{color:var(--accent)}
-.sub{color:var(--dim);font-size:11px;margin-top:2px}
-.statsbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:5px 10px;font-size:11px}
-.stat b{color:var(--bright);font-weight:600}
-#liveBtn{background:#0f2b1c;border:1px solid #1f5c38;color:#3fd68c;border-radius:4px;padding:4px 12px;font:600 11px var(--mono);cursor:pointer;margin-left:8px}
-#liveBtn:hover{background:#143723}
+.brand .verChip{font-size:10px;font-weight:600;color:var(--teal);background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.35);padding:1px 7px;border-radius:4px;letter-spacing:.3px}
+.sub{color:var(--dim);font-size:11px;margin-top:3px}
+.statsbar{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;align-items:center}
+.stat{background:rgba(15,22,32,.85);border:1px solid var(--line);border-radius:5px;padding:5px 10px;font-size:11px;transition:border-color .15s}
+.stat:hover{border-color:var(--line2)}
+.stat b{color:var(--bright);font-weight:700}
+#liveBtn{background:linear-gradient(180deg,#133824,#0d2618);border:1px solid #246b41;color:#47e396;border-radius:5px;padding:5px 13px;font:700 11px var(--mono);cursor:pointer;margin-left:4px;transition:all .15s}
+#liveBtn:hover{background:#19472e;border-color:#3fd68c;box-shadow:0 0 10px rgba(63,214,140,.2)}
 #liveBtn.busy{opacity:.6;cursor:wait}
-#liveStatus{font-size:10.5px;color:var(--dim);margin-left:8px}
-section.spotlight{padding:12px 18px 4px}
-h2{font-size:12px;color:var(--dim);letter-spacing:1px;margin:6px 0 10px;font-weight:600}
+#liveStatus{font-size:10.5px;color:var(--dim);margin-left:6px}
+
+section.spotlight{padding:12px 20px 6px}
+.secHead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:4px 0 9px}
+h2{font-size:11.5px;color:var(--dim);letter-spacing:1px;margin:0;font-weight:700;text-transform:uppercase}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:8px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:9px 11px}
+.card{background:linear-gradient(180deg,var(--panel),#0c121a);border:1px solid var(--line);border-radius:7px;padding:10px 12px;transition:all .15s;position:relative}
+.card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .card.risk{border-color:#5c2323}
-.card .cs{font-size:14px;font-weight:700;color:var(--bright)}
+.card .cs{font-size:14px;font-weight:800;color:var(--bright)}
 .card .cn{font-size:10.5px;color:var(--dim);margin-left:6px}
-.card .cp{font-size:15px;margin-top:5px;font-variant-numeric:tabular-nums}
+.card .cp{font-size:15px;margin-top:4px;font-variant-numeric:tabular-nums;color:var(--bright);font-weight:600}
 .card .chg{font-size:10.5px;margin-top:1px}
 .card .chip{display:inline-block;font-size:9px;border:1px solid var(--line2);border-radius:3px;padding:0 5px;margin:5px 4px 0 0;color:var(--dim)}
 .card .chip.r{color:#ff4d4f;border-color:#5c2323}
 .card .chip.a{color:var(--amber);border-color:#5c4a1f}
 .card .note{font-size:10px;color:var(--dim);margin-top:6px;line-height:1.45}
-nav.vsw{display:flex;gap:2px;padding:8px 18px 0;border-bottom:1px solid var(--line)}
-nav.vsw button{background:none;border:1px solid transparent;border-bottom:none;color:var(--dim);font:600 11px var(--mono);padding:6px 14px;cursor:pointer;border-radius:4px 4px 0 0}
-nav.vsw button:hover{color:var(--tx)}
-nav.vsw button.on{color:var(--accent);border-color:var(--line);background:var(--panel2)}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 18px;background:var(--panel2);border-bottom:1px solid var(--line)}
-#q{background:#0a0f15;border:1px solid var(--line2);color:var(--bright);border-radius:4px;padding:6px 10px;font:12px var(--mono);width:340px;outline:none}
-#q:focus{border-color:var(--accent)}
-select{background:#0a0f15;border:1px solid var(--line2);color:var(--tx);border-radius:4px;padding:6px 8px;font:11px var(--mono)}
-label.ck{font-size:11px;color:var(--dim);display:flex;align-items:center;gap:5px;cursor:pointer}
-#count{margin-left:auto;font-size:11px;color:var(--dim)}
-.tablewrap{overflow:auto;padding:0 18px 8px}
-table{width:100%;border-collapse:collapse;margin-top:8px;min-width:1250px}
-thead th{position:sticky;top:0;background:#0d131b;color:var(--dim);font:600 10px var(--mono);letter-spacing:.5px;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line2);cursor:pointer;white-space:nowrap;user-select:none}
-thead th:hover{color:var(--tx)}
+
+nav.vsw{display:flex;flex-wrap:wrap;gap:4px;padding:10px 20px 0;border-bottom:1px solid var(--line);background:var(--panel2)}
+nav.vsw button{background:rgba(15,22,32,.6);border:1px solid transparent;border-bottom:none;color:var(--dim);font:600 11.5px var(--mono);padding:7px 15px;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s}
+nav.vsw button:hover{color:var(--tx);background:var(--panel)}
+nav.vsw button.on{color:var(--accent);border-color:var(--line2);background:var(--bg);box-shadow:inset 0 2px 0 var(--accent)}
+nav.vsw button.bullTab{color:var(--teal)}
+nav.vsw button.bullTab.on{color:#080c11;background:linear-gradient(90deg,var(--teal),var(--accent));border-color:var(--teal);box-shadow:none;font-weight:700}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 20px 8px;background:var(--panel2);border-bottom:1px solid var(--line)}
+#q{background:#070b10;border:1px solid var(--line2);color:var(--bright);border-radius:5px;padding:6px 11px;font:12px var(--mono);width:310px;outline:none;transition:border-color .15s}
+#q:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(76,194,255,.15)}
+select{background:#070b10;border:1px solid var(--line2);color:var(--tx);border-radius:5px;padding:6px 9px;font:11px var(--mono);cursor:pointer}
+select:focus{border-color:var(--accent);outline:none}
+label.ck{font-size:11px;color:var(--dim);display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+#count{margin-left:auto;font-size:11px;color:var(--dim);font-weight:600}
+
+.pillBar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 20px;background:#0a0f16;border-bottom:1px solid var(--line)}
+.pillBar .pLbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-right:4px}
+.fPill{background:var(--panel);border:1px solid var(--line);color:var(--dim);font:600 10.5px var(--mono);padding:3px 10px;border-radius:99px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.fPill:hover{color:var(--tx);border-color:var(--line2)}
+.fPill.on{color:var(--bright);background:#132638;border-color:var(--accent);box-shadow:0 0 8px rgba(76,194,255,.2)}
+.fPill b{color:var(--teal);font-weight:700}
+
+.tablewrap{overflow:auto;padding:0 20px 10px}
+table{width:100%;border-collapse:collapse;margin-top:6px;min-width:1280px}
+thead th{position:sticky;top:0;z-index:2;background:#0b1119;color:var(--dim);font:700 10px var(--mono);letter-spacing:.5px;text-align:left;padding:8px 8px;border-bottom:1px solid var(--line2);cursor:pointer;white-space:nowrap;user-select:none}
+thead th:hover{color:var(--bright)}
 thead th .arr{color:var(--accent)}
-tbody td{padding:6px 8px;border-bottom:1px solid #141c26;white-space:nowrap;vertical-align:top}
-tbody tr:hover{background:#0f1721}
-tbody tr.sel{background:#13202e;box-shadow:inset 2px 0 0 var(--accent)}
-td.coin img{width:15px;height:15px;border-radius:50%;vertical-align:-3px;margin-right:6px}
+tbody td{padding:7px 8px;border-bottom:1px solid #121a24;white-space:nowrap;vertical-align:middle}
+tbody tr:hover{background:#0f1823}
+tbody tr.sel{background:#132232;box-shadow:inset 3px 0 0 var(--accent)}
+td.coin img{width:16px;height:16px;border-radius:50%;vertical-align:-3px;margin-right:6px}
 td.coin .sym{font-weight:700;color:var(--bright)}
 td.coin .nm{color:var(--dim);font-size:10.5px;margin-left:6px}
 td.mech{white-space:normal;max-width:260px;font-size:10.5px}
 td.note{white-space:normal;max-width:300px;font-size:10px;color:var(--dim)}
+
+.pMini{display:inline-flex;gap:2px;align-items:flex-end;height:12px;vertical-align:-1px;margin-left:5px}
+.pMini i{display:inline-block;width:3px;border-radius:1px;background:#263347}
+
 .badge{display:inline-block;font-size:9.5px;border-radius:3px;padding:1px 7px;border:1px solid var(--line2);color:var(--dim)}
-.b-mand{color:#ff4d4f;border-color:#5c2323}
-.b-def{color:var(--amber);border-color:#5c4a1f}
-.b-sel{color:var(--teal);border-color:#1c4f47}
-.b-inf{color:var(--accent);border-color:#1d3f56}
+.b-mand{color:#ff6b6d;border-color:#5c2323;background:rgba(92,35,35,.2)}
+.b-def{color:var(--amber);border-color:#5c4a1f;background:rgba(92,74,31,.2)}
+.b-sel{color:var(--teal);border-color:#1c4f47;background:rgba(28,79,71,.2)}
+.b-inf{color:var(--accent);border-color:#1d3f56;background:rgba(29,63,86,.2)}
 .b-opt{color:#9aa8b8}
 .chip{display:inline-block;font-size:9px;border-radius:3px;padding:0 5px;border:1px solid var(--line2);color:var(--dim)}
 .tier-t1{color:#ff8a8c;border-color:#5c2323}
 .tier-t2{color:var(--teal);border-color:#1c4f47}
 .tier-t3{color:#5d6a7a;border-color:#232f3e}
 .fam{color:var(--accent);border-color:#1d3f56;font-weight:600}
-td.prim{white-space:normal;max-width:280px;font-size:10.5px;color:#a9b6c6}
+td.prim{white-space:normal;max-width:270px;font-size:10.5px;color:#a9b6c6}
 tr.row{cursor:pointer}
-tr.exp>td{background:#0c131c;border-bottom:1px solid var(--line2);white-space:normal}
+tr.exp>td{background:#0b121b;border-bottom:1px solid var(--line2);white-space:normal;padding:12px 14px}
 .dnaGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 16px;padding:10px 6px}
 .dnaGrid .k{color:var(--dim);font-size:9.5px;letter-spacing:.6px;text-transform:uppercase}
 .dnaGrid .v{font-size:11px;color:var(--tx);white-space:normal;line-height:1.5}
 .dnaGrid .full{grid-column:1/-1}
-.dnaHead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 6px 0;border-bottom:1px solid #172130;margin-bottom:2px}
-.dnaHead b{color:var(--bright);font-size:12.5px}
-.hint{font-size:10.5px;color:var(--dim);padding:0 18px 6px}
+.dnaHead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:4px 6px 8px;border-bottom:1px solid #172130;margin-bottom:4px}
+.dnaHead b{color:var(--bright);font-size:13.5px}
+.hint{font-size:10.5px;color:var(--dim);padding:6px 20px 4px}
 .hint b{color:var(--tx)}
 .gene{display:inline-block;font-size:9px;border-radius:3px;padding:0 5px;font-weight:600;min-width:32px;text-align:center}
 .g2{background:#12301f;color:#3fd68c;border:1px solid #1f5c38}
@@ -103,15 +128,37 @@ tr.exp>td{background:#0c131c;border-bottom:1px solid var(--line2);white-space:no
 .gB{color:#8fd15f;font-weight:700}
 .gC{color:#e0a53a;font-weight:700}
 .gD{color:#e2705f;font-weight:700}
-table.mx{min-width:1150px}
+table.mx{min-width:1180px}
 table.mx td,table.mx th{white-space:nowrap}
-table.mx td.wide{white-space:normal;max-width:230px;font-size:10px;color:var(--dim)}
-.rubric{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin:10px 0;font-size:10.5px;color:var(--dim);line-height:1.7}
-.rubric b{color:var(--tx)}
+table.mx td.wide{white-space:normal;max-width:240px;font-size:10px;color:var(--dim)}
+.rubric{background:linear-gradient(180deg,var(--panel),#0c121a);border:1px solid var(--line2);border-radius:7px;padding:12px 14px;margin:10px 0;font-size:11px;color:var(--dim);line-height:1.7}
+.rubric b{color:var(--bright)}
 .geneRow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 6px 2px}
 .geneRow .lbl{font-size:9.5px;color:var(--dim);letter-spacing:.4px;text-transform:uppercase;margin-right:2px}
 .spark{vertical-align:-3px;margin-left:6px}
-#docsWrap{padding:0 18px 20px}
+
+/* Bull-Run Radar & Re-rating Simulator */
+.simBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#0d1722;border:1px solid var(--line2);border-radius:7px;padding:10px 14px;margin:10px 0 14px}
+.simBar .sTitle{font-weight:700;color:var(--teal);font-size:11.5px;display:flex;align-items:center;gap:6px}
+.simBtns{display:flex;flex-wrap:wrap;gap:5px}
+.simBtn{background:var(--panel);border:1px solid var(--line2);color:var(--dim);font:600 10.5px var(--mono);padding:4px 10px;border-radius:5px;cursor:pointer;transition:all .15s}
+.simBtn:hover{color:var(--tx);border-color:var(--accent)}
+.simBtn.on{color:#080c11;background:var(--teal);border-color:var(--teal);font-weight:700}
+.bullGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:10px;margin:10px 0 18px}
+.bullCard{background:linear-gradient(180deg,var(--panel),#0b1119);border:1px solid var(--line2);border-radius:7px;padding:11px 13px;cursor:pointer;transition:all .15s;position:relative}
+.bullCard:hover{border-color:var(--accent);background:#121c28;transform:translateY(-1px);box-shadow:0 5px 16px rgba(0,0,0,.4)}
+.bullCard .bTop{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.bullCard .bSym{font-size:14.5px;font-weight:800;color:var(--bright)}
+.bullCard .bScore{font-size:13.5px;font-weight:800;color:var(--teal);background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.3);padding:1px 7px;border-radius:4px}
+.bullBar{height:5px;background:#16202c;border-radius:3px;overflow:hidden;margin:7px 0}
+.bullBar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--teal))}
+.multBox{background:#091017;border:1px solid #192636;border-radius:5px;padding:5px 8px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;font-size:10.5px}
+.multBox .mVal{font-weight:800;color:#3fd68c;font-size:12px}
+.arch-zec{color:#3fd68c;border-color:#1f5c38;background:#0f281b}
+.arch-sov{color:var(--amber);border-color:#5c4a1f;background:#261f0e}
+.arch-cmp{color:var(--accent);border-color:#1d3f56;background:#0e1f2c}
+
+#docsWrap{padding:0 20px 20px}
 .dtabs{display:flex;flex-wrap:wrap;gap:4px;margin:14px 0 10px}
 .dtabs button{background:var(--panel);border:1px solid var(--line);color:var(--dim);font:600 11px var(--mono);padding:5px 11px;border-radius:4px;cursor:pointer}
 .dtabs button:hover{color:var(--tx)}
@@ -151,13 +198,13 @@ table.mx td.wide{white-space:normal;max-width:230px;font-size:10px;color:var(--d
 .cmpBtn:hover{color:var(--tx);border-color:var(--accent)}
 .cmpBtn.on{color:#0b0f14;background:var(--accent);border-color:var(--accent)}
 button:disabled{opacity:.45;cursor:not-allowed}
-.cmpHead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 18px 4px}
+.cmpHead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 20px 4px}
 .cmpHead h2{font-size:14px;color:var(--bright);margin:0}
 .cmpHead .dim{font-size:10.5px}
-.cmpLegend{display:flex;flex-wrap:wrap;gap:10px;padding:6px 18px 10px;font:600 11px var(--mono)}
+.cmpLegend{display:flex;flex-wrap:wrap;gap:10px;padding:6px 20px 10px;font:600 11px var(--mono)}
 .cmpLegend span{display:inline-flex;align-items:center;gap:5px}
 .cmpLegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
-.cmpGrid{display:flex;flex-wrap:wrap;gap:18px;padding:0 18px 14px;align-items:flex-start}
+.cmpGrid{display:flex;flex-wrap:wrap;gap:18px;padding:0 20px 14px;align-items:flex-start}
 .cmpRadar{flex:0 0 auto}
 .gtbl{border-collapse:collapse;flex:1 1 420px;min-width:380px}
 .gtbl th,.gtbl td{border:1px solid var(--line);padding:3px 6px;font-size:10.5px;text-align:center}
@@ -166,7 +213,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .gtbl td.v{font-weight:600;color:var(--tx)}
 .gtbl td.null{color:#5b6472}
 .gtbl tr.hl td{background:#111a24}
-.cmpEmpty{padding:30px 18px;color:var(--dim);font-size:12px}
+.cmpEmpty{padding:30px 20px;color:var(--dim);font-size:12px}
 .v3parts .imp{color:#8b93a0;border-style:dashed;border-color:#3a4450}
 .dossier{margin-top:10px;border-top:1px solid #172130;padding:10px 6px 2px}
 .dTitle{font-size:10px;color:var(--accent);letter-spacing:1.2px;font-weight:700;margin-bottom:8px}
@@ -176,7 +223,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .desc{font-size:11px;line-height:1.65;color:#a9b6c6;margin:6px 0 10px;white-space:normal;max-width:1100px}
 .sparkBox{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:6px 8px;margin:2px 0 8px;background:#0c131c}
 .sparkBox svg{display:block;margin:3px 0}
-footer{padding:16px 18px 30px;color:var(--dim);font-size:10.5px;line-height:1.7;border-top:1px solid var(--line);margin-top:10px}
+footer{padding:16px 20px 30px;color:var(--dim);font-size:10.5px;line-height:1.7;border-top:1px solid var(--line);margin-top:10px}
 footer .disc{margin-top:10px;color:#8b98a8}
 @media(max-width:720px){#q{width:100%}}
 </style>
@@ -184,20 +231,40 @@ footer .disc{margin-top:10px;color:#8b98a8}
 <body>
 
 <header>
-  <div class="brand">PRIVACY<span class="slash">//</span>TERMINAL</div>
-  <div class="sub">PURE PRIVACY (T1) — เฉพาะเหรียญที่ privacy เป็นแกนหลักของโปรโตคอล · คลิกแถวเพื่อเปิด DNA panel · ราคาจาก CoinGecko · <b>เขียว=ขึ้น แดง=ลง</b></div>
+  <div class="hdrTop">
+    <div>
+      <div class="brand">PRIVACY<span class="slash">//</span>TERMINAL <span class="verChip">v2.8 BULL-RUN RADAR</span></div>
+      <div class="sub">PURE PRIVACY (T1) — 51 เหรียญที่ privacy เป็นแกนหลัก · ประเมินครบ 6 Pillars (P·D·L·T·S·R) + โมเดล <b>Next Zcash ($700M → $25.95B)</b> · คลิกแถวเพื่อดู DNA &amp; เป้า Re-rating</div>
+    </div>
+  </div>
   <div class="statsbar" id="statsbar"></div>
 </header>
 
 <section class="spotlight">
-  <h2>◆ CURATED WATCHLIST — เหรียญ “แบบ ZEC / AZTEC” ที่ควรรู้</h2>
+  <div class="secHead">
+    <h2>◆ CURATED WATCHLIST — เหรียญพิมพ์เขียว ZEC / SOVEREIGN / ZK INFRA ที่ต้องจับตา</h2>
+  </div>
   <div class="cards" id="spotCards"></div>
 </section>
 
 <nav class="vsw" id="vsw"></nav>
 
 <div class="toolbar">
-  <input id="q" placeholder="ค้นหา ชื่อ / สัญลักษณ์ / mechanism…   [/ = โฟกัส, Esc = ล้าง]">
+  <input id="q" placeholder="ค้นหา ชื่อ / สัญลักษณ์ / mechanism / ZEC-ARCHETYPE…   [/ = โฟกัส, Esc = ล้าง]">
+  <select id="presetSel" title="เลือกสูตรคำนวณคะแนนหลัก (Score)">
+    <option value="privacy_investor">Preset: Privacy Investor (สมดุล P·D·L·T·S·R)</option>
+    <option value="bull_hunter">Preset: Bull-Run Hunter (เน้น R·D·P รับเงินตลาดกระทิง)</option>
+    <option value="asymmetry">Preset: Next ZEC Asymmetry (พื้นฐานสูง · Mcap มีรูมวิ่ง)</option>
+    <option value="purist">Preset: Privacy Purist (เน้นความลับล้วน P·S)</option>
+  </select>
+  <select id="bullFilter" title="กรองเหรียญตามสัญญาณตลาดกระทิงและพิมพ์เขียว ZEC">
+    <option value="all">Bull Filter: ทั้งหมด</option>
+    <option value="zec">🟢 พิมพ์เขียว ZEC (comp=2 · โค้ด Active · P แข็ง)</option>
+    <option value="gem">💎 Asymmetric Gems (Composite ≥64 · Mcap &lt;$600M)</option>
+    <option value="sov">🛡️ Sovereign Privacy (P ≥68 · Default/Mandatory)</option>
+    <option value="accum">🚀 สัญญาณสะสมต้นรอบ (Early Accumulation)</option>
+    <option value="safe">✅ ไร้ CRITICAL Flag &amp; ไม่ถูกคว่ำบาตร</option>
+  </select>
   <select id="minMcap">
     <option value="0">Mcap: ทั้งหมด</option>
     <option value="1e6">Mcap &gt; $1M</option>
@@ -205,23 +272,28 @@ footer .disc{margin-top:10px;color:#8b98a8}
     <option value="1e8">Mcap &gt; $100M</option>
     <option value="1e9">Mcap &gt; $1B</option>
   </select>
-  <label class="ck"><input type="checkbox" id="curOnly"> เฉพาะ curated ◆</label>
+  <label class="ck"><input type="checkbox" id="curOnly"> เฉพาะ Watchlist ◆</label>
   <select id="minGrade">
-    <option value="0">DNA grade: ทั้งหมด</option>
-    <option value="40">DNA grade ≥ C (40)</option>
-    <option value="55">DNA grade ≥ B (55)</option>
-    <option value="70">DNA grade ≥ A (70)</option>
-    <option value="85">DNA grade ≥ A+ (85)</option>
+    <option value="0">DNA v1: ทั้งหมด</option>
+    <option value="40">DNA v1 ≥ C (40)</option>
+    <option value="55">DNA v1 ≥ B (55)</option>
+    <option value="70">DNA v1 ≥ A (70)</option>
+    <option value="85">DNA v1 ≥ A+ (85)</option>
   </select>
   <span id="count"></span>
 </div>
-<div class="hint"><b>DNA = ชั้นเทคนิค:</b> primitive · hides (ซ่อนอะไรจริง) · trust/setup · anonymity set · audit · governance · security · risk — <b>คลิกที่แถว</b>เพื่อเปิด/ปิด · สลับเป็น <b>DNA Matrix</b> ได้จากปุ่มด้านบนเพื่อเทียบ gene ทุกเหรียญพร้อมคะแนน</div>
+
+<div class="pillBar" id="pillBar"></div>
+
+<div class="hint"><b>โหมดค้นหา The Next ZEC:</b> คลิกหัวตาราง <b>Score (6 Pillars)</b> หรือ <b>Bull Upside</b> เพื่อเรียงลำดับ · สลับแท็บ <b>⚡ Bull-Run Radar</b> เพื่อจำลองเป้าหมายราคาหาก Market Cap ขึ้นไปแตะระดับ ZEC ($700M → $25.95B)</div>
 
 <div class="tablewrap" id="tblWrap">
   <table id="tbl">
     <thead><tr>
       <th data-k="mcap" class="num">#</th>
       <th data-k="s">Coin</th>
+      <th data-k="comp" class="num" title="คะแนนรวม 6 Pillars ตาม Preset ที่เลือก + กราฟแท่งย่อย P·D·L·T·S·R (คลิกเพื่อเรียงลำดับ)">Score · 6 Pillars</th>
+      <th data-k="bull" class="num" title="คะแนน Bull-Run Asymmetry (พื้นฐาน + รูม Mcap + Tokenomics + ท่อกระดานเทรด) เทียบพิมพ์เขียว ZEC">Bull Upside</th>
       <th data-k="p" class="num">Price</th>
       <th data-k="c24" class="num">24h</th>
       <th data-k="c7" class="num">7d</th>
@@ -229,8 +301,8 @@ footer .disc{margin-top:10px;color:#8b98a8}
       <th data-k="c1y" class="num">1Y</th>
       <th data-k="m" class="num">Mcap</th>
       <th data-k="v" class="num">Vol24h</th>
-      <th data-k="sp" class="num">Supply</th>
-      <th>กลุ่ม · เกรด</th>
+      <th data-k="sp" class="num">Supply (Float)</th>
+      <th data-k="v1">กลุ่ม · v1</th>
       <th>DNA · primitive</th>
       <th>Model</th>
       <th class="cmpCell" title="เพิ่มลงเครื่องมือเปรียบเทียบ">⇄</th>
@@ -238,6 +310,7 @@ footer .disc{margin-top:10px;color:#8b98a8}
     <tbody id="tbody"></tbody>
   </table>
 </div>
+<div class="tablewrap" id="bullWrap" style="display:none"></div>
 <div class="tablewrap" id="matrixWrap" style="display:none"></div>
 <div id="docsWrap" style="display:none"></div>
 <div id="cmpWrap" class="tablewrap" style="display:none"></div>

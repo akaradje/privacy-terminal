@@ -3,6 +3,34 @@
 All notable changes to the scoring engine and data contract.
 `scoring_version` is written into every build (`STATS.scoring_version`) — the formula lives only in `engine/score.js`.
 
+## 2.8.0-preview — 2026-10-16
+
+Bull-Run Asymmetry & "Next Zcash" Scanner (`asymmetryOf()`, `bull_hunter` preset, venue breadth in Pillar R, 5 new bull-run positive rules, and 5 verified data gap closures).
+
+**1. Bull-Run Asymmetry Model (`asymmetryOf()` in `engine/score.js`) & `bull_hunter` preset.**
+- Solves the lagging-indicator bias where Pillar L rewards coins *after* they reach $1B+ market cap.
+- `asymmetryOf(d, coin, det, asof)` scores 4 dimensions of a Zcash-style re-rating ($700M → $25.95B):
+  **50% Fundamental Quality** (`P_adj 35, D 25, R 20, S 10, T 10`, with a 0.6× penalty if `D=0`) +
+  **20% Valuation Upside Room** (sweet spot $5M–$150M = 100, $150M–$800M = 95→80, gated by `min(1, P_adj/45)` so weak-privacy coins cannot score high on small cap alone) +
+  **15% Clean Tokenomics** (`(cs/ms)^0.85` to penalize heavy VC unlock overhang) +
+  **15% Market Access Rails** (`comp=2` selective disclosure/viewing keys + exchange count `ex_count` + daily turnover).
+- Added preset `bull_hunter: {P:25, D:20, L:15, T:10, S:10, R:20}` (risk-adjusted).
+
+**2. Venue Breadth integrated into Pillar R (`regulatoryScore(d, det)`).**
+- When dossier `ex_count` is available, Pillar R blends **45% censorship resistance (`tl`) + 40% compliance capability (`comp`) + 15% exchange breadth (`min(ex_count/12, 1)`)**; falls back to 55/45 when `det` is omitted so standalone DNA monotonicity tests remain invariant.
+
+**3. Bull-Run Alpha Signals & `brk=0.5` fix in `engine/flags.js`.**
+- Fixed a bug in `metricsFor()` where `brk ? 1 : 0` coerced `brk=0.5` (patched historical bug in XMR/ZEC/SCRT) to `1`, falsely triggering CRITICAL `unpatched_break`.
+- Added 5 bull-run opportunity rules to `POSITIVE_RULES`: `zec_archetype`, `asymmetric_gem`, `sovereign_scarcity`, `early_accumulation`, `multi_venue_rail`.
+
+**4. Five data gaps closed with HTTP-200 primary sources.**
+- **FIRO `comp=2` (high):** IACR ePrint `https://eprint.iacr.org/2021/1173` (Lelantus Spark) confirms opt-in incoming/full viewing keys without delegating spend authority (FIRO composite 65 → 74, Bull Asymmetry #1 at 82).
+- **ZAMA `comp=2` (high):** `https://github.com/zama-ai/fhevm` README confirms programmable smart-contract access control logic + threshold KMS decryption.
+- **ROSE `comp=2` (med):** `https://docs.oasis.io/build/sapphire/develop/concept` confirms View-Call Authentication and selective event disclosure.
+- **DUSK & P2P active repo overrides in `data/curated/repos.json`:** `dusk-network/rusk` (pushed 2026-08-16, 208★) and `sentinel-official/sentinel-dvpnx` (pushed 2026-10-13, 138★) replace archived legacy repos, clearing both false-positive `dead_repo` warnings.
+
+**5. UI upgraded with `⚡ Bull-Run Radar` view, sortable `Score` & `Bull Upside` columns, and Preset/Bull Filter selectors.**
+
 ## 2.7.0-preview — 2026-10-16
 
 Three cleanups that close the last logical leaks in Pillar R / S and make the history snapshot usable.

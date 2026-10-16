@@ -23,5 +23,17 @@
   "reason": "AztecProtocol/aztec ถูก archive (GitHub API ยืนยัน archived=true, push ล่าสุด 2022-12-13) — ตัวต่อคือ aztec-packages (push 2026-10-15) · aztec-nr (Noir circuits) ก็ active (2026-10-15)",
   "src": "https://api.github.com/repos/AztecProtocol/aztec",
   "asof": "2026-10-16"
+ },
+ "dusk-network": {
+  "repo": "dusk-network/rusk",
+  "reason": "dusk-network/dusk-blockchain ถูก archive — repo หลักของโหนดปัจจุบันคือ dusk-network/rusk (push 2026-08-16, 208 stars) และโมเดลธุรกรรมมืดคือ dusk-network/phoenix (push 2026-10-16)",
+  "src": "https://api.github.com/repos/dusk-network/rusk",
+  "asof": "2026-10-16"
+ },
+ "sentinel": {
+  "repo": "sentinel-official/sentinel-dvpnx",
+  "reason": "sentinel-official/sentinel ถูก archive — การพัฒนาย้ายไปที่ sentinel-official/sentinel-dvpnx (push 2026-10-13, 138 stars) และ sentinel-official/hub (push 2026-09-28, 97 stars)",
+  "src": "https://api.github.com/repos/sentinel-official/sentinel-dvpnx",
+  "asof": "2026-10-16"
  }
 }

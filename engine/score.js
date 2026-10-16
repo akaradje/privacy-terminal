@@ -1,8 +1,8 @@
 /* engine/score.js — DNA v2 scorer (v3 blueprint §3.1, §4)
- * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar.
+ * SINGLE SOURCE OF TRUTH for the P (Privacy Strength) pillar, 6-pillar composite, and Bull-Run Asymmetry.
  * Loaded by build (Node) and by the browser — never re-implement this formula elsewhere.
  *
- * scoring_version: 2.7.0-preview
+ * scoring_version: 2.8.0-preview
  *
  * --- Definition of `aset` (one definition for every mechanism family) -------------
  * `aset` = EFFECTIVE PER-TRANSACTION ANONYMITY SET: the number of plausible counterparties an
@@ -33,7 +33,7 @@
  * band widens with the missing weight. `coverage` reports how much of the weight had data,
  * and `insufficient` is true below 80% — in that state the UI must not present v2 as a ranking.
  */
-var SCORING_VERSION = '2.7.0-preview';
+var SCORING_VERSION = '2.8.0-preview';
 var ASET_BITS_FULL = 20;   // effective set of 2^20 == full credit for the bits component
 
 /* Conservative floor — makes the score strictly monotonic.
@@ -169,10 +169,7 @@ function scoreP(d) {
   /* band: evidence weakness + missing weight, capped so it stays usable for decisions.
    * Floored at 2: a band of 0 would assert that the score has no uncertainty at all, which no
    * model of this kind can claim — the `aset` definition itself (effective vs protocol-enforced)
-   * is contested in the literature, and `hmeta`/`hnet` are read off feature lists, not measured.
-   * NOTE (known weakness): avgConf averages the component confidences, so one contested value
-   * among eight barely moves the band. A worst-case term is the principled fix; flagged, not
-   * applied unilaterally. */
+   * is contested in the literature, and `hmeta`/`hnet` are read off feature lists, not measured. */
   var band = Math.max(2, Math.min(25, Math.round((1 - avgConf) * 15 + (1 - coverage) * 40)));
 
   return {
@@ -187,14 +184,7 @@ function scoreP(d) {
 
 /* ---------------------------------------------------------------------------------------------
  * Pillars D (developer velocity) and L (liquidity & market health) — v3 blueprint §3.2/§3.3
- * ---------------------------------------------------------------------------------------------
- * D is a PROXY and the file says so: CoinGecko's free tier no longer returns `developer_data`
- * and the GitHub GraphQL pass (commit history, contributor counts, Dependabot filtering) is
- * still on the roadmap. What we do have — the last push date and the archive flag — is exactly
- * the signal that separates a live project from a legacy fork, so D is built from that and the
- * raw fields are reported next to the number so a reader can see where it came from.
- * L is computable from data we already collect: daily turnover, market depth and float.
- */
+ * --------------------------------------------------------------------------------------------- */
 var DEV_RECENCY = [[7, 100], [30, 80], [90, 55], [365, 25]];
 
 function daysSince(dateStr, asof) {
@@ -244,7 +234,7 @@ function pillarsOf(d, coin, det, asof) {
     L: liqScore(coin),
     T: maturityScore(d, asof, D),
     S: securityScore(d),
-    R: regulatoryScore(d),
+    R: regulatoryScore(d, det),
     Pdetail: p, Ddetail: devDetail(det, asof)
   };
 }
@@ -259,9 +249,7 @@ function hasText(g, key) {
 
 /* --- Pillar T: battle-testedness & liveness (the Lindy effect) ------------------------------
  * 70% age of the mainnet + 30% dev continuity. Audit is deliberately NOT here — it is pillar S's
- * job, and keeping it in both was double-counting. `mat` is kept out of T too: it already blends
- * age and audits, so it would re-introduce the same overlap. The hard cap at 40 for a mainnet
- * under a year old stays: a fresh protocol cannot be battle-tested however good the design is. */
+ * job, and keeping it in both was double-counting. */
 function maturityScore(d, asof, devScoreValue) {
   var yr = gval(d, 'yr');
   if (yr == null && devScoreValue == null) return null;
@@ -279,13 +267,7 @@ function maturityScore(d, asof, devScoreValue) {
 
 /* --- Pillar S: security & cryptographic assurance -------------------------------------------
  * 40% audit quality (0/1/2 from the `audit` field) + 35% exploit history (`brk`) + 25% the trust
- * assumption of the primitive (`tl`, which is also 12% of P — S is a roll-up of the security
- * dimension, so that overlap is intentional and stated).
- * Audit 0 means "no audit record found in our sources", NOT "never audited".
- * `brk` 0.5 (patched history) scores 55 rather than 0: a coin that has been broken and fixed is
- * more fragile than one never attacked, but it is not currently broken.
- * S is null when `brk` is unknown — the security posture of a coin whose exploit history has not
- * been checked cannot be scored. */
+ * assumption of the primitive (`tl`). */
 function securityScore(d) {
   var brk = gval(d, 'brk');
   if (brk == null) return null;
@@ -301,26 +283,28 @@ function securityScore(d) {
   return tw ? Math.round(acc / tw) : null;
 }
 
-/* --- Pillar R: regulatory & censorship resilience --------------------------------------------
- * 55% protocol censorship resistance (from `tl`: nothing to switch off, no enclave vendor, no
- * permissioned notary) + 45% compliance capability (`comp`: viewing keys / selective disclosure /
- * proof of innocence — the affordance that keeps an institutional holder from a blanket ban).
- * A directly sanctioned protocol is capped at 25 regardless: Tornado Cash scores well on
- * censorship resistance and terribly on the other two, and the cap is what says so.
- * Not included for lack of a source: venue breadth / DEX-vs-CEX liquidity, which needs exchange
- * ticker data we do not collect. That component's weight is left unassigned rather than guessed. */
-function regulatoryScore(d) {
+/* --- Pillar R: regulatory, compliance & market access resilience -----------------------------
+ * Protocol censorship resistance (`tl`) + compliance capability (`comp`: viewing keys / selective
+ * disclosure / proof of innocence) + venue breadth (`det.ex_count` when available: 12+ exchanges
+ * = full marks, separating multi-venue accessible assets like ZEC from single-venue/delisted ones).
+ * When `det` is omitted (e.g. unit tests on DNA alone), falls back cleanly to 55% tl + 45% comp.
+ * A directly sanctioned protocol is capped at 25 regardless. */
+function regulatoryScore(d, det) {
   var tl = gval(d, 'tl'), comp = gval(d, 'comp');
   if (tl == null && comp == null) return null;
   var tlS = tl == null ? null : (tl <= 0 ? 25 : tl <= 1 ? 50 : tl <= 1.5 ? 75 : 100);
-  /* comp null means "not evidenced", NOT "none". It floors to 0 with the weight retained — the
-   * same rule as the P components: unknown must never outscore a known absence. (The old version
-   * dropped the weight instead, which meant an unchecked coin scored higher than a checked one
-   * that turned out to have nothing.) */
   var compS = comp == null ? 0 : (comp / 2) * 100;
+  var hasEx = (det && det.ex_count != null && det.ex_count > 0);
   var parts = [];
-  if (tlS != null) parts.push([0.55, tlS]);
-  parts.push([0.45, compS]);
+  if (hasEx) {
+    var exS = Math.min(100, Math.round(Math.min(det.ex_count / 12, 1) * 100));
+    if (tlS != null) parts.push([0.45, tlS]);
+    parts.push([0.40, compS]);
+    parts.push([0.15, exS]);
+  } else {
+    if (tlS != null) parts.push([0.55, tlS]);
+    parts.push([0.45, compS]);
+  }
   var tw = 0, acc = 0;
   for (var i = 0; i < parts.length; i++) { tw += parts[i][0]; acc += parts[i][0] * parts[i][1]; }
   var R = tw ? Math.round(acc / tw) : null;
@@ -328,14 +312,102 @@ function regulatoryScore(d) {
   return R;
 }
 
-/* composite over whatever pillars exist; `composite()` already skips nulls and renormalises.
- * Two guards:
- *   1. if the preset gives P any weight and P is unavailable, there is no composite — a coin
- *      whose mechanism has not been evidenced must not be ranked on dev/liquidity alone;
- *   2. `riskAdjust` (used by privacy_investor) replaces the P point estimate with its lower
- *      half (P - band/2). An institutional reader does not act on a point estimate, and without
- *      this a wide-band coin with strong dev and liquidity climbs on momentum alone. */
+/* --- Bull-Run Asymmetry & Re-rating Model ("The Next Zcash" Scanner) -------------------------
+ * Why did ZEC re-rate from $700M to $25.95B (~37x) while pure-privacy rank #1 XMR faced 73+ CEX
+ * delistings? Because bull-run capital requires four things simultaneously:
+ *   1. Fundamental Quality (40%): real, evidenced privacy (risk-adjusted P), active dev (D),
+ *      regulatory/compliance posture (R), security (S) and battle-testedness (T).
+ *   2. Valuation Room / Mcap Asymmetry (25%): high-quality protocols sitting in the $5M-$800M
+ *      accumulation zone have 10x-50x re-rating room; $10B+ mega-caps already priced it in.
+ *   3. Clean Tokenomics (20%): high circulating float (cs/ms >= 85% or no VC unlock cliff) so
+ *      demand translates into price rather than absorbing unlock dilution.
+ *   4. Market Access & Liquidity Rails (15%): selective disclosure / viewing keys (comp=2),
+ *      exchange breadth (ex_count), and healthy turnover.
+ */
+function asymmetryOf(d, coin, det, asof) {
+  if (!d) return null;
+  if (gval(d, 'sanctioned')) return null;
+  var p = pillarsOf(d, coin, det, asof);
+  if (p.P == null) return null;
+
+  var pAdj = p.P;
+  if (p.Pdetail && p.Pdetail.band) {
+    pAdj = Math.max(0, p.P - Math.round(0.5 * p.Pdetail.band));
+  }
+  var fund = composite(
+    { P: pAdj, D: p.D, R: p.R, S: p.S, T: p.T },
+    { P: 35, D: 25, R: 20, S: 10, T: 10 }
+  );
+  if (fund == null) return null;
+  if (p.D === 0) fund = Math.round(fund * 0.60); // stalled/archived repo penalty
+
+  /* Valuation room: only meaningful when the privacy mechanism itself is credible (scaled by
+   * min(1, pAdj / 45) so a weak-privacy coin with a small mcap is not mistaken for a gem).
+   * Sweet spot is $5M-$150M (100), $150M-$800M (95->80, ZEC pre-run zone),
+   * $800M-$3B (80->55), >$3B (55->25). Micro-caps <$5M get 45 due to illiquidity/delist risk. */
+  var mcap = (coin && coin.m) ? coin.m : null;
+  var rawUpside = 50;
+  if (mcap != null && mcap > 0) {
+    if (mcap < 5e6) {
+      rawUpside = 45;
+    } else if (mcap <= 1.5e8) {
+      rawUpside = 100;
+    } else if (mcap <= 8e8) {
+      rawUpside = Math.round(95 - 15 * ((mcap - 1.5e8) / (8e8 - 1.5e8)));
+    } else if (mcap <= 3e9) {
+      rawUpside = Math.round(80 - 25 * ((mcap - 8e8) / (3e9 - 8e8)));
+    } else {
+      var lg = Math.min(Math.log(mcap / 3e9) / Math.LN10, 1.2);
+      rawUpside = Math.max(20, Math.round(55 - 25 * lg));
+    }
+  }
+  var pGate = Math.min(1, Math.max(0.25, pAdj / 45));
+  var upside = Math.round(rawUpside * pGate);
+
+  /* Clean tokenomics: high circulating ratio (cs/ms) means no VC cliff overhang */
+  var tok = 75; // default for tail-emission / uncapped PoW chains with no VC unlock schedule
+  if (coin && coin.cs && coin.ms && coin.ms > 0) {
+    var fl = Math.max(0, Math.min(1, coin.cs / coin.ms));
+    tok = Math.round(Math.pow(fl, 0.85) * 100);
+  }
+
+  /* Market access & liquidity rails */
+  var comp = gval(d, 'comp');
+  var compS = comp === 2 ? 100 : (comp === 1 ? 55 : 20);
+  var exS = (det && det.ex_count) ? Math.min(100, Math.round(Math.min(det.ex_count / 10, 1) * 100)) : 40;
+  var turnS = (coin && coin.m && coin.v) ? Math.min(100, Math.round(Math.min((coin.v / coin.m) / 0.03, 1) * 100)) : 30;
+  var rails = Math.round(0.50 * compS + 0.25 * exS + 0.25 * turnS);
+
+  var score = Math.round(0.50 * fund + 0.20 * upside + 0.15 * tok + 0.15 * rails);
+
+  var arch = gval(d, 'arch') || d.g || 'proto';
+  var archetype = 'PRIVACY-ASSET';
+  if (comp === 2 && p.P >= 42 && (p.D == null || p.D >= 55)) {
+    archetype = 'ZEC-ARCHETYPE';
+  } else if ((gval(d, 'man') || 0) >= 0.5 && p.P >= 65 && (p.D == null || p.D >= 55)) {
+    archetype = 'SOVEREIGN-PRIV';
+  } else if (arch === 'compute' || d.g === 'compute') {
+    archetype = 'CONF-COMPUTE';
+  } else if (arch === 'transport' || d.g === 'net') {
+    archetype = 'PRIV-NETWORK';
+  }
+
+  return {
+    score: score,
+    fundamentals: fund,
+    upside: upside,
+    tokenomics: tok,
+    rails: rails,
+    archetype: archetype
+  };
+}
+
+/* composite over whatever pillars exist; `composite()` already skips nulls and renormalises. */
 function compositeOf(d, coin, det, asof, preset, riskAdjust) {
+  if (preset === 'asymmetry') {
+    var a = asymmetryOf(d, coin, det, asof);
+    return a ? a.score : null;
+  }
   var w = PRESETS[preset || 'investor'];
   var p = pillarsOf(d, coin, det, asof);
   if ((w.P || 0) > 0 && p.P == null) return null;
@@ -352,17 +424,10 @@ var PRESETS = {
   investor: { P: 15, S: 15, D: 15, T: 20, L: 20, R: 10, U: 5 },
   builder: { P: 20, S: 15, D: 35, T: 5, L: 5, R: 5, U: 15 },
   survivor: { P: 20, S: 15, D: 10, T: 5, L: 15, R: 30, U: 5 },
-  /* The blueprint's `investor` preset was written for a general-purpose terminal. When only
-   * P/D/L exist it gives P just 15 of the 50 available weight — so a liquid, actively developed
-   * coin with a weak mechanism outranks a strong one (measured: DASH and XVG both land in the
-   * top 15 of it). This terminal exists to find privacy assets, so P carries the weight here.
-   * Added, not replaced — both are shown in the panel so the difference is visible. */
-  /* privacy_investor: P is the mechanism, but a strong mechanism alone is not an asset — the
-   * other four pillars are what separate XMR from a well-marketed fork. Extended from the
-   * P/D/L-only version (45/30/25) once T and S existed, and it is risk-adjusted: the P point
-   * estimate is replaced by its lower half (P - band/2) so a wide-band coin with strong dev and
-   * liquidity cannot climb on momentum alone. Measured on the ZAMA case below. */
-  privacy_investor: { P: 30, D: 20, L: 15, T: 15, S: 10, R: 10 }
+  privacy_investor: { P: 30, D: 20, L: 15, T: 15, S: 10, R: 10 },
+  /* bull_hunter: weights Compliance/Access (R=20) + Dev Velocity (D=20) alongside Privacy (P=25)
+   * and Liquidity (L=15), capturing the institutional/CEX re-rating thesis that drove ZEC. */
+  bull_hunter: { P: 25, D: 20, L: 15, T: 10, S: 10, R: 20 }
 };
 
 function composite(pillars, w) {

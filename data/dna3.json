@@ -917,7 +917,13 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวน coin ใน Spark pool ณ asof — ยังไม่มีแหล่งนับสาธารณะ",
-  "comp": null
+  "comp": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://eprint.iacr.org/2021/1173",
+   "asof": "2026-10-16",
+   "note": "Lelantus Spark (IACR 2021/1173): รองรับ incoming/full viewing key สำหรับให้บุคคลที่สามตรวจสอบธุรกรรมโดยไม่เสียสิทธิ์การใช้จ่าย"
+  }
  },
  "XVG": {
   "g": "coin",
@@ -3179,7 +3185,13 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": null
+  "comp": {
+   "v": 2,
+   "conf": "high",
+   "src": "https://github.com/zama-ai/fhevm",
+   "asof": "2026-10-16",
+   "note": "fhevm README ยืนยัน programmable access control logic ใน smart contract + threshold decryption KMS"
+  }
  },
  "TORN": {
   "g": "proto",
@@ -5447,7 +5459,13 @@
    "note": "ไม่พบ disclosure ระดับโปรโตคอลที่ยังไม่ปิดในแหล่งของเรา — 0 ไม่ได้หมายความว่าไม่เคยมีบั๊ก"
   },
   "aset_note": "ชั้น 2: ต้องใช้จำนวนผู้ใช้ที่ interact กับ contract/pool เดียวกันต่อ epoch — ยังไม่มีแหล่งนับ",
-  "comp": null
+  "comp": {
+   "v": 2,
+   "conf": "med",
+   "src": "https://docs.oasis.io/build/sapphire/develop/concept",
+   "asof": "2026-10-16",
+   "note": "Oasis Sapphire รองรับ View-Call Authentication + selective disclosure ผ่าน smart contract events/getters"
+  }
  },
  "PHA": {
   "g": "compute",
